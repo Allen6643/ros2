@@ -74,6 +74,10 @@ class MujocoSimNode(Node):
         self.declare_parameter('auto_trajectory_mode', False)  # 自动轨迹跟踪
         self.declare_parameter('trajectory_type', '3d_helix')  # 3d_helix / lawnmower
         self.declare_parameter('controller_type', 'nn')        # nn / pid
+        # 是否启用相机真实离屏渲染。默认 False 与原有行为保持一致（不与图形视窗
+        # 抢占 OpenGL 上下文），但此时相机输出为固定合成底色，不含任何场景信息；
+        # 端到端视觉控制必须显式设为 True。
+        self.declare_parameter('enable_camera_renderer', False)
 
         model_path = self.get_parameter('model_path').get_parameter_value().string_value
         config_path = self.get_parameter('config_path').get_parameter_value().string_value
@@ -83,6 +87,7 @@ class MujocoSimNode(Node):
         self.auto_trajectory_mode = self.get_parameter('auto_trajectory_mode').get_parameter_value().bool_value
         self.trajectory_type = self.get_parameter('trajectory_type').get_parameter_value().string_value
         self.controller_type = self.get_parameter('controller_type').get_parameter_value().string_value
+        enable_camera_renderer = self.get_parameter('enable_camera_renderer').get_parameter_value().bool_value
 
         # ========== 加载配置 ==========
         if not config_path or not os.path.exists(config_path):
@@ -162,7 +167,17 @@ class MujocoSimNode(Node):
                 )
 
             self.sonar = MultibeamSonar(self.model, self.data, body_name='rov', num_beams=72)
-            self.camera = UnderwaterCamera(self.model, self.data, camera_name='forward_cam')
+            self.camera = UnderwaterCamera(self.model, self.data, camera_name='forward_cam',
+                                           enable_renderer=enable_camera_renderer)
+            if enable_camera_renderer and self.camera.renderer is None:
+                self.get_logger().warn(
+                    '相机渲染器初始化失败，/rov/camera/image_raw 将只发布合成底色图像。'
+                    '无显卡环境请设置 MUJOCO_GL=osmesa 并安装 libosmesa6 与 PyOpenGL')
+            elif not enable_camera_renderer:
+                self.get_logger().warn(
+                    '相机未启用真实渲染 (enable_camera_renderer=false)，'
+                    '/rov/camera/image_raw 发布的是固定合成底色图像，不含场景信息。'
+                    '做视觉端到端控制请设置 enable_camera_renderer:=true')
             self.traj_gen = TrajectoryGenerator(trajectory_type=self.trajectory_type)
 
             if self.controller_type == 'pid':
@@ -434,3 +449,28 @@ class MujocoSimNode(Node):
                 joint_state.position.append(float(self.data.qpos[qadr]))
                 joint_state.velocity.append(float(self.data.qvel[vadr]))
         self.pub_joint_states.publish(joint_state)
+
+
+def main(args=None):
+    """``mujoco_sim_node`` 进程入口（setup.py 的 console_scripts 指向本函数）。
+
+    上游 setup.py 声明了 ``mujoco_sim_node = rov_mujoco.mujoco_sim_node:main``，
+    但本文件此前没有 ``main``，导致 ``ros2 launch rov_mujoco main.launch.py``
+    报 ``ImportError: module 'rov_mujoco.mujoco_sim_node' has no attribute 'main'``。
+    """
+    rclpy.init(args=args)
+    node = None
+    try:
+        node = MujocoSimNode()
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        if node is not None:
+            node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
