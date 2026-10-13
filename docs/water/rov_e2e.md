@@ -864,9 +864,9 @@ python3 src/water/rov_e2e/rov_e2e/evaluate.py compare --reports runs/*_report.js
 
 <!-- TODO(提交前补充)：录屏 gif 并插入，同时粘贴 ros2 topic hz / /cmd_vel 的真实输出 -->
 
-![水下 ROV 端到端视觉自主航行](../img/water/rov_e2e_autonomous.gif)
+![水下 ROV 端到端视觉自主航行](../img/water/rov_e2e_autonomous.png)
 
-*图 7.3：`ros2 launch rov_e2e main.launch.py` 一键启动后，ROV 仅依据前视相机图像
+*图 7.3（实机截图）：`ros2 launch rov_e2e main.launch.py` 一键启动后，ROV 仅依据前视相机图像
 自主输出前进推力与转向指令，在水下通道中持续前行。*
 
 **闭环数据流验证**：
