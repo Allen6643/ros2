@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>步骤 9：自动轨迹控制 - 模拟器的 ROS 文档</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u6b65\u9aa4 9\uff1a\u81ea\u52a8\u8f68\u8ff9\u63a7\u5236";
+        var mkdocs_page_input_path = "chapter\\chap4\\gazebo_09_auto_motion.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ubuntu20.04/">安装 ROS</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap5/">5. 机器人感知</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_e2e/">静水环境下单目视觉水下 ROV 端到端神经网络控制</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a></li>
+<li class="breadcrumb-item active">步骤 9：自动轨迹控制</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/chapter/chap4/gazebo_09_auto_motion.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="9">步骤 9：自动轨迹控制</h1>
+<blockquote>
+<p>前置条件：完成<a href="../gazebo_08_manual_control/">步骤 8</a>。
+本步目标：运行 <code>move_square.py</code>，让机器人自动完成近似正方形轨迹。
+预计时间：30-50 分钟。</p>
+</blockquote>
+<ul>
+<li><a href="#design">1. 节点设计</a></li>
+<li><a href="#code">2. 核心代码</a></li>
+<li><a href="#run">3. 运行步骤</a></li>
+<li><a href="#results">4. 结果分析</a></li>
+<li><a href="#closed-loop">5. 改为闭环控制</a></li>
+<li><a href="#debug">6. 常见问题</a></li>
+<li><a href="#acceptance">7. 本步验收</a></li>
+</ul>
+<h2 id="1">1. 节点设计 <span id="design"></span></h2>
+<p><code>move_square.py</code> 是时间开环控制：</p>
+<div class="mermaid">flowchart TD
+  A[等待 1 秒] --&gt; B[前进 side_time]
+  B --&gt; C[停止 0.4 秒]
+  C --&gt; D[左转 turn_time]
+  D --&gt; E[停止 0.4 秒]
+  E --&gt; F{完成 4 次?}
+  F -- 否 --&gt; B
+  F -- 是 --&gt; G[停车退出]
+</div>
+<p>参数：</p>
+<pre class="highlight"><code class="language-python">self.linear_speed = 0.35
+self.angular_speed = 0.8
+side_time = 2.0 / self.linear_speed
+turn_time = (math.pi / 2.0) / self.angular_speed</code></pre>
+<p>理论边长为 2.0 m，理论转角为 90 度。</p>
+<h2 id="2">2. 核心代码 <span id="code"></span></h2>
+<pre class="highlight"><code class="language-python">#!/usr/bin/env python3
+import math
+
+import rospy
+from geometry_msgs.msg import Twist
+
+rospy.init_node("mybot_move_square")
+pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
+rate = rospy.Rate(20)
+
+linear_speed = 0.35
+angular_speed = 0.8
+side_time = 2.0 / linear_speed
+turn_time = (math.pi / 2.0) / angular_speed
+
+for index in range(4):
+    cmd = Twist()
+    cmd.linear.x = linear_speed
+    end_time = rospy.Time.now() + rospy.Duration(side_time)
+    while rospy.Time.now() &lt; end_time and not rospy.is_shutdown():
+        pub.publish(cmd)
+        rate.sleep()
+
+    pub.publish(Twist())
+    rospy.sleep(0.4)
+
+    cmd = Twist()
+    cmd.angular.z = angular_speed
+    end_time = rospy.Time.now() + rospy.Duration(turn_time)
+    while rospy.Time.now() &lt; end_time and not rospy.is_shutdown():
+        pub.publish(cmd)
+        rate.sleep()
+
+    pub.publish(Twist())
+    rospy.sleep(0.4)</code></pre>
+<p>关键点：</p>
+<ul>
+<li>用 <code>rospy.Rate(20)</code> 持续发布速度；</li>
+<li>每段动作结束后发布零速度；</li>
+<li>动作间暂停，避免惯性影响下一段；</li>
+<li>中断时最后发布零速度。</li>
+</ul>
+<h2 id="3">3. 运行步骤 <span id="run"></span></h2>
+<p>终端 1：</p>
+<pre class="highlight"><code class="language-bash">roslaunch mybot_gazebo mybot_gazebo.launch</code></pre>
+<p>终端 2：</p>
+<pre class="highlight"><code class="language-bash">source ~/catkin_ws/devel/setup.bash
+rosrun mybot_gazebo move_square.py</code></pre>
+<p>同时在另一个终端观察：</p>
+<pre class="highlight"><code class="language-bash">rostopic echo /cmd_vel
+rostopic echo /odom
+rosrun tf tf_echo odom base_link</code></pre>
+<h2 id="4">4. 结果分析 <span id="results"></span></h2>
+<p>预期轨迹如下。实际结果会受到车轮打滑、惯性和停车延迟影响，通常是近似正方形：</p>
+<p><img alt="自动正方形轨迹效果示意" src="../images/gazebo_platform/square_path_effect.png"/></p>
+<p>预期结果：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>命令</th>
+<th>观察现象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>直行</td>
+<td><code>linear.x &gt; 0</code></td>
+<td>机器人前进</td>
+</tr>
+<tr>
+<td>停止</td>
+<td>全零 Twist</td>
+<td>机器人减速停下</td>
+</tr>
+<tr>
+<td>左转</td>
+<td><code>angular.z &gt; 0</code></td>
+<td>机器人逆时针旋转</td>
+</tr>
+<tr>
+<td>重复 4 次</td>
+<td>相同序列</td>
+<td>近似正方形轨迹</td>
+</tr>
+</tbody>
+</table>
+<p>误差来源：</p>
+<ul>
+<li>车轮打滑；</li>
+<li>速度指令与实际速度存在差异；</li>
+<li>机器人存在惯性和减速时间；</li>
+<li>转弯时间受到角速度误差影响。</li>
+</ul>
+<p>开环控制的结果通常是“近似正方形”，不是精确正方形。它的价值是验证从节点到话题再到 Gazebo 的完整控制链。</p>
+<h2 id="5">5. 改为闭环控制 <span id="closed-loop"></span></h2>
+<p>闭环控制需要订阅 <code>/odom</code>：</p>
+<pre class="highlight"><code class="language-python">from nav_msgs.msg import Odometry
+
+position = None
+
+def odom_callback(msg):
+    global position
+    position = msg.pose.pose.position
+
+rospy.Subscriber("/odom", Odometry, odom_callback, queue_size=1)</code></pre>
+<p>控制逻辑改为：</p>
+<ol>
+<li>记录起点；</li>
+<li>计算当前点与起点的欧氏距离；</li>
+<li>距离达到 2.0 m 时停止直行；</li>
+<li>记录当前航向；</li>
+<li>航向变化达到 90 度时停止转弯。</li>
+</ol>
+<p>闭环控制能减少速度误差对轨迹的影响，但还需要处理 <code>/odom</code> 的累计漂移。</p>
+<h2 id="6">6. 常见问题 <span id="debug"></span></h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>节点启动但机器人不动</td>
+<td>仿真未启动或 <code>/cmd_vel</code> 无订阅者</td>
+<td>检查 <code>rostopic info /cmd_vel</code></td>
+</tr>
+<tr>
+<td>正方形不闭合</td>
+<td>轮径、轮距或打滑</td>
+<td>校正参数，降低速度</td>
+</tr>
+<tr>
+<td>转弯角度偏差</td>
+<td>角速度或时间误差</td>
+<td>改用 <code>/odom</code> 闭环</td>
+</tr>
+<tr>
+<td>动作之间拖尾过大</td>
+<td>停止时间过短</td>
+<td>增加 <code>rospy.sleep(0.4)</code></td>
+</tr>
+<tr>
+<td>中断后机器人继续运动</td>
+<td>未发布零速度</td>
+<td>在 <code>finally</code> 中停车</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7">7. 本步验收 <span id="acceptance"></span></h2>
+<ul>
+<li>[ ] <code>move_square.py</code> 能独立运行；</li>
+<li>[ ] 机器人完成四条边和四个转弯；</li>
+<li>[ ] 终端能观察到 <code>/cmd_vel</code> 的变化；</li>
+<li>[ ] <code>/odom</code> 和 TF 能显示运动轨迹；</li>
+<li>[ ] 能说明开环与闭环控制的区别；</li>
+<li>[ ] 知道如何利用 <code>/odom</code> 改进轨迹。</li>
+</ul>
+<hr/>
+<ul>
+<li>上一步：<a href="../gazebo_08_manual_control/">手动速度控制</a></li>
+<li>返回<a href="../gazebo_platform_simulation/">教程总览</a></li>
+<li>下一步：<a href="../gazebo_10_tuning_debug/">步骤 10：参数调整与故障排查</a></li>
+</ul></div>
+</div>
+</div><footer>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+</span>
+</div>
+<script src="../../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../../..";</script>
+<script src="../../../js/theme_extra.js"></script>
+<script src="../../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../../js/umlconvert.js"></script>
+<script src="../../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script>mermaid.initialize({});</script></body>
+</html>

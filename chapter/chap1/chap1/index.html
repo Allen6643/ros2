@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>1. 认识 ROS - 模拟器的 ROS 文档</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "1. \u8ba4\u8bc6 ROS";
+        var mkdocs_page_input_path = "chapter\\chap1\\chap1.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ubuntu20.04/">安装 ROS</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal current" href="#">1. 认识 ROS</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#_1">实验内容</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#1">1. 小海龟绘制正方形</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#2">2. 小海龟绘制圆形</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#3-openhutb">3. 小海龟绘制 OpenHUTB</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#4-ros2-service">4. ROS2 Service 小海龟距离控制</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#5">5. 小海龟画花瓣</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#6">6. 小海龟画五角星</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#7-gazebo">7. Gazebo 入门</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#8">8. 小海龟画爱心</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#9">9. 小海龟绘制任意文字</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap4/">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap5/">5. 机器人感知</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_e2e/">静水环境下单目视觉水下 ROV 端到端神经网络控制</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a></li>
+<li class="breadcrumb-item">ROS 教程</li>
+<li class="breadcrumb-item active">1. 认识 ROS</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/chapter/chap1/chap1.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="1-ros">第1章 认识 ROS</h1>
+<p>本章通过 ROS Noetic 中的 turtlesim 小海龟仿真学习 ROS 的基本使用方法，
+包括话题通信、速度控制、位姿反馈以及服务调用。</p>
+<h2 id="_1">实验内容</h2>
+<h3 id="1">1. 小海龟绘制正方形</h3>
+<p>通过向 <code>/turtle1/cmd_vel</code> 发布 <code>geometry_msgs/Twist</code> 消息，
+控制小海龟完成直线运动和转向，从而自主绘制正方形。</p>
+<p><a href="../turtle_square/">进入小海龟画正方形实验</a></p>
+<h3 id="2">2. 小海龟绘制圆形</h3>
+<p>同时向 <code>/turtle1/cmd_vel</code> 发布线速度和角速度，
+并通过 <code>/turtle1/pose</code> 的位姿反馈判断是否完成一圈。</p>
+<p><a href="../turtle_circle/">进入小海龟画圆实验</a></p>
+<h3 id="3-openhutb">3. 小海龟绘制 OpenHUTB</h3>
+<p>订阅 <code>/turtle1/pose</code> 获取实时位姿，并结合 <code>/turtle1/cmd_vel</code>、
+<code>/turtle1/set_pen</code> 和 <code>/turtle1/teleport_absolute</code>，
+控制小海龟自动绘制 OpenHUTB 字样。</p>
+<p><a href="../turtle_hutb/">进入小海龟绘制 OpenHUTB 实验</a></p>
+<h3 id="4-ros2-service">4. ROS2 Service 小海龟距离控制</h3>
+<p>通过 ROS2 Service 控制 turtlesim 小海龟按照指定距离移动，并根据 <code>/turtle1/pose</code> 的位置反馈判断实际移动距离。</p>
+<p><a href="../move_forward/">进入 ROS2 Service 小海龟距离控制实验</a></p>
+<h3 id="5">5. 小海龟画花瓣</h3>
+<p>综合 <code>/set_pen</code> 画笔服务、<code>/teleport_absolute</code> 瞬移服务与速度话题发布，
+控制小海龟画出 6 个圆心均匀分布、两两相扣的彩色花瓣。</p>
+<p><a href="../turtle_sim_experiment/">进入小海龟画花瓣实验</a></p>
+<h3 id="6">6. 小海龟画五角星</h3>
+<p>使用发布器向<code>/turtle1/cmd_vel</code>话题发布速度指令，使用<code>/turtle1/set_pen</code>服务动态修改画笔RGB颜色，实现彩色绘图，通过定时方式控制海龟直行距离与旋转角度，完成五角星轨迹绘制，使用<code>rosnode</code>、<code>rostopic</code>、<code>rosservice</code>工具查看节点、话题、服务，验证ROS通信。</p>
+<p><a href="../turtle_star/">进入小海龟画五角星实验</a></p>
+<h3 id="7-gazebo">7. Gazebo 入门</h3>
+<p>本章先通过 turtlesim 理解 ROS 话题、服务和位姿反馈。掌握这些基础后，
+可以进入第 4 章“机器人仿真”，使用 URDF/xacro、Gazebo 插件和 launch 文件搭建完整移动机器人平台。</p>
+<p><a href="../../chap4/">进入第 4 章 Gazebo 机器人仿真</a></p>
+<h3 id="8">8. 小海龟画爱心</h3>
+<p>通过爱心参数方程生成轨迹点，控制小海龟绘制出一个完整的爱心图案。</p>
+<p><a href="../turtle_heart/">进入小海龟画爱心实验</a></p>
+<h3 id="9">9. 小海龟绘制任意文字</h3>
+<p>在键盘上输入任意英文单词或短句，程序根据内容长度自动计算字号并按单词折行，
+结合 <code>/turtle1/pose</code> 的位姿反馈、<code>/turtle1/cmd_vel</code> 的速度控制和 <code>/turtle1/set_pen</code> 的画笔服务，
+控制小海龟把输入的文字逐笔绘制在画布上。</p>
+<p><a href="../turtle_text/">进入小海龟绘制任意文字实验</a></p></div>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../../../ubuntu20.04/" title="安装 ROS"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../../chap2/" title="2. ROS 基础 - ROS 基础">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../../../ubuntu20.04/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../../chap2/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../../..";</script>
+<script src="../../../js/theme_extra.js"></script>
+<script src="../../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../../js/umlconvert.js"></script>
+<script src="../../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+</body>
+</html>

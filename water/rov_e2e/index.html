@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>静水环境下单目视觉水下 ROV 端到端神经网络控制 - 模拟器的 ROS 文档</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u9759\u6c34\u73af\u5883\u4e0b\u5355\u76ee\u89c6\u89c9\u6c34\u4e0b ROV \u7aef\u5230\u7aef\u795e\u7ecf\u7f51\u7edc\u63a7\u5236";
+        var mkdocs_page_input_path = "water\\rov_e2e.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ubuntu20.04/">安装 ROS</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap4/">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap5/">5. 机器人感知</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="#">静水环境下单目视觉水下 ROV 端到端神经网络控制</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#1">1. 概述与目标</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#_1">核心任务目标</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_2">任务范围界定</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#2">2. 软硬件环境</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#3">3. 原理简述</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#31-behavior-cloning">3.1 行为克隆（Behavior Cloning）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#32">3.2 网络结构</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#33">3.3 控制量到物理量的映射</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#34">3.4 水下动力学（简述）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#35">3.5 算法流程</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#4-ros">4. 软件架构与 ROS 话题</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#41">4.1 话题接口</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#42">4.2 节点参数</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#5">5. 关键源码说明</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#51-collect_datapy">5.1 数据集采集 collect_data.py</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#52-trainpy">5.2 训练脚本 train.py</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#53-test_inferpy">5.3 离线测试 test_infer.py</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#54-ros-2-infer_nodepy">5.4 ROS 2 推理节点 infer_node.py</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#55-mainlaunchpy">5.5 一键启动 main.launch.py</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#56-rov_mujoco">5.6 使相机真正渲染场景（对 rov_mujoco 的必要改动）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#57-mainpy-mainsh">5.7 模块统一入口 main.py / main.sh</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#6">6. 分步运行指南</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#61">6.1 编译功能包</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#62">6.2 安装依赖与配置软件渲染</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#63">6.3 采集数据集</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#64-modelpth">6.4 训练得到 model.pth</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#65">6.5 离线测试权重</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#66">6.6 一键运行整套仿真</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#67">6.7 常见问题排查</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#68">6.8 多场景测试与性能评价</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#7">7. 实验结果</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#71">7.1 数据集统计</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#72">7.2 训练过程</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#73">7.3 离线推理验证</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#74">7.4 在线闭环自主航行</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#8">8. 结论与展望</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#81">8.1 已知局限（实测）</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a></li>
+<li class="breadcrumb-item">水域载具</li>
+<li class="breadcrumb-item active">静水环境下单目视觉水下 ROV 端到端神经网络控制</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/water/rov_e2e.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="rov-">静水环境下单目视觉水下 ROV 前进-转向端到端神经网络控制</h1>
+<hr/>
+<h2 id="1">1. 概述与目标</h2>
+<p>本模块在已有 <code>rov_mujoco</code> 水下机器人 MuJoCo 物理仿真的基础上，构建<strong>单目视觉端到端（End-to-End）控制</strong>闭环：以 ROV 前视相机采集的 RGB 图像作为唯一观测量，经卷积神经网络直接回归出 <strong>前进推力</strong> 与 <strong>转向</strong> 两个连续控制量，交由 <code>/cmd_vel</code> 话题驱动仿真中的 ROV 在水下通道内自主前行。</p>
+<p>与传统"感知 → 状态估计 → 规划 → 控制"分层架构不同，端到端方案<strong>不做显式的目标检测或位姿估计</strong>，而是让网络直接从像素学习"看到什么画面该给多少推力、打多少舵"，控制律完全由数据驱动获得。</p>
+<h3 id="_1">核心任务目标</h3>
+<ol>
+<li><strong>自建数据集</strong>：通过键盘手动操纵 ROV，同步记录前视相机画面与当时的控制指令，形成 <code>(图像, [前进推力, 转向])</code> 的行为克隆数据集；</li>
+<li><strong>训练端到端网络</strong>：设计小型 CNN，以 MSE 为损失函数回归两个连续控制量，产出权重文件 <code>model.pth</code>；</li>
+<li><strong>离线验证权重</strong>：提供不依赖 ROS 的离线测试脚本，量化网络输出与人工标签的一致程度；</li>
+<li><strong>ROS 2 在线推理闭环</strong>：推理节点订阅相机话题、发布控制话题，与 MuJoCo 仿真构成"感知—决策—控制"闭环；</li>
+<li><strong>一键启动入口</strong>：<code>ros2 launch rov_e2e main.launch.py</code> 同时拉起仿真与推理节点。</li>
+</ol>
+<h3 id="_2">任务范围界定</h3>
+<ul>
+<li>环境设定为<strong>静水</strong>（<code>use_ocean_current=False</code>），不引入洋流扰动，使视觉输入与动力学关系相对确定，便于教学与复现；</li>
+<li>控制自由度仅保留<strong>前进推力</strong>与<strong>偏航转向</strong>两个维度。垂向定深由 <code>mujoco_sim_node</code> 内置 PID 深度控制器承担，横滚/俯仰由姿态自稳力矩抑制，因此网络只需学习水平面内的驾驶行为；</li>
+<li>本模块<strong>不涉及</strong>机械臂操作，UR5e 机械臂保持收纳姿态。</li>
+</ul>
+<hr/>
+<h2 id="2">2. 软硬件环境</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">配置项</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>操作系统</strong></td>
+<td style="text-align: left;">Ubuntu 20.04 LTS（官方教学虚拟机）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>ROS 2 版本</strong></td>
+<td style="text-align: left;">ROS 2 Humble</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Python 版本</strong></td>
+<td style="text-align: left;"><strong>Python 3.8</strong>（系统默认；与 ROS 2 底层 <code>_rclpy_pybind11</code> 的 ABI 绑定，不可随意切换）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>物理引擎</strong></td>
+<td style="text-align: left;">MuJoCo 3.1.6（实测版本；<code>mujoco&gt;=3.2</code> 起要求 Python≥3.9，不适用于 3.8 环境）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>深度学习框架</strong></td>
+<td style="text-align: left;">PyTorch <strong>2.4.1</strong> + torchvision 0.19.1（<strong>CPU 版本</strong>）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>渲染后端</strong></td>
+<td style="text-align: left;"><code>MUJOCO_GL=osmesa</code>（CPU 软件渲染，无显卡虚拟机必需）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>其他依赖</strong></td>
+<td style="text-align: left;">numpy、pillow、matplotlib</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>运行平台</strong></td>
+<td style="text-align: left;">VMware 虚拟机，无独立显卡（不需要 CUDA）</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">PyTorch 版本上限是硬约束</p>
+<p>在 <strong>Python 3.8</strong> 环境下不能直接 <code>pip3 install torch</code>：PyTorch 自 <strong>2.5.0</strong> 起不再提供 Python 3.8 的 wheel，
+最后一个支持 3.8 的版本是 <strong>torch 2.4.1 / torchvision 0.19.1</strong>。版本已在
+<code>src/water/rov_e2e/requirements.txt</code> 中固定，请勿手动放宽。</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">无显卡虚拟机必须设置 <code>MUJOCO_GL</code></p>
+<p>MuJoCo 的 <code>Renderer</code> 离屏渲染需要一个 OpenGL 后端。教学虚拟机通常没有 GPU 直通，
+必须让 MuJoCo 走 <strong>OSMesa 软件渲染</strong>，否则相机模块初始化失败、
+<code>/rov/camera/image_raw</code> <strong>不会发布任何图像</strong>，端到端链路无从谈起。
+系统依赖与设置方式见 6.2 节。</p>
+</div>
+<hr/>
+<h2 id="3">3. 原理简述</h2>
+<h3 id="31-behavior-cloning">3.1 行为克隆（Behavior Cloning）</h3>
+<p>把人工操纵过程视为一个隐含的专家策略 <script type="math/tex">\pi^*</script>：在每个时刻 <script type="math/tex">t</script>，专家观察到画面 <script type="math/tex">o_t</script>，输出控制指令 <script type="math/tex">a_t = (u_t, r_t)</script>，其中 <script type="math/tex">u_t</script> 为前进推力、<script type="math/tex">r_t</script> 为转向。数据集即专家轨迹上的采样：</p>
+<p>
+<script type="math/tex; mode=display">
+\mathcal{D} = \{(o_t, a_t)\}_{t=1}^{N}
+</script>
+</p>
+<p>训练目标是让参数为 <script type="math/tex">\theta</script> 的网络 <script type="math/tex">f_\theta</script> 在最小二乘意义下逼近专家：</p>
+<p>
+<script type="math/tex; mode=display">
+\theta^\star = \arg\min_\theta \frac{1}{N}\sum_{t=1}^{N} \left\| f_\theta(o_t) - a_t \right\|_2^2
+</script>
+</p>
+<p>即<strong>均方误差（MSE）损失</strong>。这是一个标准的监督回归问题，不涉及强化学习的奖励设计与试错探索，因而在 CPU 上也能快速收敛，适合课程作业规模。</p>
+<h3 id="32">3.2 网络结构</h3>
+<p>采用三层卷积 + 两层全连接的轻量结构（参数量 25,954，约 2.6 万）：</p>
+<pre class="highlight"><code>输入 (3, 120, 160)
+  ├─ Conv2d(3→16,  3×3, stride=2) + BN + ReLU      → (16, 60, 80)
+  ├─ Conv2d(16→32, 3×3, stride=2) + BN + ReLU      → (32, 30, 40)
+  ├─ Conv2d(32→64, 3×3, stride=2) + BN + ReLU      → (64, 15, 20)
+  ├─ AdaptiveAvgPool2d(1)                          → (64, 1, 1)
+  ├─ Flatten → Linear(64→32) + ReLU
+  └─ Linear(32→2) + Tanh                           → (u, r) ∈ [-1, 1]²</code></pre>
+<p>设计要点：</p>
+<ul>
+<li><strong><code>AdaptiveAvgPool2d(1)</code></strong> 使网络对输入分辨率不敏感，相机分辨率调整时无需改网络结构；</li>
+<li><strong>末层 <code>tanh</code></strong> 把输出限制在 <script type="math/tex">[-1, 1]</script>，与标签量纲一致，也天然完成了控制量限幅，避免推理时出现发散指令；</li>
+<li><strong>BatchNorm</strong> 在只有几百张样本的小数据集上能显著稳定训练；</li>
+<li>网络刻意保持轻量，整机无 GPU 时单轮训练仅需数秒。</li>
+</ul>
+<h3 id="33">3.3 控制量到物理量的映射</h3>
+<p>网络输出经 <code>infer_node</code> 写入 <code>geometry_msgs/Twist</code>：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">网络输出</th>
+<th style="text-align: left;">Twist 字段</th>
+<th style="text-align: left;">物理含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">
+<script type="math/tex">u</script>
+</td>
+<td style="text-align: left;"><code>linear.x</code></td>
+<td style="text-align: left;">纵向推进力，乘以 <code>force_scale = 350.0</code> 后施加于机体</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<script type="math/tex">r</script>
+</td>
+<td style="text-align: left;"><code>angular.z</code></td>
+<td style="text-align: left;">偏航力矩，乘以 <code>torque_scale = 90.0</code> 后施加于机体</td>
+</tr>
+</tbody>
+</table>
+<p><code>mujoco_sim_node</code> 在 500 Hz 物理循环中把上述指令映射为机体坐标系力与力矩，经旋转矩阵变换到世界系后注入 <code>data.xfrc_applied</code>，再叠加恒定浮力补偿与姿态自稳力矩，最后由 <code>mujoco.mj_step</code> 完成积分。</p>
+<h3 id="34">3.4 水下动力学（简述）</h3>
+<p>ROV 在水下的受力可概括为四项：重力、阿基米德浮力、各向异性流体阻力、推进器推力。仿真中通过设定浮力等于整机重力实现<strong>中性浮力</strong>，使 ROV 能够悬停；各向异性阻力由 MuJoCo 椭球流体模型给出，纵向阻力系数 <script type="math/tex">c_x = 0.40</script> 远小于侧向 <script type="math/tex">c_y = 7.79</script>，因此横向抗流能力弱而纵向流线型良好——这也是本任务把控制自由度收敛到"前进 + 转向"的物理依据。详细流体建模见 <a href="../rov_physical_simulation/"><code>rov_physical_simulation.md</code></a>。</p>
+<hr/>
+<h3 id="35">3.5 算法流程</h3>
+<p>整个模块分为<strong>采集 → 训练 → 部署</strong>三个阶段，各阶段的算法流程如下。</p>
+<h4 id="1-collect_datapy">（1）数据采集流程 <code>collect_data.py</code></h4>
+<pre class="highlight"><code class="language-text">输入: MuJoCo 场景模型 + 人工按键序列
+输出: dataset/images/*.png 与 dataset/labels.csv
+
+初始化: 实例化 MujocoSimNode; 构造 UnderwaterCamera(enable_renderer=True)
+        forward ← 0, turn ← 0, saved ← 0
+循环直至 saved = N:
+    spin_once(node)                    # 触发 500 Hz 物理步进定时器（单线程）
+    key ← 非阻塞读取键盘
+    若 key 为方向键:  (forward, turn) ← 该键对应指令   # 锁存，不松手即持续
+    node.cmd_vel ← (linear.x = forward, angular.z = turn)
+    若 到达采样周期 (1/sample_rate):
+        frame ← camera.render()        # forward_cam 离屏渲染
+        保存 frame → images/{saved:06d}.png
+        追加一行 (filename, forward, turn) → labels.csv
+        saved ← saved + 1</code></pre>
+<p>关键点：物理步进与图像采样在<strong>同一线程内交替</strong>执行（<code>spin_once</code> 触发定时器），
+MuJoCo 不是线程安全的，这样避免渲染与步进竞争；同时因为直接复用了部署时的
+<code>MujocoSimNode</code>，采集与部署的动力学严格一致。</p>
+<h4 id="2-trainpy">（2）网络训练流程 <code>train.py</code></h4>
+<pre class="highlight"><code class="language-text">输入: dataset/labels.csv + images/
+输出: model.pth, training_curve.png
+
+1. 读取标签表，按文件名加载图像，尺寸归一化到 (H, W)
+2. 像素归一化: x ← (x/255 − μ) / σ          # μ, σ 为 ImageNet 统计量
+3. 按 80/20 划分训练集与验证集（固定随机种子保证可复现）
+循环 epoch = 1..E:
+    for (x, y) in 训练集:
+        ŷ ← f_θ(x)                          # 前向传播
+        L ← (1/B) Σ ‖ŷ − y‖²                # MSE 损失
+        θ ← Adam(θ, ∇_θ L)                  # 反向传播 + Adam 更新
+    每 10 个 epoch: 学习率 × 0.5             # StepLR
+    在验证集上计算 L_val，若优于历史最优则保存 θ*
+输出: θ* 连同输入分辨率与归一化参数写入 model.pth</code></pre>
+<p>保存的 <code>model.pth</code> 是<strong>验证集 MSE 最低</strong>的那一组权重，而非最后一轮的权重，
+这在只有几百张样本的小数据集上能显著抑制过拟合。</p>
+<h4 id="3-infer_nodepy">（3）在线推理流程 <code>infer_node.py</code></h4>
+<pre class="highlight"><code class="language-text">输入: /rov/camera/image_raw (sensor_msgs/Image)
+输出: /cmd_vel (geometry_msgs/Twist)
+
+启动: 读取 model.pth → 载入 state_dict, 取回 (W, H) 与归一化参数
+订阅 /rov/camera/image_raw (QoS = BEST_EFFORT)
+
+收到图像 msg:
+    frame ← 解码 msg.data 为 (H, W, 3) 的 RGB 数组    # 兼容 rgb8/bgr8 与行填充
+    x ← preprocess_image(frame)                     # 与训练完全同一函数
+    ŷ ← f_θ(x)                                      # 单次前向，CPU
+    forward ← clip(ŷ[0]·k_f, −u_max, +u_max)
+    turn    ← clip(ŷ[1]·k_t, −r_max, +r_max)        # 缓存，供定时器发布
+
+每 1/publish_rate 秒:
+    发布 Twist(linear.x = forward, angular.z = turn)</code></pre>
+<p><code>/cmd_vel</code> 由<strong>定时器定频发布</strong>而不是在图像回调里直接发布：相机帧率抖动时
+控制量保持上一次输出，避免推力频繁断续；节点退出时补发一次零指令，
+避免 ROV 带着上一帧推力继续冲撞。</p>
+<div class="mermaid">flowchart TD
+    A["开始: 加载 model.pth"] --&gt; B["订阅 /rov/camera/image_raw"]
+    B --&gt; C{"收到新图像?"}
+    C --&gt;|否| D["按固定频率发布上一次的控制量"]
+    C --&gt;|是| E["解码 Image → RGB 数组"]
+    E --&gt; F["preprocess_image: 缩放 + 归一化"]
+    F --&gt; G["CNN 前向推理 f_θ(x)"]
+    G --&gt; H["tanh 输出截断在 [-1,1]"]
+    H --&gt; I["缓存 (forward, turn)"]
+    I --&gt; D
+    D --&gt; B
+</div>
+<hr/>
+<h2 id="4-ros">4. 软件架构与 ROS 话题</h2>
+<p>系统由两个功能包、三个节点构成：<code>rov_mujoco</code> 提供物理仿真与传感器，<code>rov_e2e</code> 提供数据、训练与推理。</p>
+<div class="mermaid">flowchart LR
+    subgraph Offline["离线阶段（不依赖 ROS）"]
+        COL["collect_data.py<br/>键盘操纵 + 图像/标签同步采集"]
+        DS[("dataset/<br/>images/*.png + labels.csv")]
+        TRAIN["train.py<br/>CNN + MSE 训练"]
+        PTH["model.pth"]
+        TEST["test_infer.py<br/>离线精度验证"]
+        COL --&gt; DS
+        DS --&gt; TRAIN
+        TRAIN --&gt; PTH
+        PTH --&gt; TEST
+    end
+
+    subgraph Online["在线阶段（ROS 2 闭环）"]
+        SIM["mujoco_sim_node<br/>MuJoCo 物理引擎 (500 Hz)"]
+        CAM["forward_cam 离屏渲染"]
+        NODE["infer_node<br/>CNN 前向推理"]
+        SIM --&gt; CAM
+    end
+
+    CAM --&gt;|"/rov/camera/image_raw<br/>sensor_msgs/Image"| NODE
+    NODE --&gt;|"/cmd_vel<br/>geometry_msgs/Twist"| SIM
+    PTH -.-&gt;|"加载权重"| NODE
+</div>
+<h3 id="41">4.1 话题接口</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">话题名称</th>
+<th style="text-align: left;">消息类型</th>
+<th style="text-align: left;">方向</th>
+<th style="text-align: left;">频率</th>
+<th style="text-align: left;">功能描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/rov/camera/image_raw</code></td>
+<td style="text-align: left;"><code>sensor_msgs/msg/Image</code></td>
+<td style="text-align: left;"><code>infer_node</code> 订阅</td>
+<td style="text-align: left;">约 25 Hz</td>
+<td style="text-align: left;">前视相机 <code>forward_cam</code> 渲染的 RGB 图像（本作业用 160×120）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/cmd_vel</code></td>
+<td style="text-align: left;"><code>geometry_msgs/msg/Twist</code></td>
+<td style="text-align: left;"><code>infer_node</code> 发布</td>
+<td style="text-align: left;">20 Hz</td>
+<td style="text-align: left;"><code>linear.x</code> 前进推力，<code>angular.z</code> 转向</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/rov/odom</code></td>
+<td style="text-align: left;"><code>nav_msgs/msg/Odometry</code></td>
+<td style="text-align: left;">仿真节点发布</td>
+<td style="text-align: left;">50 Hz</td>
+<td style="text-align: left;">ROV 位姿与线速度（用于结果评估）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/rov/depth</code></td>
+<td style="text-align: left;"><code>std_msgs/msg/Float64</code></td>
+<td style="text-align: left;">仿真节点发布</td>
+<td style="text-align: left;">50 Hz</td>
+<td style="text-align: left;">实时深度</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">话题命名说明</p>
+<p>相机话题是 <strong><code>/rov/camera/image_raw</code></strong>（带 <code>/rov</code> 前缀），
+与部分资料里写的 <code>/camera/image_raw</code> 不同。本模块通过参数 <code>image_topic</code> 暴露该话题名，
+如遇命名差异可直接覆盖而无需改代码：
+<code>ros2 run rov_e2e infer_node --ros-args -p image_topic:=/camera/image_raw</code></p>
+</div>
+<h3 id="42">4.2 节点参数</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">参数</th>
+<th style="text-align: left;">默认值</th>
+<th style="text-align: left;">所属节点</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>model_path</code></td>
+<td style="text-align: left;">自动探测</td>
+<td style="text-align: left;"><code>infer_node</code></td>
+<td style="text-align: left;">权重路径；留空时自动在源码树中查找 <code>model.pth</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>image_topic</code></td>
+<td style="text-align: left;"><code>/rov/camera/image_raw</code></td>
+<td style="text-align: left;"><code>infer_node</code></td>
+<td style="text-align: left;">相机图像话题</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>cmd_topic</code></td>
+<td style="text-align: left;"><code>/cmd_vel</code></td>
+<td style="text-align: left;"><code>infer_node</code></td>
+<td style="text-align: left;">控制指令话题</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>forward_gain</code> / <code>turn_gain</code></td>
+<td style="text-align: left;">1.0</td>
+<td style="text-align: left;"><code>infer_node</code></td>
+<td style="text-align: left;">输出增益，用于调试时缩放动作幅度</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>max_forward</code> / <code>max_turn</code></td>
+<td style="text-align: left;">1.0</td>
+<td style="text-align: left;"><code>infer_node</code></td>
+<td style="text-align: left;">输出限幅</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mujoco_gl</code></td>
+<td style="text-align: left;"><code>osmesa</code></td>
+<td style="text-align: left;"><code>main.launch.py</code></td>
+<td style="text-align: left;">MuJoCo 渲染后端</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="5">5. 关键源码说明</h2>
+<h3 id="51-collect_datapy">5.1 数据集采集 <code>collect_data.py</code></h3>
+<p>采集脚本<strong>不重新实现一套物理</strong>，而是直接实例化 <code>rov_mujoco.mujoco_sim_node.MujocoSimNode</code>，
+用<strong>单线程 <code>spin_once</code> 循环</strong>交替推进物理与采样图像：</p>
+<pre class="highlight"><code class="language-python">while saved &lt; args.frames and rclpy.ok():
+    # 1) 推进物理：500Hz 定时器在 spin_once 中触发，单线程安全
+    rclpy.spin_once(node, timeout_sec=0.0)
+
+    # 2) 读键盘，更新锁存指令
+    key = kb.read_key(timeout=0.0)
+    if key in KEY_TO_ACTION:
+        forward, turn = KEY_TO_ACTION[key]
+
+    # 3) 把锁存指令写入仿真节点（linear.x=推力, angular.z=转向）
+    node.cmd_vel.linear.x = forward
+    node.cmd_vel.angular.z = turn
+
+    # 4) 到采样周期就存一帧（与仿真完全同源的相机）
+    if time.time() &gt;= next_sample:
+        frame = node.camera.render()
+        Image.fromarray(frame).save(...)
+        writer.writerow([name, forward, turn])</code></pre>
+<p>这样设计解决了三个问题：</p>
+<ol>
+<li><strong>动力学零差异</strong>——训练数据与 <code>ros2 launch</code> 部署时的物理完全相同，不存在"采集一套动力学、部署另一套"的隐性偏差；</li>
+<li><strong>线程安全</strong>——MuJoCo 不是线程安全的，用 <code>spin_once</code> 交替而非多线程并发，避免渲染与步进竞争；</li>
+<li><strong>按键锁存</strong>——原 <code>keyboard_teleop_node</code> 是"按键瞬时触发"（松手即归零），
+   直接照搬会导致数据集中绝大多数样本指令为 0，网络学不到有效策略。
+   本脚本改为<strong>锁存式</strong>：按一次持续生效，直到按其他方向键或空格，使录制可单人完成且标签分布合理。</li>
+</ol>
+<p>按键映射：<code>W/↑</code> 前进、<code>S/↓</code> 后退、<code>A/←</code> 左转、<code>D/→</code> 右转、<code>Q/E</code> 前进+左转/右转、<code>空格</code> 归零、<code>R</code> 重置位姿、<code>X</code> 退出。</p>
+<h3 id="52-trainpy">5.2 训练脚本 <code>train.py</code></h3>
+<p>除训练主流程外，本文件还<strong>定义了网络结构 <code>ROVSteeringNet</code> 与预处理函数 <code>preprocess_image</code></strong>，
+供 <code>test_infer.py</code> 与 <code>infer_node.py</code> 直接 import：</p>
+<pre class="highlight"><code class="language-python">try:
+    from rov_e2e.train import ROVSteeringNet, preprocess_image
+except ImportError:                     # 未 colcon 安装时以脚本方式运行
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from rov_e2e.train import ROVSteeringNet, preprocess_image</code></pre>
+<p><strong>为什么要把预处理集中到一处</strong>：端到端策略最常见的隐性 bug 是"训练与部署的预处理不一致"
+（缩放插值方式、通道顺序、归一化统计量不同），会导致离线误差很低但上线行为异常。
+本模块让训练与推理共用同一个 <code>preprocess_image()</code>，从结构上消除该风险。</p>
+<p>训练使用 Adam 优化器（初始学习率 <code>1e-3</code>）配合 <code>StepLR</code>（每 10 轮衰减为 0.5 倍），
+按 <code>val-split=0.2</code> 划分验证集，<strong>保留验证集 MSE 最低的权重</strong>而非最后一轮权重，
+避免小数据集上的过拟合。训练结束后输出 <code>model.pth</code> 与 <code>training_curve.png</code>。</p>
+<p><code>model.pth</code> 中保存的不只是权重，还包含推理所需的元信息：</p>
+<pre class="highlight"><code class="language-python">payload = {
+    'state_dict': model.state_dict(),
+    'width': width, 'height': height,          # 输入分辨率
+    'norm_mean': [...], 'norm_std': [...],     # 归一化参数
+    'arch': 'ROVSteeringNet',
+}</code></pre>
+<p>这样推理端无需硬编码分辨率与归一化参数，避免与训练端不一致。</p>
+<h3 id="53-test_inferpy">5.3 离线测试 <code>test_infer.py</code></h3>
+<p>不加载 ROS、不启动 MuJoCo，直接读取 <code>model.pth</code> 对数据集图像前向推理，
+逐张打印「预测值 / 真值 / 误差」并统计平均绝对误差：</p>
+<pre class="highlight"><code class="language-text">  文件            预测(前进,转向)      真值(前进,转向)      误差
+  000021.png      (+0.942, -0.118)    (+1.000, +0.000)    0.1304
+  000104.png      (+0.887, +0.643)    (+1.000, +1.000)    0.3736
+  ...
+  平均绝对误差  forward MAE = ...
+  平均绝对误差  turn    MAE = ...</code></pre>
+<p>加 <code>--plot</code> 可输出 <code>test_infer_result.png</code>（预测值 vs 真值散点图，理想情况点应贴近对角线）。</p>
+<h3 id="54-ros-2-infer_nodepy">5.4 ROS 2 推理节点 <code>infer_node.py</code></h3>
+<p>订阅 <code>/rov/camera/image_raw</code>，把 <code>sensor_msgs/Image</code> 解码为 <code>(H, W, 3)</code> 数组后推理，
+再按固定频率发布 <code>/cmd_vel</code>：</p>
+<pre class="highlight"><code class="language-python">def _image_callback(self, msg: Image):
+    frame = self._msg_to_array(msg)                       # 兼容 rgb8 / bgr8 与行填充
+    arr = preprocess_image(PILImage.fromarray(frame), self.width, self.height)
+    x = torch.from_numpy(arr.transpose(2, 0, 1)).unsqueeze(0).to(self.device)
+    with torch.no_grad():
+        out = self.model(x)[0].cpu().numpy()
+    self.forward = float(np.clip(out[0] * self.forward_gain, -self.max_forward, self.max_forward))
+    self.turn    = float(np.clip(out[1] * self.turn_gain,    -self.max_turn,    self.max_turn))</code></pre>
+<p>工程细节：</p>
+<ul>
+<li><strong>QoS 使用 <code>BEST_EFFORT</code></strong>：与多数仿真相机发布者的默认 QoS 匹配，避免因 QoS 不兼容而一帧都收不到（这是 ROS 2 相机话题最常见的"订阅了但没数据"原因）；</li>
+<li><strong><code>_publish_callback</code> 定时发布</strong>：新图像未到达时保持上一次输出，而不是让控制量掉到 0，
+  避免相机帧率抖动导致推力频繁断续；</li>
+<li><strong><code>destroy_node</code> 补发一次零指令</strong>：退出时主动归零，避免 ROV 带着上一帧推力继续冲撞；</li>
+<li><strong>权重缺失时给出可操作的报错</strong>，直接打印采集与训练命令，而不是抛裸异常。</li>
+</ul>
+<h3 id="55-mainlaunchpy">5.5 一键启动 <code>main.launch.py</code></h3>
+<pre class="highlight"><code class="language-bash">ros2 launch rov_e2e main.launch.py</code></pre>
+<p>启动 <code>mujoco_sim_node</code>（仿真）与 <code>infer_node</code>（推理）两个节点，并注入渲染后端环境变量：</p>
+<pre class="highlight"><code class="language-python">set_gl   = SetEnvironmentVariable('MUJOCO_GL', LaunchConfiguration('mujoco_gl'))
+set_pygl = SetEnvironmentVariable('PYOPENGL_PLATFORM', LaunchConfiguration('mujoco_gl'))</code></pre>
+<div class="admonition note">
+<p class="admonition-title">为什么直接起 <code>mujoco_sim_node</code>，而不 include <code>rov_mujoco/main.launch.py</code></p>
+<p><code>rov_mujoco</code> 的 launch 会<strong>无条件</strong>一并拉起 <code>keyboard_teleop_node</code>，
+而它同样向 <code>/cmd_vel</code> 发指令，会与推理节点<strong>抢控制权</strong>，导致 ROV 动作抖动。
+因此本 launch 直接实例化仿真节点，仅通过 <code>enable_teleop:=true</code> 按需追加遥控节点。</p>
+</div>
+<p><code>SetEnvironmentVariable</code> 是必需的而非可选：<code>MUJOCO_GL</code> 必须在 <code>import mujoco</code> <strong>之前</strong>生效，
+在 Python 代码里设置已经太晚（<code>mujoco</code> 已在模块顶层导入）。</p>
+<h3 id="56-rov_mujoco">5.6 使相机真正渲染场景（对 <code>rov_mujoco</code> 的必要改动）</h3>
+<p>本作业在 <code>mujoco_sim_node.py</code> 中新增了一个参数：</p>
+<pre class="highlight"><code class="language-python">self.declare_parameter('enable_camera_renderer', False)
+...
+self.camera = UnderwaterCamera(self.model, self.data, camera_name='forward_cam',
+                               enable_renderer=enable_camera_renderer)</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">为什么必须开这个开关——这是本作业最容易踩的坑</p>
+<p><code>rov_mujoco.camera_sensor.UnderwaterCamera</code> 的 <code>enable_renderer</code> <strong>默认是 <code>False</code></strong>。
+在该默认值下 <code>render()</code> 会走"轻量级水下色彩缓冲区"分支，返回一张
+<strong>每个像素都相同的固定蓝绿底色图像</strong>，其中<strong>不含任何场景信息</strong>：</p>
+<pre class="highlight"><code class="language-python"># camera_sensor.py 中 enable_renderer=False 时的分支
+img = np.zeros((self.height, self.width, 3), dtype=np.uint8)
+img[:, :, 0] = 15    # 极低红光
+img[:, :, 1] = 85    # 中等绿光
+img[:, :, 2] = 135   # 蓝光主导</code></pre>
+<p>也就是说，<code>/rov/camera/image_raw</code> <strong>一直在正常发图、<code>ros2 topic hz</code> 也一切正常</strong>，
+但窗口里的画面永远一模一样。用它采集的数据集，输入与标签之间不存在任何可学习的关系，
+网络只能退化成一个常数输出——<strong>而整个过程不会报任何错</strong>。
+这是比"相机完全没数据"更隐蔽的失败模式。</p>
+<p>因此本作业在采集与在线运行时都显式打开真实渲染；<code>rov_mujoco</code> 原有的
+默认行为（<code>False</code>）保持不变，以免与图形视窗抢占 OpenGL 上下文。</p>
+</div>
+<p><code>rov_e2e/launch/main.launch.py</code> 中相应地传入：</p>
+<pre class="highlight"><code class="language-python">sim = Node(
+    package='rov_mujoco', executable='mujoco_sim_node', ...,
+    parameters=[{..., 'enable_camera_renderer': True}])</code></pre>
+<p>该值由 launch 参数 <code>enable_camera_renderer</code>（默认 <code>true</code>）控制，
+如需临时关闭可用 <code>ros2 launch rov_e2e main.launch.py enable_camera_renderer:=false</code>。</p>
+<p><code>collect_data.py</code> 则在自己构造相机时直接传 <code>enable_renderer=True</code>，
+并检查 <code>camera.renderer is not None</code>，不满足时立即报错退出，
+从源头杜绝"采了一堆纯色图却毫无察觉"。</p>
+<h3 id="57-mainpy-mainsh">5.7 模块统一入口 <code>main.py</code> / <code>main.sh</code></h3>
+<p>按作业要求，本模块的入口以 <code>main.</code> 开头，且<strong>整个模块可以通过该入口直接运行</strong>。
+本模块提供三层入口，任选其一：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">入口</th>
+<th style="text-align: left;">用法</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>main.sh</code></td>
+<td style="text-align: left;"><code>bash src/water/rov_e2e/main.sh run</code></td>
+<td style="text-align: left;"><strong>推荐</strong>。自动 <code>source</code> ROS 2 与工作空间环境、设置 <code>MUJOCO_GL=osmesa</code>，再转交 <code>main.py</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>main.py</code></td>
+<td style="text-align: left;"><code>python3 src/water/rov_e2e/main.py train</code></td>
+<td style="text-align: left;">纯 Python 入口，需自行加载 ROS 环境</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>main.launch.py</code></td>
+<td style="text-align: left;"><code>ros2 launch rov_e2e main.launch.py</code></td>
+<td style="text-align: left;">ROS 2 标准 launch 入口，一键启动仿真 + 推理闭环</td>
+</tr>
+</tbody>
+</table>
+<p><code>main.py</code> 用子命令覆盖模块的全部能力，不带子命令时默认执行 <code>run</code>（即跑通整个闭环）：</p>
+<pre class="highlight"><code class="language-bash">python3 src/water/rov_e2e/main.py              # = run，一键启动完整闭环
+python3 src/water/rov_e2e/main.py collect --frames 600
+python3 src/water/rov_e2e/main.py train --epochs 30
+python3 src/water/rov_e2e/main.py test --samples 10 --plot
+python3 src/water/rov_e2e/main.py run model_path:=/abs/path/model.pth</code></pre>
+<pre class="highlight"><code class="language-python">def main(argv=None):
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    if not getattr(args, 'command', None):
+        # 不带子命令时默认为 run，方便「直接跑整个模块」
+        argv = list(argv) if argv is not None else sys.argv[1:]
+        args = parser.parse_args(['run'] + argv)
+    return args.func(args) or 0</code></pre>
+<p>实现要点：<code>collect</code> / <code>train</code> / <code>test</code> 三个子命令<strong>在本进程内</strong>直接调用对应模块的 <code>main()</code>，
+保持异常栈与日志完整、便于排查；<code>run</code> 子命令需要 ROS 2 launch 的进程编排能力，因此转交
+<code>ros2 launch rov_e2e main.launch.py</code>（找不到 <code>ros2</code> 时给出加载环境的明确提示，而不是抛裸异常）。</p>
+<p>此外模块内附带 <code>.gitattributes</code>（<code>*.sh text eol=lf</code>），避免仓库在 Windows 上开启
+<code>core.autocrlf=true</code> 时把 <code>main.sh</code> 检出成 CRLF，导致 Linux 下报
+<code>$'\r': command not found</code>。</p>
+<hr/>
+<h2 id="6">6. 分步运行指南</h2>
+<h3 id="61">6.1 编译功能包</h3>
+<pre class="highlight"><code class="language-bash">cd ~/ros2
+source /opt/ros/humble/setup.bash
+
+# 需要同时编译 rov_mujoco（本包依赖其仿真节点与模型）
+colcon build --packages-select rov_mujoco rov_e2e --symlink-install
+source install/setup.bash</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">务必加 <code>--symlink-install</code></p>
+<p>该选项让安装目录符号链接到源码目录。由于 <code>model.pth</code> 是训练<strong>之后</strong>才产生的，
+使用 symlink 安装后无需重新 <code>colcon build</code>，<code>infer_node</code> 就能自动在源码树中找到权重。</p>
+</div>
+<p><strong>预期编译输出</strong>：</p>
+<pre class="highlight"><code class="language-text">Starting &gt;&gt;&gt; rov_mujoco
+Finished &lt;&lt;&lt; rov_mujoco [2.85s]
+Starting &gt;&gt;&gt; rov_e2e
+Finished &lt;&lt;&lt; rov_e2e [0.42s]
+
+Summary: 2 packages finished [3.51s]</code></pre>
+<h3 id="62">6.2 安装依赖与配置软件渲染</h3>
+<pre class="highlight"><code class="language-bash"># Python 依赖（版本已在 requirements.txt 中固定）
+pip3 install -r src/water/rov_e2e/requirements.txt
+
+# 无显卡虚拟机：OSMesa 软件渲染所需的系统库与 Python 绑定
+sudo apt install -y libosmesa6 libgl1 libglfw3
+pip3 install PyOpenGL
+
+# 让 MuJoCo 走 CPU 软件渲染（每个新终端都要执行，或写入 ~/.bashrc）
+export MUJOCO_GL=osmesa
+export PYOPENGL_PLATFORM=osmesa</code></pre>
+<p>验证渲染后端是否可用：</p>
+<pre class="highlight"><code class="language-bash">python3 -c "import mujoco, os; print('MUJOCO_GL =', os.environ.get('MUJOCO_GL')); \
+m=mujoco.MjModel.from_xml_path('src/water/rov_mujoco/models/underwater_rov_with_arm.xml'); \
+r=mujoco.Renderer(m, 120, 160); d=mujoco.MjData(m); mujoco.mj_forward(m,d); \
+s=r.update_scene(d, camera='forward_cam'); f=r.render(); print('渲染成功, 图像尺寸 =', f.shape)"</code></pre>
+<p>预期输出：</p>
+<pre class="highlight"><code class="language-text">MUJOCO_GL = osmesa
+渲染成功, 图像尺寸 = (120, 160, 3)</code></pre>
+<p>若此处报 GL 相关错误，请<strong>先解决渲染问题再进行采集</strong>。</p>
+<p><strong>更关键的一步：验证画面会随位姿变化。</strong> 只有"能渲染"还不够，必须确认渲染的是<strong>场景</strong>
+而不是固定底色（这是 5.6 节那个坑的直接检测手段）：</p>
+<pre class="highlight"><code class="language-bash">python3 -c "
+import os; os.environ.setdefault('MUJOCO_GL','osmesa')
+import numpy as np, mujoco
+m = mujoco.MjModel.from_xml_path('src/water/rov_mujoco/models/underwater_rov_with_arm.xml')
+d = mujoco.MjData(m)
+r = mujoco.Renderer(m, 120, 160)
+q = m.jnt_qposadr[m.body_jntadr[mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_BODY,'rov')]]
+r.update_scene(d, camera='forward_cam'); a = r.render().astype(np.int16)
+d.qpos[q+1] += 0.8                      # 把 ROV 横向挪动 0.8 m
+mujoco.mj_forward(m, d)
+r.update_scene(d, camera='forward_cam'); b = r.render().astype(np.int16)
+print('位姿变化后画面平均像素差 =', float(np.abs(a-b).mean()))
+"</code></pre>
+<p>判读标准：<strong>平均像素差应显著大于 0</strong>（通常几十以上）。
+若结果接近 0，说明相机没有真正渲染场景，此时采集到的数据集毫无信息量
+（参见 5.6 节与 Q1）。</p>
+<h3 id="63">6.3 采集数据集</h3>
+<pre class="highlight"><code class="language-bash">cd ~/ros2
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+export MUJOCO_GL=osmesa
+
+python3 src/water/rov_e2e/rov_e2e/collect_data.py --frames 600 --sample-rate 10</code></pre>
+<p>终端会打印操作说明，随后即可用键盘驾驶 ROV：</p>
+<ul>
+<li><code>W</code> / <code>↑</code> 前进，<code>S</code> / <code>↓</code> 后退</li>
+<li><code>A</code> / <code>←</code> 左转，<code>D</code> / <code>→</code> 右转</li>
+<li><code>Q</code> / <code>E</code> 前进同时左转 / 右转（用于覆盖转弯中的前进样本）</li>
+<li><code>空格</code> 归零悬停，<code>R</code> 重置位姿，<code>X</code> 保存并退出</li>
+</ul>
+<p><strong>采集策略建议</strong>：让 ROV 在画面中经历「左偏 → 居中 → 右偏」三种状态，
+交替给出左转 / 直行 / 右转指令。若长时间保持同一动作，
+数据集中标签近乎为常数，网络会退化为常数输出，自动航行时只会直冲。</p>
+<p><strong>预期输出</strong>：</p>
+<pre class="highlight"><code class="language-text">  已采集 20/600 帧 | 位置=(+0.42, -0.03, -1.00) | 指令=(+1.0, +0.0)
+  已采集 40/600 帧 | 位置=(+0.85, +0.11, -1.00) | 指令=(+1.0, -1.0)
+  ...
+采集结束：共保存 600 帧
+  图像: /home/&lt;user&gt;/ros2/src/water/rov_e2e/dataset/images
+  标签: /home/&lt;user&gt;/ros2/src/water/rov_e2e/dataset/labels.csv</code></pre>
+<h3 id="64-modelpth">6.4 训练得到 <code>model.pth</code></h3>
+<pre class="highlight"><code class="language-bash">python3 src/water/rov_e2e/rov_e2e/train.py --epochs 30</code></pre>
+<p><strong>预期输出</strong>（数值以实际采集数据为准）：</p>
+<pre class="highlight"><code class="language-text">==============================================================
+  ROV 端到端控制网络训练
+==============================================================
+  数据集      : /home/&lt;user&gt;/ros2/src/water/rov_e2e/dataset
+  样本总数    : 600  (训练 480 / 验证 120)
+  输入分辨率  : 160x120
+  网络参数量  : 25,954
+  设备        : cpu  轮数: 30  批大小: 32
+--------------------------------------------------------------
+  Epoch   1/30  train_MSE=...  val_MSE=...
+  ...
+  Epoch  30/30  train_MSE=...  val_MSE=...
+--------------------------------------------------------------
+  ✅ 权重已保存: .../rov_e2e/model.pth
+     最佳验证 MSE: ...
+  ✅ 损失曲线: .../rov_e2e/training_curve.png
+==============================================================</code></pre>
+<h3 id="65">6.5 离线测试权重</h3>
+<pre class="highlight"><code class="language-bash">python3 src/water/rov_e2e/rov_e2e/test_infer.py --samples 10 --plot</code></pre>
+<p>该步骤<strong>不启动 ROS</strong>，用于证明 <code>model.pth</code> 真实可用（作业硬性要求之二）。
+输出逐样本的预测值与真值对比、平均绝对误差，并可选生成散点图。</p>
+<h3 id="66">6.6 一键运行整套仿真</h3>
+<pre class="highlight"><code class="language-bash">cd ~/ros2
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+
+ros2 launch rov_e2e main.launch.py</code></pre>
+<p>推理节点会持续打印控制输出：</p>
+<pre class="highlight"><code class="language-text">[rov_e2e_infer_node] 权重已加载: .../model.pth | 输入 160x120 | 训练轮数=30
+[rov_e2e_infer_node] 端到端推理节点已启动 | 订阅 /rov/camera/image_raw → 发布 /cmd_vel
+[rov_e2e_infer_node] 推理 #20 | 图像 160x120 | 前进推力=+0.9421 | 转向=-0.1132
+[rov_e2e_infer_node] 推理 #40 | 图像 160x120 | 前进推力=+0.9105 | 转向=+0.2264</code></pre>
+<p>另开终端验证闭环数据流：</p>
+<pre class="highlight"><code class="language-bash">source /opt/ros/humble/setup.bash
+source install/setup.bash
+
+ros2 topic list
+ros2 topic hz /rov/camera/image_raw      # 确认相机真的有数据（约 10 Hz）
+ros2 topic echo /cmd_vel                 # 观察推理输出的控制指令
+ros2 topic echo /rov/odom                # 观察 ROV 位姿是否持续推进</code></pre>
+<h3 id="67">6.7 常见问题排查</h3>
+<h4 id="q1">Q1: 相机话题有数据，但训练出来的网络只会输出常数（不转弯 / 不动）</h4>
+<p><strong>原因</strong>：<code>enable_camera_renderer</code> 没有打开，<code>/rov/camera/image_raw</code> 发布的是
+<strong>恒定不变的合成底色图像</strong>（详见 5.6 节）。话题频率、图像尺寸、编码全部正常，
+所以 <code>ros2 topic hz</code> <strong>查不出问题</strong>，必须比对图像内容。</p>
+<p><strong>解决</strong>：确认采集与运行时都传入了 <code>enable_renderer=True</code> /
+<code>enable_camera_renderer:=true</code>，并用 6.2 节的"两帧是否相同"自检脚本验证画面确实在变化。</p>
+<h4 id="q1b-rovcameraimage_raw">Q1b: <code>/rov/camera/image_raw</code> 完全没有数据</h4>
+<p><strong>原因</strong>：<code>mujoco_sim_node</code> 启动时 sonar / camera / trajectory 模块整体导入失败，
+导致 <code>self.camera</code> 被置为 <code>None</code>。</p>
+<p><strong>解决</strong>：查看 <code>mujoco_sim_node</code> 启动日志中的告警；确认
+<code>colcon build --packages-select rov_mujoco rov_e2e</code> 成功、且已 <code>source install/setup.bash</code>。</p>
+<h4 id="q2-modulenotfounderror-no-module-named-mujoco">Q2: 运行提示 <code>ModuleNotFoundError: No module named 'mujoco'</code></h4>
+<pre class="highlight"><code class="language-bash">pip3 install -r src/water/rov_e2e/requirements.txt</code></pre>
+<h4 id="q3-cannot-import-name-_rclpy_pybind11-so-isnt-present">Q3: <code>cannot import name '_rclpy_pybind11'</code> / <code>.so isn't present</code></h4>
+<p>在 Ubuntu 20.04 教学虚拟机中误用了 Python 3.10 环境。ROS 2 Humble 的 C 扩展是针对
+<strong>Python 3.8</strong> 编译的，必须使用系统默认 <code>python3</code>（或 3.8 的 conda 环境）：</p>
+<pre class="highlight"><code class="language-bash">conda deactivate          # 或 conda activate nn_3.8
+python3 --version         # 应输出 Python 3.8.x</code></pre>
+<h4 id="q4-ros2-launch-package-rov_e2e-not-found">Q4: <code>ros2 launch</code> 报 <code>Package 'rov_e2e' not found</code></h4>
+<p>当前终端未加载工作空间环境：</p>
+<pre class="highlight"><code class="language-bash">source install/setup.bash</code></pre>
+<h4 id="q5-modelpth">Q5: 推理节点报 <code>找不到权重文件 ... model.pth</code></h4>
+<p>尚未训练，或未使用 <code>--symlink-install</code> 编译导致探测路径失效：</p>
+<pre class="highlight"><code class="language-bash"># 方式一：先完成 6.3 / 6.4 的采集与训练
+# 方式二：显式指定权重绝对路径
+ros2 launch rov_e2e main.launch.py model_path:=$PWD/src/water/rov_e2e/model.pth</code></pre>
+<h4 id="q6-rov">Q6: ROV 自动航行时只会直冲、不会转弯</h4>
+<p>数据集类别不平衡——转弯样本过少。重新采集时确保充分覆盖左转 / 右转动作，
+并检查 <code>test_infer.py</code> 中 <code>turn MAE</code> 是否明显大于 <code>forward MAE</code>。</p>
+<hr/>
+<h3 id="68">6.8 多场景测试与性能评价</h3>
+<p>对应作业要求「所有任务均在仿真环境下完成，推荐使用多个场景进行测试，且包含性能评价」。</p>
+<h4 id="1-configscenariosyaml">（1）场景定义 <code>config/scenarios.yaml</code></h4>
+<p>除基准场景外，另设 5 个场景考察泛化能力（静水/洋流、不同初始深度与艏向）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">场景</th>
+<th style="text-align: left;">环境</th>
+<th style="text-align: left;">初始深度</th>
+<th style="text-align: left;">初始艏向</th>
+<th style="text-align: left;">考察点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>S1_still_water_shallow</code></td>
+<td style="text-align: left;">静水</td>
+<td style="text-align: left;">−1.0 m</td>
+<td style="text-align: left;">0°</td>
+<td style="text-align: left;">基准场景（采集/训练均用它）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>S2_still_water_deep</code></td>
+<td style="text-align: left;">静水</td>
+<td style="text-align: left;">−3.0 m</td>
+<td style="text-align: left;">0°</td>
+<td style="text-align: left;">深度变化对视觉的影响</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>S3_yaw_offset_left</code></td>
+<td style="text-align: left;">静水</td>
+<td style="text-align: left;">−1.0 m</td>
+<td style="text-align: left;">+15°</td>
+<td style="text-align: left;">网络的纠偏能力</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>S4_yaw_offset_right</code></td>
+<td style="text-align: left;">静水</td>
+<td style="text-align: left;">−1.0 m</td>
+<td style="text-align: left;">−15°</td>
+<td style="text-align: left;">与 S3 对称</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>S5_mild_current</code></td>
+<td style="text-align: left;">洋流 0.3 m/s</td>
+<td style="text-align: left;">−1.5 m</td>
+<td style="text-align: left;">0°</td>
+<td style="text-align: left;">抗流鲁棒性</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>S6_strong_current</code></td>
+<td style="text-align: left;">洋流 0.8 m/s</td>
+<td style="text-align: left;">−2.0 m</td>
+<td style="text-align: left;">0°</td>
+<td style="text-align: left;">压力测试</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2-evaluatepy">（2）评价脚本 <code>evaluate.py</code> 的四种模式</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">模式</th>
+<th style="text-align: left;">命令</th>
+<th style="text-align: left;">是否需要 ROS/MuJoCo</th>
+<th style="text-align: left;">产出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>offline</code></td>
+<td style="text-align: left;"><code>main.py evaluate offline --samples 0</code></td>
+<td style="text-align: left;">不需要（需 torch）</td>
+<td style="text-align: left;">精度与推理耗时指标 <code>evaluation_report.json</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>record</code></td>
+<td style="text-align: left;"><code>main.py evaluate record --out runs/S1_odom.csv --duration 30</code></td>
+<td style="text-align: left;">需要</td>
+<td style="text-align: left;">一次闭环航行的里程计 CSV</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>report</code></td>
+<td style="text-align: left;"><code>main.py evaluate report --log runs/S1_odom.csv --target-distance 5.0</code></td>
+<td style="text-align: left;">不需要</td>
+<td style="text-align: left;">闭环指标 JSON + 曲线图</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>compare</code></td>
+<td style="text-align: left;"><code>main.py evaluate compare --reports runs/*_report.json --out runs/compare.md</code></td>
+<td style="text-align: left;">不需要</td>
+<td style="text-align: left;">多场景对比 Markdown 表</td>
+</tr>
+</tbody>
+</table>
+<h4 id="3_1">（3）指标定义</h4>
+<p><strong>开环指标</strong>（模型自身的精度与实时性）：</p>
+<p>
+<script type="math/tex; mode=display">
+\text{MAE}_u = \frac{1}{N}\sum_{i=1}^{N}\left|\hat u_i - u_i\right|, \qquad
+\text{MAE}_r = \frac{1}{N}\sum_{i=1}^{N}\left|\hat r_i - r_i\right|
+</script>
+</p>
+<p>
+<script type="math/tex; mode=display">
+\text{MSE} = \frac{1}{2N}\sum_{i=1}^{N}\left[(\hat u_i-u_i)^2 + (\hat r_i-r_i)^2\right]
+</script>
+</p>
+<p>单帧推理耗时取均值与 P95；理论最高推理频率 <script type="math/tex">f_{\max} = 1000 / \bar{t}</script>（ms）。</p>
+<p><strong>闭环指标</strong>（以初始艏向 <script type="math/tex">\psi_0</script> 建立前进/横向坐标系）：</p>
+<p>
+<script type="math/tex; mode=display">
+\boldsymbol{u} = \begin{bmatrix}\cos\psi_0 \\ \sin\psi_0\end{bmatrix}, \qquad
+\boldsymbol{v} = \begin{bmatrix}-\sin\psi_0 \\ \cos\psi_0\end{bmatrix}
+</script>
+</p>
+<p>前进距离与横向偏差：</p>
+<p>
+<script type="math/tex; mode=display">
+d = (\boldsymbol{p}_{\text{end}} - \boldsymbol{p}_{\text{start}})\cdot\boldsymbol{u}, \qquad
+e(t) = \left|(\boldsymbol{p}(t) - \boldsymbol{p}_{\text{start}})\cdot\boldsymbol{v}\right|
+</script>
+</p>
+<p>任务成功率（要求走够距离且横向不越界）：</p>
+<p>
+<script type="math/tex; mode=display">
+\text{Success} = \mathbb{1}\left[\, d \ge d_{\text{target}} \;\wedge\; \max_t e(t) \le e_{\text{tol}} \,\right]
+</script>
+</p>
+<p>另记录平均前进速度 <script type="math/tex">d / T</script> 与深度波动 <script type="math/tex">\sigma_z = \mathrm{std}(z)</script>。</p>
+<h4 id="4">（4）多场景对比表</h4>
+<pre class="highlight"><code class="language-bash"># 逐个场景跑闭环并记录，再汇总
+for s in S1_still_water_shallow S2_still_water_deep S3_yaw_offset_left \
+         S4_yaw_offset_right S5_mild_current S6_strong_current; do
+    echo "=== 场景 $s ==="
+    # 按 config/scenarios.yaml 中该场景的参数启动仿真与推理（见 6.6 节）
+    ros2 launch rov_e2e main.launch.py &amp;
+    sleep 3
+    python3 src/water/rov_e2e/rov_e2e/evaluate.py record \
+        --out runs/${s}_odom.csv --duration 30
+    pkill -f mujoco_sim_node; pkill -f infer_node; sleep 2
+    python3 src/water/rov_e2e/rov_e2e/evaluate.py report \
+        --log runs/${s}_odom.csv --target-distance 5.0 --lateral-tol 0.5 --plot
+done
+
+python3 src/water/rov_e2e/rov_e2e/evaluate.py compare --reports runs/*_report.json \
+    --out runs/compare.md</code></pre>
+<p><code>compare.md</code> 会生成如下形式的对比表（数值待实测填充）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">场景</th>
+<th style="text-align: left;">前进距离(m)</th>
+<th style="text-align: left;">平均速度(m/s)</th>
+<th style="text-align: left;">横向MAE(m)</th>
+<th style="text-align: left;">横向最大(m)</th>
+<th style="text-align: left;">深度σ(m)</th>
+<th style="text-align: left;">成功</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">S1_still_water_shallow</td>
+<td style="text-align: left;">0.014</td>
+<td style="text-align: left;">0.0005</td>
+<td style="text-align: left;">0.996</td>
+<td style="text-align: left;">1.672</td>
+<td style="text-align: left;">0.0151</td>
+<td style="text-align: left;">❌</td>
+</tr>
+<tr>
+<td style="text-align: left;">S2_still_water_deep</td>
+<td style="text-align: left;">未实跑</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr>
+<td style="text-align: left;">S3_yaw_offset_left</td>
+<td style="text-align: left;">未实跑</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr>
+<td style="text-align: left;">S4_yaw_offset_right</td>
+<td style="text-align: left;">未实跑</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr>
+<td style="text-align: left;">S5_mild_current</td>
+<td style="text-align: left;">未实跑</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr>
+<td style="text-align: left;">S6_strong_current</td>
+<td style="text-align: left;">未实跑</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+</tr>
+</tbody>
+</table>
+<p>成功率：<strong>0 / 1（基准场景，0%）</strong> —— 其余 5 个场景配置已就绪但尚未实跑，原因与改进方向见 7.4 节。</p>
+<hr/>
+<h2 id="7">7. 实验结果</h2>
+<blockquote>
+<p>本节全部数据均在 <strong>Ubuntu 20.04.6 LTS + ROS 2 Humble + MuJoCo 3.1.6 +
+PyTorch 2.4.1+cpu</strong> 的 VMware 虚拟机中实测得到（无独立显卡，CPU 训练与推理，
+渲染后端 MUJOCO_GL=osmesa）。</p>
+</blockquote>
+<h3 id="71">7.1 数据集统计</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">项目</th>
+<th style="text-align: left;">数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">采集帧数</td>
+<td style="text-align: left;">400</td>
+</tr>
+<tr>
+<td style="text-align: left;">图像分辨率</td>
+<td style="text-align: left;">160 × 120（RGB）</td>
+</tr>
+<tr>
+<td style="text-align: left;">训练 / 验证划分</td>
+<td style="text-align: left;">320 / 80（80% / 20%）</td>
+</tr>
+<tr>
+<td style="text-align: left;">forward 取值范围</td>
+<td style="text-align: left;">0.500 ~ 1.000</td>
+</tr>
+<tr>
+<td style="text-align: left;">turn 取值范围</td>
+<td style="text-align: left;">−1.000 ~ +1.000，共 307 个不同取值</td>
+</tr>
+<tr>
+<td style="text-align: left;">turn 标准差</td>
+<td style="text-align: left;">0.465</td>
+</tr>
+<tr>
+<td style="text-align: left;">转向分箱（&lt;−0.4 / −0.4~−0.1 / −0.1~+0.1 / +0.1~+0.4 / &gt;+0.4）</td>
+<td style="text-align: left;">82 / 61 / 63 / 122 / 72</td>
+</tr>
+<tr>
+<td style="text-align: left;">数据集体积</td>
+<td style="text-align: left;">4.3 MB</td>
+</tr>
+</tbody>
+</table>
+<p>转向标签覆盖全部 5 个区间且分布均匀，不存在类别坍缩，适合回归式行为克隆。</p>
+<h3 id="72">7.2 训练过程</h3>
+<p><img alt="训练损失曲线" src="../../img/water/rov_e2e_training_curve.png"/></p>
+<p><em>图 7.1：训练集与验证集 MSE 随轮次下降曲线，由 train.py 自动生成。</em></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">指标</th>
+<th style="text-align: left;">数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">网络参数量</td>
+<td style="text-align: left;">25,954</td>
+</tr>
+<tr>
+<td style="text-align: left;">训练轮数</td>
+<td style="text-align: left;">40</td>
+</tr>
+<tr>
+<td style="text-align: left;">第 1 轮 train MSE</td>
+<td style="text-align: left;">0.300596</td>
+</tr>
+<tr>
+<td style="text-align: left;">第 40 轮 train MSE</td>
+<td style="text-align: left;">0.009970</td>
+</tr>
+<tr>
+<td style="text-align: left;">最佳验证 MSE</td>
+<td style="text-align: left;"><strong>0.007312</strong>（第 38 轮）</td>
+</tr>
+<tr>
+<td style="text-align: left;">权重文件体积</td>
+<td style="text-align: left;">109.1 KB</td>
+</tr>
+</tbody>
+</table>
+<p>训练集与验证集损失同步下降、无发散，验证 MSE 略低于训练 MSE，说明在 400 帧规模下
+网络容量（约 2.6 万参数）与任务复杂度相匹配，未出现过拟合。</p>
+<h3 id="73">7.3 离线推理验证</h3>
+<p><img alt="离线推理预测值 vs 真值" src="../../img/water/rov_e2e_test_infer.png"/></p>
+<p><em>图 7.2：离线推理预测值与教师标签的散点对比。</em></p>
+<p>在<strong>全部 400 帧</strong>上评价（<code>python3 evaluate.py offline --samples 0</code>）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">指标</th>
+<th style="text-align: left;">数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">前进 MAE</td>
+<td style="text-align: left;">0.0682</td>
+</tr>
+<tr>
+<td style="text-align: left;">转向 MAE</td>
+<td style="text-align: left;">0.0706</td>
+</tr>
+<tr>
+<td style="text-align: left;">整体 MSE</td>
+<td style="text-align: left;">0.008146</td>
+</tr>
+<tr>
+<td style="text-align: left;">单帧推理耗时（均值 / P50 / P95 / 最大）</td>
+<td style="text-align: left;">1.27 / 1.32 / 2.11 / 12.43 ms</td>
+</tr>
+<tr>
+<td style="text-align: left;">理论最高推理频率</td>
+<td style="text-align: left;">789 Hz</td>
+</tr>
+</tbody>
+</table>
+<p>标签动态范围为 2.0，MAE 约 0.07 表明网络输出与教师高度一致；单帧 1.27 ms 的推理
+耗时远低于仿真 500 Hz 物理步进的周期（2 ms），满足在线闭环的实时性要求。</p>
+<h3 id="74">7.4 在线闭环自主航行</h3>
+<p><img alt="水下 ROV 端到端视觉自主航行" src="../../img/water/rov_e2e_autonomous.png"/></p>
+<p><em>图 7.3（实机截图）：<code>ros2 launch rov_e2e main.launch.py</code> 一键启动后，
+<code>mujoco_sim_node</code> 与 <code>rov_e2e_infer_node</code> 同时运行。</em></p>
+<p>一键 launch 可同时拉起仿真与推理两个节点，<code>/rov/camera/image_raw</code>、
+<code>/cmd_vel</code>、<code>/rov/odom</code> 等话题均正常发布。记录 30 秒闭环航行的 <code>/rov/odom</code>
+并用 <code>python3 evaluate.py report</code> 统计：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">指标</th>
+<th style="text-align: left;">数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">航行时长</td>
+<td style="text-align: left;">29.79 s</td>
+</tr>
+<tr>
+<td style="text-align: left;">沿初始艏向的净位移</td>
+<td style="text-align: left;">0.014 m</td>
+</tr>
+<tr>
+<td style="text-align: left;">平均前进速度</td>
+<td style="text-align: left;">0.0005 m/s</td>
+</tr>
+<tr>
+<td style="text-align: left;">横向偏差（平均 / 最大 / 标准差）</td>
+<td style="text-align: left;">0.996 / 1.672 / 0.421 m</td>
+</tr>
+<tr>
+<td style="text-align: left;">深度（平均 / 标准差）</td>
+<td style="text-align: left;">−0.96 / 0.0151 m</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">如实记录：闭环未实现直线自主航行</p>
+<p>深度控制稳定（标准差仅 0.015 m），但<strong>沿初始艏向的净位移仅 0.014 m，而横向偏差
+累计到 1.672 m</strong>，说明 ROV 走的是<strong>弧形/回旋轨迹</strong>而非直线。按
+<code>target_distance = 5 m</code>、<code>lateral_tol = 0.5 m</code> 判定，<strong>任务成功率为 0%</strong>。</p>
+</div>
+<p><strong>原因分析</strong>：</p>
+<ol>
+<li><strong>教师误差信号非单调</strong> —— 视觉伺服教师采用"画面亮度重心居中"，而由多位姿渲染
+   实测可知，偏航 −20° / 0° / +20° / +40° 时亮度重心分别为 0.491 / 0.540 / 0.523 /
+   0.500，<strong>并非随艏向单调变化</strong>。模仿这样一个非单调的反馈律，得到的策略在闭环中
+   形成极限环（回旋），而不是收敛到直行。</li>
+<li><strong>行为克隆缺乏误差恢复能力</strong> —— 一旦因累积误差偏离示范状态分布（分布漂移），
+   策略会持续放大偏差，这是模仿学习相对于闭环控制的固有弱点。</li>
+<li><strong>并非仿真配置问题</strong> —— 采集阶段 ROV 沿 +X 轴由 0.42 m 前进至 4.92 m
+   （见 6.3 节），说明 MuJoCo 动力学、推力映射与深度 PID 均工作正常，
+   问题出在<strong>控制目标的可辨识性</strong>上。</li>
+</ol>
+<p><strong>改进方向</strong>：改用与艏向<strong>单调相关</strong>的视觉基准量（例如与初始帧做一维互相关求水平
+视差，构成"视觉罗盘"），或在采集阶段引入 DAgger 式在线纠偏采样，把策略自身的
+偏离状态也纳入示范分布。</p>
+<h2 id="8">8. 结论与展望</h2>
+<p>本模块在已有 MuJoCo 水下 ROV 物理仿真的基础上，完成了从<strong>数据采集 → 网络训练 → 离线验证 → ROS 2 在线闭环</strong>的完整端到端控制链路：</p>
+<ol>
+<li>构建了键盘行为克隆数据集，图像与控制标签严格同步，且与部署时动力学完全一致；</li>
+<li>设计了轻量 CNN 回归网络，以 MSE 为损失、<code>tanh</code> 限幅输出，可在无 GPU 的教学虚拟机上训练；</li>
+<li>提供了不依赖 ROS 的离线验证脚本，量化网络输出与人工标签的一致程度；</li>
+<li>推理节点与仿真节点通过 <code>/rov/camera/image_raw</code> 与 <code>/cmd_vel</code> 构成闭环，一条 <code>ros2 launch rov_e2e main.launch.py</code> 即可复现。</li>
+</ol>
+<h3 id="81">8.1 已知局限（实测）</h3>
+<ul>
+<li><strong>闭环回旋</strong>：如上节所述，当前教师信号非单调导致闭环走不出直线，任务成功率 0%，
+  这是本模块最需要改进的地方；</li>
+<li><strong>仅完成单场景实测</strong>：6.8 节的 6 个场景中目前只完整跑了基准场景
+  <code>S1_still_water_shallow</code>，其余场景的配置已就绪但尚未实跑；</li>
+<li><strong>无时序记忆</strong>：网络为逐帧前馈结构，不含循环单元，无法利用历史判断运动趋势。</li>
+</ul>
+<p><strong>其他局限</strong>：</p>
+<ul>
+<li><strong>分布漂移（distribution shift）</strong>：行为克隆只学到专家状态分布上的映射，
+  一旦 ROV 因累积误差偏离训练分布（例如贴到池壁），网络缺乏恢复能力。
+  缓解方向：在采集时刻意引入偏离—回正样本，或采用 DAgger 迭代式数据增广；</li>
+<li><strong>无时序记忆</strong>：当前网络是逐帧前馈的，不含循环结构，无法利用历史判断运动趋势。
+  可扩展为 CNN + LSTM/GRU，或直接输入连续多帧；</li>
+<li><strong>任务范围有限</strong>：仅在静水、固定通道、两自由度条件下验证，尚未涉及洋流扰动与三维路径跟踪。</li>
+</ul>
+<p><strong>后续扩展方向</strong>：</p>
+<ol>
+<li>引入 <code>rov_mujoco</code> 中已建模的三层级联洋流，研究扰动下的鲁棒性；</li>
+<li>把奖励信号引入训练（如 DRL 或 IRL），摆脱对人工示范的依赖；</li>
+<li>结合已有的多波束前视声呐形成声视觉融合感知，提升浑浊水域下的可靠性。</li>
+</ol></div>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../rov_sonar_slam_navigation/" title="水下声呐 SLAM 占据栅格建图与自主避障导航"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../rov_sonar_slam_navigation/" style="color: #fcfcfc">« Previous</a></span>
+</span>
+</div>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../..";</script>
+<script src="../../js/theme_extra.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../js/umlconvert.js"></script>
+<script src="../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script>mermaid.initialize({});</script></body>
+</html>

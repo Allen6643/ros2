@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>步骤 2：工作空间与功能包 - 模拟器的 ROS 文档</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u6b65\u9aa4 2\uff1a\u5de5\u4f5c\u7a7a\u95f4\u4e0e\u529f\u80fd\u5305";
+        var mkdocs_page_input_path = "chapter\\chap4\\gazebo_02_package.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ubuntu20.04/">安装 ROS</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap5/">5. 机器人感知</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_e2e/">静水环境下单目视觉水下 ROV 端到端神经网络控制</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a></li>
+<li class="breadcrumb-item active">步骤 2：工作空间与功能包</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/chapter/chap4/gazebo_02_package.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="2">步骤 2：工作空间与功能包</h1>
+<blockquote>
+<p>前置条件：完成<a href="../gazebo_01_environment/">步骤 1</a>。
+本步目标：建立 catkin 工作空间，成功编译并找到 <code>mybot_gazebo</code>。
+预计时间：20-30 分钟。</p>
+</blockquote>
+<ul>
+<li><a href="#workspace">1. 创建 Catkin 工作空间</a></li>
+<li><a href="#copy">2. 放入功能包</a></li>
+<li><a href="#structure">3. 功能包目录结构</a></li>
+<li><a href="#build-config">4. 编译配置解析</a></li>
+<li><a href="#build">5. 编译与验证</a></li>
+<li><a href="#debug">6. 常见问题</a></li>
+<li><a href="#acceptance">7. 本步验收</a></li>
+</ul>
+<h2 id="1-catkin">1. 创建 Catkin 工作空间 <span id="workspace"></span></h2>
+<pre class="highlight"><code class="language-bash">mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws
+catkin_make
+source devel/setup.bash</code></pre>
+<p>检查工作空间：</p>
+<pre class="highlight"><code class="language-bash">echo $ROS_PACKAGE_PATH</code></pre>
+<p>输出中应包含：</p>
+<pre class="highlight"><code class="language-text">/home/&lt;用户名&gt;/catkin_ws/src:/opt/ros/noetic/share</code></pre>
+<p>为了避免每次新开终端都手动加载，可以加入 <code>~/.bashrc</code>：</p>
+<pre class="highlight"><code class="language-bash">echo "source /opt/ros/noetic/setup.bash" &gt;&gt; ~/.bashrc
+echo "source ~/catkin_ws/devel/setup.bash" &gt;&gt; ~/.bashrc
+source ~/.bashrc</code></pre>
+<h2 id="2_1">2. 放入功能包 <span id="copy"></span></h2>
+<p>在仓库根目录中，把 <code>mybot_gazebo</code> 复制到工作空间：</p>
+<pre class="highlight"><code class="language-bash">cp -r src/chap4/mybot_gazebo ~/catkin_ws/src/</code></pre>
+<h2 id="3">3. 功能包目录结构 <span id="structure"></span></h2>
+<pre class="highlight"><code class="language-text">mybot_gazebo/
+├── package.xml
+├── CMakeLists.txt
+├── LICENSE
+├── main.sh
+├── README.md
+├── launch/
+│   └── mybot_gazebo.launch
+├── urdf/
+│   └── mybot.urdf.xacro
+├── worlds/
+│   └── mybot_empty.world
+└── scripts/
+    └── move_square.py</code></pre>
+<p>各目录职责：</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>package.xml</code></td>
+<td>声明依赖和包信息</td>
+</tr>
+<tr>
+<td><code>CMakeLists.txt</code></td>
+<td>安装 Python 脚本，安装 launch、urdf、world 文件</td>
+</tr>
+<tr>
+<td><code>main.sh</code></td>
+<td>仓库要求的统一入口，调用 launch 文件启动仿真</td>
+</tr>
+<tr>
+<td><code>launch/</code></td>
+<td>组织 Gazebo、模型、TF 和参数</td>
+</tr>
+<tr>
+<td><code>urdf/</code></td>
+<td>机器人结构和 Gazebo 插件</td>
+</tr>
+<tr>
+<td><code>worlds/</code></td>
+<td>Gazebo 世界文件</td>
+</tr>
+<tr>
+<td><code>scripts/</code></td>
+<td>机器人运动控制节点</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4">4. 编译配置解析 <span id="build-config"></span></h2>
+<p><code>package.xml</code> 至少要声明以下依赖：</p>
+<pre class="highlight"><code class="language-xml">&lt;buildtool_depend&gt;catkin&lt;/buildtool_depend&gt;
+
+&lt;exec_depend&gt;gazebo_ros&lt;/exec_depend&gt;
+&lt;exec_depend&gt;geometry_msgs&lt;/exec_depend&gt;
+&lt;exec_depend&gt;robot_state_publisher&lt;/exec_depend&gt;
+&lt;exec_depend&gt;rospy&lt;/exec_depend&gt;
+&lt;exec_depend&gt;sensor_msgs&lt;/exec_depend&gt;
+&lt;exec_depend&gt;xacro&lt;/exec_depend&gt;</code></pre>
+<p><code>CMakeLists.txt</code> 的核心是：</p>
+<pre class="highlight"><code class="language-cmake">catkin_install_python(PROGRAMS
+  scripts/move_square.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY launch urdf worlds
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)</code></pre>
+<p>因为本功能包只有 Python 脚本和资源文件，不需要 ROS C++ 编译，但 <code>catkin_make</code> 仍然负责注册包和生成环境脚本。</p>
+<h2 id="5">5. 编译与验证 <span id="build"></span></h2>
+<pre class="highlight"><code class="language-bash">cd ~/catkin_ws
+catkin_make
+source devel/setup.bash
+rospack find mybot_gazebo</code></pre>
+<p>预期输出：</p>
+<pre class="highlight"><code class="language-text">/home/&lt;用户名&gt;/catkin_ws/src/mybot_gazebo</code></pre>
+<p>再检查脚本是否可执行：</p>
+<pre class="highlight"><code class="language-bash">ls -l ~/catkin_ws/src/mybot_gazebo/scripts/move_square.py
+python3 -m py_compile ~/catkin_ws/src/mybot_gazebo/scripts/move_square.py</code></pre>
+<p><code>py_compile</code> 通过说明 Python 语法正确，但不会检查 ROS 话题和 Gazebo 连接。</p>
+<p>也可以使用包内统一入口启动：</p>
+<pre class="highlight"><code class="language-bash">cd ~/catkin_ws/src/mybot_gazebo
+./main.sh</code></pre>
+<h2 id="6">6. 常见问题 <span id="debug"></span></h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rospack find</code> 找不到包</td>
+<td>未 source <code>devel/setup.bash</code></td>
+<td>重新 source 并确认 <code>ROS_PACKAGE_PATH</code></td>
+</tr>
+<tr>
+<td><code>catkin_make</code> 找不到依赖</td>
+<td><code>package.xml</code> 依赖未安装</td>
+<td>安装对应 ROS 包</td>
+</tr>
+<tr>
+<td>脚本无法运行</td>
+<td>没有执行权限</td>
+<td><code>chmod +x scripts/*.py</code></td>
+</tr>
+<tr>
+<td>修改后没有生效</td>
+<td>没有重新 source</td>
+<td>每次新终端都要 source</td>
+</tr>
+<tr>
+<td>复制到了错误位置</td>
+<td>功能包放进 <code>devel</code> 或嵌套目录</td>
+<td>必须放在 <code>~/catkin_ws/src/</code> 下</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7">7. 本步验收 <span id="acceptance"></span></h2>
+<ul>
+<li>[ ] <code>~/catkin_ws</code> 可以正常 <code>catkin_make</code>；</li>
+<li>[ ] <code>rospack find mybot_gazebo</code> 找到功能包；</li>
+<li>[ ] <code>launch</code>、<code>urdf</code>、<code>worlds</code>、<code>scripts</code> 四个目录都在；</li>
+<li>[ ] 能解释 <code>package.xml</code>、<code>CMakeLists.txt</code> 和 catkin 工作空间的关系；</li>
+<li>[ ] 知道每个终端都要 source 工作空间环境。</li>
+</ul>
+<hr/>
+<ul>
+<li>上一步：<a href="../gazebo_01_environment/">环境检查与 Gazebo 验证</a></li>
+<li>返回<a href="../gazebo_platform_simulation/">教程总览</a></li>
+<li>下一步：<a href="../gazebo_03_urdf_model/">步骤 3：URDF 与 xacro 建模</a></li>
+</ul></div>
+</div>
+</div><footer>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+</span>
+</div>
+<script src="../../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../../..";</script>
+<script src="../../../js/theme_extra.js"></script>
+<script src="../../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../../js/umlconvert.js"></script>
+<script src="../../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+</body>
+</html>

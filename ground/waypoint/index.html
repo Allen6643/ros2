@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>路径点发布器 - 模拟器的 ROS 文档</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u8def\u5f84\u70b9\u53d1\u5e03\u5668";
+        var mkdocs_page_input_path = "ground\\waypoint.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ubuntu20.04/">安装 ROS</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap4/">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap5/">5. 机器人感知</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="#">路径点发布器</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#_2">参考</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_3">拓展：自行实现「给定轨迹的神经网络跟踪控制」</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#_4">与本文示例的区别</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_5">复用本文的配置步骤</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_6">本拓展新增的内容</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_7">运行本拓展模块</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_8">实测结果</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../water/HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_e2e/">静水环境下单目视觉水下 ROV 端到端神经网络控制</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a></li>
+<li class="breadcrumb-item">地面载具</li>
+<li class="breadcrumb-item active">路径点发布器</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/ground/waypoint.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="_1">路径点发布器</h1>
+<p>本文介绍 CARLA ROS Bridge 中的<strong>路径点发布器</strong>：它由 CARLA 地图导出道路中心线，
+以话题形式发布给其它节点使用，属于 <code>carla_ros_bridge</code> 的既有功能。</p>
+<h2 id="_2">参考</h2>
+<ul>
+<li><a href="https://openhutb.github.io/doc/carla_waypoint/">Carla 路径点发布器</a></li>
+</ul>
+<h2 id="_3">拓展：自行实现「给定轨迹的神经网络跟踪控制」</h2>
+<p>本文的路径点发布器只负责<strong>发布</strong>路径点，车辆如何沿路径点行驶由其它节点决定。
+下面是在该功能基础上<strong>自主实现</strong>的一套「传感器感知 + 给定轨迹跟踪」控制，
+代码位于
+<a href="https://github.com/OpenHUTB/ros2/tree/master/src/ground/carla_perception_control"><code>src/ground/carla_perception_control</code></a>，
+详细介绍（计算原理、源码解析、性能评价）见
+<a href="../carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>。</p>
+<h3 id="_4">与本文示例的区别</h3>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>本文示例（路径点发布器）</th>
+<th>本拓展模块</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>技术路线</td>
+<td><code>carla_ros_bridge</code> 的 waypoint publisher 发布路径点话题</td>
+<td>CARLA Python API 直连 + 自研感知/控制节点</td>
+</tr>
+<tr>
+<td>是否依赖 ros-bridge</td>
+<td>必须编译并运行 ros-bridge</td>
+<td><strong>不需要</strong>，仅需 <code>carla</code> Python 客户端</td>
+</tr>
+<tr>
+<td>功能范围</td>
+<td>只发布路径点，不含控制</td>
+<td>完整闭环：传感器 → 感知 → 控制 → 车辆</td>
+</tr>
+<tr>
+<td>感知环节</td>
+<td>无</td>
+<td><strong>感知神经网络</strong>：RGB + 深度 + 雷达 → 障碍方向</td>
+</tr>
+<tr>
+<td>控制环节</td>
+<td>由外部节点自行订阅并控制</td>
+<td><strong>控制神经网络</strong>：状态 → 转向角</td>
+</tr>
+<tr>
+<td>算法性质</td>
+<td>地图几何查询</td>
+<td>两个可训练神经网络（纯 numpy 反向传播）</td>
+</tr>
+<tr>
+<td>无 CARLA / 无图形界面时</td>
+<td>无法运行</td>
+<td><code>--headless --demo</code> 离线自证并导出曲线图</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_5">复用本文的配置步骤</h3>
+<p>CARLA 服务端的启动、宿主机 IP 与端口 2000 的查看、虚拟机网络设置等步骤
+<strong>与已有示例完全一致，此处不再重复</strong>，请参考
+<a href="../../set_up_and_connect_to_carla/">设置并连接到 Carla 模拟器</a> 的
+「启动 Carla 服务器」与「使用 Carla 客户端启动 Ego Vehicle」小节；
+连接失败的排查见同一篇的「常见问题」小节。</p>
+<div class="admonition warning">
+<p class="admonition-title">不要从头到尾照做已有示例</p>
+<p>已有示例中的「设置 Carla ROS Bridge」「使用 rviz 进行可视化」等小节属于
+<strong>ros-bridge 路线</strong>（需要 catkin 编译 ros-bridge）。本拓展模块<strong>不依赖 ros-bridge</strong>，
+这些步骤可以跳过。</p>
+</div>
+<h3 id="_6">本拓展新增的内容</h3>
+<ol>
+<li><strong>感知神经网络</strong>：三路传感器（RGB 相机、深度相机、32 线激光雷达）压缩为 4 维归一化特征，
+   由 MLP 分类器（4→12→3）输出障碍方向（无目标 / 偏左 / 偏右）。</li>
+<li><strong>控制神经网络</strong>：状态 (航向差, 前视距离) → 转向角，MLP 策略网络（2→32→1），
+   tanh 输出保证转向落在 <script type="math/tex">[-1,1]</script>。</li>
+<li><strong>几何监督标签</strong>：控制网络的训练标签由纯跟踪几何律解析生成，
+   免去人工标注。</li>
+<li><strong>前视追踪 + 路点加密 + 垂距误差</strong>：把稀疏给定轨迹加密到 2 m 间距，
+   用前视点选取目标，用点到折线垂距度量横向误差。</li>
+<li><strong>弯道自适应减速 + 终点停车</strong>：按航向差自动降油门，进入终点 5 m 内刹车。</li>
+<li><strong>离线取证模式</strong>：<code>--headless --demo</code> 无需 CARLA、无需图形界面即可跑通全链路，
+   并导出损失/误差曲线 PNG。</li>
+</ol>
+<h3 id="_7">运行本拓展模块</h3>
+<p>除本文所需环境外，只需补装 CARLA 0.9.16 的 Python 客户端
+（神经网络为纯 numpy 实现，无需 TensorFlow/PyTorch）：</p>
+<pre class="highlight"><code class="language-shell">pip3 install &lt;CARLA&gt;/PythonAPI/carla/dist/carla-0.9.16-cp310-cp310-manylinux_2_31_x86_64.whl</code></pre>
+<p>离线训练两个神经网络（<strong>不需要 CARLA</strong>）：</p>
+<pre class="highlight"><code class="language-shell">python3 src/ground/carla_perception_control/main.py --mode train --epochs 300</code></pre>
+<p>在线感知 + 沿给定轨迹跟踪（<code>--host</code> 的填法与本文一致：填宿主机 IP）。
+<strong>省略 <code>--waypoints</code> 即使用模块内置的 <code>DEMO_ROUTE</code></strong>
+（26 个航点，已逐点校验在车道上，含两个约 90° 弯）：</p>
+<pre class="highlight"><code class="language-shell">python3 src/ground/carla_perception_control/main.py --mode run \
+        --host 172.21.108.47 --sim_time 90 --save_dir ~/shots</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">给定轨迹务必落在车道上、且弯道处加密</p>
+<p>航点之间是直线连接：航点若在路面外，车会开出路面撞停；
+转弯处航点间距过大会让车来不及转弯（前视距离仅 6 m）。
+详见 <a href="../carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a> 5.7 节。</p>
+</div>
+<p>使用 launch 启动（ROS 2 / ROS 1）：</p>
+<pre class="highlight"><code class="language-shell"># ROS 2
+ros2 launch carla_perception_control main.launch.py host:=172.21.108.47
+# ROS 1
+roslaunch carla_perception_control main.launch host:=172.21.108.47</code></pre>
+<h3 id="_8">实测结果</h3>
+<p>离线取证模式实测（<code>--epochs 300 --sim_time 90</code>，无需 CARLA）：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>感知 NN 训练集准确率</td>
+<td>0.995</td>
+</tr>
+<tr>
+<td>控制 NN 训练集 MSE</td>
+<td>0.00303</td>
+</tr>
+<tr>
+<td>横向误差 RMSE</td>
+<td><strong>0.249 m</strong>（含两个约 90° 弯）</td>
+</tr>
+</tbody>
+</table>
+<p>在线连接 CARLA 服务端实测（<code>--mode run --sim_time 90</code>，Town05）：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>横向误差 RMSE</td>
+<td><strong>1.012 m</strong></td>
+</tr>
+<tr>
+<td>是否到达终点</td>
+<td>是（t=28.9 s）</td>
+</tr>
+<tr>
+<td>相机帧数 / 导出截图</td>
+<td>577 帧 / 28 张</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="横向误差随时间的收敛曲线" src="../../img/ground/carla_lateral_error.png"/></p>
+<p><img alt="控制神经网络输出的转向指令" src="../../img/ground/carla_steer_cmd.png"/></p>
+<p>完整的调优过程与性能评价见
+<a href="../carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a> 第 6 节。</p></div>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../carla_perception_control/" title="传感器感知与给定轨迹跟踪（神经网络版）"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../ad_agent/" title="自动驾驶代理">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../carla_perception_control/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../ad_agent/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../..";</script>
+<script src="../../js/theme_extra.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../js/umlconvert.js"></script>
+<script src="../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+</body>
+</html>

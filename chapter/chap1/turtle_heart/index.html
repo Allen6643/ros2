@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>小海龟画爱心实验 - 模拟器的 ROS 文档</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u5c0f\u6d77\u9f9f\u753b\u7231\u5fc3\u5b9e\u9a8c";
+        var mkdocs_page_input_path = "chapter\\chap1\\turtle_heart.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ubuntu20.04/">安装 ROS</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap4/">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap5/">5. 机器人感知</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_e2e/">静水环境下单目视觉水下 ROV 端到端神经网络控制</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a></li>
+<li class="breadcrumb-item active">小海龟画爱心实验</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/chapter/chap1/turtle_heart.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="_1">小海龟画爱心实验</h1>
+<h2 id="_2">一、实验目的与环境说明</h2>
+<h3 id="11">1.1 实验目的</h3>
+<ol>
+<li>掌握 ROS 话题通信机制。节点作为发布者发布 <code>/turtle1/cmd_vel</code> 话题，发送 <code>geometry_msgs/Twist</code> 消息控制海龟运动；同时作为订阅者订阅 <code>/turtle1/pose</code> 话题，接收海龟的位姿消息。</li>
+<li>掌握利用参数方程生成轨迹点的方法。利用爱心参数方程生成一系列密集的坐标点，控制小海龟依次跟踪这些点，从而绘制出爱心图案。</li>
+<li>通过 turtlesim 仿真器，体会闭环反馈控制中距离与角度误差的计算与修正。</li>
+</ol>
+<h3 id="12">1.2 实验环境</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">配置项</th>
+<th style="text-align: left;">版本/说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">操作系统</td>
+<td style="text-align: left;">Ubuntu 20.04 (VMware虚拟机)</td>
+</tr>
+<tr>
+<td style="text-align: left;">ROS 版本</td>
+<td style="text-align: left;">ROS Noetic</td>
+</tr>
+<tr>
+<td style="text-align: left;">仿真器</td>
+<td style="text-align: left;">turtlesim</td>
+</tr>
+<tr>
+<td style="text-align: left;">编程语言</td>
+<td style="text-align: left;">Python 3.8</td>
+</tr>
+<tr>
+<td style="text-align: left;">功能包</td>
+<td style="text-align: left;">turtle_heart</td>
+</tr>
+</tbody>
+</table>
+<p><strong>功能包目录结构如下：</strong>
+</p><pre class="highlight"><code class="language-text">turtle_heart/
+├── package.xml             # 包清单
+├── CMakeLists.txt          # 构建文件
+├── scripts/
+│   └── main.py             # 主程序：控制小海龟绘制爱心
+└── README.md               # 运行环境和步骤说明</code></pre>
+<p>二、核心控制原理与算法解析</p>
+<p>2.1 话题通信机制</p>
+<p>turtlesim 仿真器启动后，小海龟会自动订阅 /turtle1/cmd_vel 话题。我们编写的节点脚本作为发布者向该话题发送 Twist 消息控制海龟运动，同时通过 /turtle1/pose 话题接收自身位姿（包含 x, y 坐标和 theta 朝向角）。本节点订阅该话题，实时读取当前位置。</p>
+<p>Twist 消息中本实验用到的两个分量：</p>
+<p>· linear.x：线速度，控制海龟前进的快慢（单位：m/s）
+· angular.z：角速度，控制海龟转动的快慢（单位：rad/s）</p>
+<p>Pose 消息中用到三个分量：</p>
+<p>· x, y：海龟在平面上的坐标（单位：m）
+· theta：海龟的朝向角（单位：rad）</p>
+<p>2.2 爱心参数方程与轨迹跟踪</p>
+<p>与画正方形走直线和转固定角度不同，爱心是一个复杂的曲线。本实验采用心形参数方程生成轨迹点：
+x = 16 * sin^3(t)
+y = 13 * cos(t) - 5 * cos(2t) - 2 * cos(3t) - cos(4t)</p>
+<p>其中 t 的取值范围是 [0, 2π]。代码中均匀采样 60 个点。为了适配 turtlesim 的 11.08×11.08 画布边界，对计算出的坐标进行了缩放（乘 0.25）和偏移（加 5.5），确保爱心能居中显示且不撞墙。</p>
+<p>闭环跟踪控制：
+对于每个目标点 (x_target, y_target)，计算当前点 (x_cur, y_cur) 的距离：
+d = sqrt((x_target - x_cur)^2 + (y_target - y_cur)^2)
+当 d &lt; 0.15 时，认为到达目标点，发布 0 速度停止海龟，然后转向下一个点。</p>
+<p>角度控制：
+计算目标点相对于当前点的期望角度 theta_target = atan2(y_target - y_cur, x_target - x_cur)。
+通过将角速度 angular.z 设为 4.0 * (theta_target - theta_cur)，使得海龟平滑地转向目标点。</p>
+<p>2.3 动作间隙的稳定处理</p>
+<p>由于小海龟具有物理惯性，每次到达一个目标点后，需要发布一次零速度指令，并 rospy.sleep(0.05) 短暂停歇，让海龟的动能消耗完毕，消除运动惯性带来的位置偏差，然后再向下一目标点移动。</p>
+<p>2.4 算法流程</p>
+<ol>
+<li>初始化节点，创建发布者发布 /turtle1/cmd_vel，创建订阅者订阅 /turtle1/pose，设置控制频率为 10Hz。</li>
+<li>等待第一帧位姿数据，确保连接建立。</li>
+<li>根据爱心参数方程，计算并存储 61 个目标坐标点。</li>
+<li>遍历目标点列表：
+   · 计算当前位置与目标点的距离 d。
+   · 如果 d &lt; 0.15，停止并等待 0.05s，切换到下一个目标点。
+   · 计算角度差，将角度归一化到 [-π, π]，发布线速度与角速度指令。</li>
+<li>循环结束后，发布停止指令，绘制完成。</li>
+</ol>
+<p>三、完整源码展示</p>
+<p>3.1 主程序 scripts/main.py</p>
+<pre class="highlight"><code class="language-python">#!/usr/bin/env python3
+import rospy
+from geometry_msgs.msg import Twist
+from turtlesim.msg import Pose
+import math
+import time
+
+current_pose = None
+
+def pose_callback(msg):
+    global current_pose
+    current_pose = msg
+
+class TurtleDrawer:
+    def __init__(self):
+        rospy.init_node('draw_heart', anonymous=True)
+        self.pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
+        rospy.Subscriber('/turtle1/pose', Pose, pose_callback)
+        self.rate = rospy.Rate(10) # 10Hz
+        time.sleep(2)
+
+    def move_to(self, target_x, target_y):
+        """让海龟平滑移动到目标点"""
+        global current_pose
+        while not rospy.is_shutdown():
+            if current_pose is None:
+                continue
+
+            dx = target_x - current_pose.x
+            dy = target_y - current_pose.y
+            distance = math.sqrt(dx**2 + dy**2)
+
+            # 距离小于 0.15 就算到达
+            if distance &lt; 0.15:
+                self.stop()
+                break
+
+            target_theta = math.atan2(dy, dx)
+            angle_diff = target_theta - current_pose.theta
+
+            # 角度归一化到 [-pi, pi]
+            while angle_diff &gt; math.pi: angle_diff -= 2 * math.pi
+            while angle_diff &lt; -math.pi: angle_diff += 2 * math.pi
+
+            move_cmd = Twist()
+            # 降低线速度，防止冲过头
+            move_cmd.linear.x = min(1.0, 0.8 * distance)
+            # 提高转向灵敏度
+            move_cmd.angular.z = 4.0 * angle_diff 
+
+            self.pub.publish(move_cmd)
+            self.rate.sleep()
+
+    def stop(self):
+        """停止海龟"""
+        move_cmd = Twist()
+        move_cmd.linear.x = 0.0
+        move_cmd.angular.z = 0.0
+        self.pub.publish(move_cmd)
+        time.sleep(0.05)
+
+    def draw_heart(self):
+        rospy.loginfo("开始绘制爱心...")
+
+        points = []
+        for i in range(61):
+            t = i * (2 * math.pi / 60)
+
+            # 爱心参数方程
+            x = 16 * math.sin(t)**3
+            y = 13 * math.cos(t) - 5 * math.cos(2*t) - 2 * math.cos(3*t) - math.cos(4*t)
+
+            # 缩放和平移，以适应 turtlesim 边界
+            scaled_x = max(0.5, min(10.5, x * 0.25 + 5.5))
+            scaled_y = max(0.5, min(10.5, y * 0.25 + 5.5))
+
+            points.append((scaled_x, scaled_y))
+
+        for point in points:
+            rospy.loginfo(f"移动到: {point}")
+            self.move_to(point[0], point[1])
+            time.sleep(0.05)
+
+        rospy.loginfo("爱心绘制完成！")
+
+if __name__ == '__main__':
+    try:
+        drawer = TurtleDrawer()
+        drawer.draw_heart()
+    except rospy.ROSInterruptException:
+        pass</code></pre>
+<p>3.2 构建文件 CMakeLists.txt</p>
+<pre class="highlight"><code class="language-cmake">cmake_minimum_required(VERSION 3.0.2)
+project(turtle_heart)
+
+find_package(catkin REQUIRED COMPONENTS
+  rospy
+  geometry_msgs
+  turtlesim
+)
+
+catkin_package()
+
+catkin_install_python(PROGRAMS
+  scripts/main.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)</code></pre>
+<p>3.3 包清单 package.xml</p>
+<pre class="highlight"><code class="language-xml">&lt;?xml version="1.0"?&gt;
+&lt;package format="2"&gt;
+  &lt;name&gt;turtle_heart&lt;/name&gt;
+  &lt;version&gt;0.0.0&lt;/version&gt;
+  &lt;description&gt;The turtle_heart package&lt;/description&gt;
+  &lt;maintainer email="liming@todo.todo"&gt;liming&lt;/maintainer&gt;
+  &lt;license&gt;TODO&lt;/license&gt;
+
+  &lt;buildtool_depend&gt;catkin&lt;/buildtool_depend&gt;
+  &lt;build_depend&gt;rospy&lt;/build_depend&gt;
+  &lt;build_depend&gt;geometry_msgs&lt;/build_depend&gt;
+  &lt;build_depend&gt;turtlesim&lt;/build_depend&gt;
+
+  &lt;exec_depend&gt;rospy&lt;/exec_depend&gt;
+  &lt;exec_depend&gt;geometry_msgs&lt;/exec_depend&gt;
+  &lt;exec_depend&gt;turtlesim&lt;/exec_depend&gt;
+&lt;/package&gt;</code></pre>
+<p>四、运行与验证</p>
+<p>4.1 编译功能包</p>
+<p>在工作空间根目录下运行：</p>
+<pre class="highlight"><code class="language-bash">cd ~/catkin_ws
+catkin_make
+source devel/setup.bash</code></pre>
+<p>4.2 启动节点</p>
+<p>需要打开三个终端，分别运行：</p>
+<ol>
+<li>终端 1 (ROS 核心)：</li>
+</ol>
+<pre class="highlight"><code class="language-bash">roscore</code></pre>
+<ol>
+<li>终端 2 (仿真器)：</li>
+</ol>
+<pre class="highlight"><code class="language-bash">rosrun turtlesim turtlesim_node</code></pre>
+<ol>
+<li>终端 3 (运行画爱心脚本)：</li>
+</ol>
+<pre class="highlight"><code class="language-bash">rosrun turtle_heart main.py</code></pre>
+<p>4.3 话题订阅与验证</p>
+<p>在节点运行时，另开终端依次执行：</p>
+<pre class="highlight"><code class="language-bash">rostopic list
+rostopic info /turtle1/cmd_vel
+rostopic echo /turtle1/pose</code></pre>
+<p>预期可以看到 Twist 线速度 linear.x 在 0.0-1.0 之间不断变化，角速度 angular.z 频繁调整，表明程序正在实时计算并发布速度指令。</p>
+<p>4.4 预期结果</p>
+<p>节点启动后，在 turtle_win 窗口中可以看到小海龟先移动至起始点，然后平滑地画出一个完整的爱心图案。最后海龟停在爱心上</p>
+<p><img alt="小海龟画爱心运行效果" src="../images/turtle_heart.png"/></p>
+<p>五、总结</p>
+<p>本实验通过发布 /turtle1/cmd_vel 话题实现了对 turtlesim 小海龟的速度控制，并通过订阅 /turtle1/pose 位姿话题实现了闭环反馈。相较于走直线的几何图形，画爱心需要处理复杂的参数方程轨迹点。通过计算距离与角度差，结合速度比例控制，成功完成了爱心图案的绘制。实验深化了对 ROS 话题通信机制和闭环控制算法的理解。</p>
+<p>```</p></div>
+</div>
+</div><footer>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+</span>
+</div>
+<script src="../../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../../..";</script>
+<script src="../../../js/theme_extra.js"></script>
+<script src="../../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../../js/umlconvert.js"></script>
+<script src="../../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+</body>
+</html>

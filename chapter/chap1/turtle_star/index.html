@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>小海龟绘制彩色五角星实验报告 - 模拟器的 ROS 文档</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u5c0f\u6d77\u9f9f\u7ed8\u5236\u5f69\u8272\u4e94\u89d2\u661f\u5b9e\u9a8c\u62a5\u544a";
+        var mkdocs_page_input_path = "chapter\\chap1\\turtle_star.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ubuntu20.04/">安装 ROS</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap4/">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap5/">5. 机器人感知</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_e2e/">静水环境下单目视觉水下 ROV 端到端神经网络控制</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a></li>
+<li class="breadcrumb-item active">小海龟绘制彩色五角星实验报告</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/chapter/chap1/turtle_star.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="_1">小海龟绘制彩色五角星实验报告</h1>
+<h2 id="_2">一、实验目的</h2>
+<ol>
+<li>熟悉ROS Noetic环境，掌握ROS话题通信机制，使用发布器向<code>/turtle1/cmd_vel</code>话题发布速度指令，控制海龟运动。</li>
+<li>掌握ROS服务调用，使用<code>/turtle1/set_pen</code>服务动态修改画笔RGB颜色，实现彩色绘图。</li>
+<li>理解时序控制逻辑，通过定时方式控制海龟直行距离与旋转角度，完成五角星轨迹绘制。</li>
+<li>学会使用<code>rosnode</code>、<code>rostopic</code>、<code>rosservice</code>工具查看节点、话题、服务，验证ROS通信。</li>
+</ol>
+<h2 id="12">1.2 实验环境</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>配置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>操作系统</td>
+<td>Ubuntu 20.04（VMware虚拟机）</td>
+</tr>
+<tr>
+<td>ROS发行版</td>
+<td>ROS Noetic</td>
+</tr>
+<tr>
+<td>仿真器</td>
+<td>turtlesim</td>
+</tr>
+<tr>
+<td>编程语言</td>
+<td>Python 3（rospy）</td>
+</tr>
+<tr>
+<td>功能包</td>
+<td>turtle_motion</td>
+</tr>
+</tbody>
+</table>
+<p>功能包目录结构：
+</p><pre class="highlight"><code class="language-text">turtle_motion/
+├── package.xml        # 包清单，声明 rospy、geometry_msgs 和 turtlesim 依赖
+├── CMakeLists.txt     # 编译配置，安装 Python 脚本
+└── scripts/
+    └── star_draw.py   # 主程序：控制小海龟绘制彩色五角星</code></pre>
+<h2 id="_3">二、核心控制原理与算法解析</h2>
+<h3 id="21-ros">2.1 ROS话题通信与服务调用</h3>
+<p>turtlesim仿真器启动后，海龟订阅<code>/turtle1/cmd_vel</code>话题，该话题消息类型为Twist，包含线速度linear与角速度angular。自定义节点作为发布者，向该话题发送速度指令，控制海龟前进、转向。
+本实验额外调用<code>turtlesim</code>内置服务<code>/turtle1/set_pen</code>，服务参数：<code>r,g,b,width,off</code>。r/g/b为0~255的RGB颜色值，width设置画笔粗细，off=0开启画笔。在绘制每一条边前调用该服务切换颜色，实现五角星五条边色彩不同。</p>
+<h3 id="22">2.2 五角星几何原理</h3>
+<p>五角星外角为144°，程序循环执行5次：设置画笔颜色 → 直线前进 → 原地逆时针旋转144°。循环结束即可闭合五角星图形。
+本程序采用<strong>定时控制策略</strong>：根据 <code>时间 = 距离 / 速度</code> 计算直行持续时间；根据 <code>时间 = 角度 / 角速度</code> 计算旋转持续时间，到达设定时间就停止运动。</p>
+<h3 id="23">2.3 算法流程</h3>
+<ol>
+<li>初始化绘图节点<code>draw_star_node</code></li>
+<li>等待<code>/turtle1/set_pen</code>画笔服务就绪</li>
+<li>创建速度消息发布器，设置发布频率50Hz</li>
+<li>循环5次：<ul>
+<li>调用SetPen设置本条边RGB颜色</li>
+<li>发布线速度，海龟直行，计时结束后停止前进</li>
+<li>短暂延时稳定海龟</li>
+<li>发布角速度，海龟原地旋转144°，计时结束停止旋转</li>
+<li>短暂延时</li>
+</ul>
+</li>
+<li>循环结束，打印绘制完成信息</li>
+</ol>
+<h2 id="_4">三、完整源码展示</h2>
+<h3 id="31-scriptsstar_drawpy">3.1 主程序 scripts/star_draw.py</h3>
+<pre class="highlight"><code class="language-python">#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# 小海龟绘制彩色五角星 ROS Noetic
+import math
+import rospy
+from geometry_msgs.msg import Twist
+from turtlesim.srv import SetPen
+# 5种颜色，5条边
+COLORS = [(255,0,0),(0,255,0),(0,0,255),(255,255,0),(255,0,255)]
+def main():
+    rospy.init_node('draw_star_node')
+    # 等待画笔服务
+    rospy.wait_for_service('/turtle1/set_pen')
+    set_pen = rospy.ServiceProxy('/turtle1/set_pen', SetPen)
+    # 速度发布器
+    pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
+    rate = rospy.Rate(50)
+    twist = Twist()
+    # 参数
+    line_len = 2.0
+    turn_angle_rad = 144 * math.pi / 180
+    lin_speed = 1.0
+    ang_speed = 1.0
+    rospy.loginfo("开始绘制彩色五角星")
+    for i in range(5):
+        # 设置当前边颜色
+        r,g,b = COLORS[i]
+        set_pen(r,g,b,3,0)
+        # 前进画边
+        twist.linear.x = lin_speed
+        twist.angular.z = 0.0
+        end_time = rospy.Time.now() + rospy.Duration(line_len / lin_speed)
+        while rospy.Time.now() &lt; end_time and not rospy.is_shutdown():
+            pub.publish(twist)
+            rate.sleep()
+        # 停下
+        twist.linear.x = 0.0
+        pub.publish(twist)
+        rospy.sleep(0.2)
+        # 转弯144度
+        twist.angular.z = ang_speed
+        end_time = rospy.Time.now() + rospy.Duration(turn_angle_rad / ang_speed)
+        while rospy.Time.now() &lt; end_time and not rospy.is_shutdown():
+            pub.publish(twist)
+            rate.sleep()
+        # 停止转弯
+        twist.angular.z = 0.0
+        pub.publish(twist)
+        rospy.sleep(0.2)
+        rospy.loginfo(f"第{i+1}条边绘制完成")
+    rospy.loginfo("五角星绘制完毕！")
+if __name__ == '__main__':
+    main()</code></pre>
+<h3 id="32-cmakeliststxt">3.2 构建文件 CMakeLists.txt</h3>
+<pre class="highlight"><code class="language-cmake">cmake_minimum_required(VERSION 3.0.2)
+project(turtle_motion)
+find_package(catkin REQUIRED COMPONENTS
+  rospy
+  geometry_msgs
+  turtlesim
+)
+catkin_package()
+catkin_install_python(PROGRAMS
+  scripts/star_draw.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)</code></pre>
+<h3 id="33-packagexml">3.3 包清单 package.xml</h3>
+<pre class="highlight"><code class="language-xml">&lt;?xml version="1.0"?&gt;
+&lt;!-- turtle_motion 功能包：小海龟自主绘制彩色五角星轨迹 --&gt;
+&lt;package format="2"&gt;
+  &lt;name&gt;turtle_motion&lt;/name&gt;
+  &lt;version&gt;0.0.0&lt;/version&gt;
+  &lt;description&gt;turtle_motion: 小海龟自主绘制彩色五角星轨迹功能包&lt;/description&gt;
+  &lt;maintainer email="your_email@example.com"&gt;your_name&lt;/maintainer&gt;
+  &lt;license&gt;TODO&lt;/license&gt;
+  &lt;buildtool_depend&gt;catkin&lt;/buildtool_depend&gt;
+  &lt;build_depend&gt;rospy&lt;/build_depend&gt;
+  &lt;build_depend&gt;geometry_msgs&lt;/build_depend&gt;
+  &lt;build_depend&gt;turtlesim&lt;/build_depend&gt;
+  &lt;exec_depend&gt;rospy&lt;/exec_depend&gt;
+  &lt;exec_depend&gt;geometry_msgs&lt;/exec_depend&gt;
+  &lt;exec_depend&gt;turtlesim&lt;/exec_depend&gt;
+  &lt;export&gt;
+  &lt;/export&gt;
+&lt;/package&gt;</code></pre>
+<h2 id="_5">四、运行与验证</h2>
+<h3 id="41">4.1 编译功能包</h3>
+<p>将<code>turtle_motion</code>功能包放入Catkin工作空间的src目录，终端依次执行：
+</p><pre class="highlight"><code class="language-bash">chmod +x ~/catkin_ws/src/turtle_motion/scripts/star_draw.py
+cd ~/catkin_ws
+catkin_make
+source devel/setup.bash</code></pre>
+<h3 id="42">4.2 启动节点</h3>
+<p>打开<strong>三个独立终端</strong>
+终端1：启动ROS核心
+</p><pre class="highlight"><code class="language-bash">roscore</code></pre>
+终端2：启动海龟仿真器
+<pre class="highlight"><code class="language-bash">rosrun turtlesim turtlesim_node</code></pre>
+终端3：运行五角星绘制程序
+<pre class="highlight"><code class="language-bash">source ~/catkin_ws/devel/setup.bash
+rosrun turtle_motion star_draw.py</code></pre>
+程序启动后，海龟将依次绘制5条不同颜色的线条，形成彩色五角星。
+<img alt="小海龟绘制五角星效果" src="../../../img/chapter/turtle_star.png"/>
+<h3 id="43">4.3 话题和节点验证</h3>
+<p>保持程序运行状态，新开终端执行以下命令验证ROS通信。
+1. 查看当前运行节点
+</p><pre class="highlight"><code class="language-bash">rosnode list</code></pre>
+预期输出：
+<pre class="highlight"><code>/draw_star_node
+/rosout
+/turtlesim</code></pre>
+<code>draw_star_node</code>为本实验自定义绘图节点，<code>turtlesim</code>是海龟仿真节点。
+<ol>
+<li>
+<p>查看全部话题
+</p><pre class="highlight"><code class="language-bash">rostopic list</code></pre>
+可看到核心话题：<code>/turtle1/cmd_vel</code>、<code>/turtle1/pose</code>。
+</li>
+<li>
+<p>实时打印速度话题消息
+</p><pre class="highlight"><code class="language-bash">rostopic echo /turtle1/cmd_vel</code></pre>
+程序运行时交替输出两种消息：
+</li>
+</ol>
+<p>直行状态：
+</p><pre class="highlight"><code class="language-yaml">linear:
+  x: 1.0
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 0.0
+---</code></pre>
+<p>转弯状态：
+</p><pre class="highlight"><code class="language-yaml">linear:
+  x: 0.0
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 1.0
+---</code></pre>
+<blockquote>
+<p>说明：直行时只有x方向线速度；转弯时只有z方向角速度。</p>
+</blockquote>
+<ol>
+<li>查看可用服务
+<pre class="highlight"><code class="language-bash">rosservice list</code></pre>
+能看到<code>/turtle1/set_pen</code>画笔服务。
+<pre class="highlight"><code class="language-bash">rosservice info /turtle1/set_pen</code></pre>
+程序在绘制每条边前调用该服务修改画笔RGB颜色。</li>
+</ol>
+<h2 id="_6">五、参数调整</h2>
+<p>修改<code>star_draw.py</code>内参数，可调整图形效果：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>line_len = 2.0</code></td>
+<td>五角星每条边的长度，数值越大图形越大</td>
+</tr>
+<tr>
+<td><code>lin_speed = 1.0</code></td>
+<td>海龟前进速度</td>
+</tr>
+<tr>
+<td><code>ang_speed = 1.0</code></td>
+<td>海龟旋转角速度</td>
+</tr>
+<tr>
+<td><code>COLORS</code>数组</td>
+<td>修改五条边的RGB颜色</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>注意：line_len不能设置过大，海龟碰到窗口边界会卡住，影响绘图。</p>
+</blockquote>
+<h2 id="_7">六、实验总结</h2>
+<p>本次实验结合ROS话题通信与ROS服务调用，控制turtlesim小海龟绘制彩色五角星。</p>
+<ol>
+<li>通过<code>/turtle1/cmd_vel</code>话题发布Twist速度消息，实现海龟前进与原地旋转。</li>
+<li>调用<code>/turtle1/set_pen</code>服务动态修改画笔RGB色彩，实现每条边不同颜色，是本实验的特色。</li>
+<li>采用定时控制策略，循环5次完成五角星轨迹绘制。</li>
+<li>使用<code>rosnode</code>、<code>rostopic</code>、<code>rosservice</code>工具，验证节点、话题、服务通信正常。</li>
+</ol>
+<p>实验发现定时方案会积累微小误差，图形末端存在轻微闭合偏差，后续可以使用pose订阅的闭环方式优化。</p></div>
+</div>
+</div><footer>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+</span>
+</div>
+<script src="../../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../../..";</script>
+<script src="../../../js/theme_extra.js"></script>
+<script src="../../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../../js/umlconvert.js"></script>
+<script src="../../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+</body>
+</html>

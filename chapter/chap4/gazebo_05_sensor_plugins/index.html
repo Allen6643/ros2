@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>步骤 5：激光与相机插件 - 模拟器的 ROS 文档</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u6b65\u9aa4 5\uff1a\u6fc0\u5149\u4e0e\u76f8\u673a\u63d2\u4ef6";
+        var mkdocs_page_input_path = "chapter\\chap4\\gazebo_05_sensor_plugins.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ubuntu20.04/">安装 ROS</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap5/">5. 机器人感知</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_e2e/">静水环境下单目视觉水下 ROV 端到端神经网络控制</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a></li>
+<li class="breadcrumb-item active">步骤 5：激光与相机插件</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/chapter/chap4/gazebo_05_sensor_plugins.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="5">步骤 5：激光与相机插件</h1>
+<blockquote>
+<p>前置条件：完成<a href="../gazebo_04_diff_drive/">步骤 4</a>。
+本步目标：让 Gazebo 中的激光雷达和 RGB 相机发布标准 ROS 话题。
+预计时间：40-60 分钟。</p>
+</blockquote>
+<ul>
+<li><a href="#laser">1. 激光雷达原理</a></li>
+<li><a href="#laser-plugin">2. 激光插件配置</a></li>
+<li><a href="#camera">3. 相机传感器配置</a></li>
+<li><a href="#camera-plugin">4. 相机插件配置</a></li>
+<li><a href="#verify">5. 数据流验证</a></li>
+<li><a href="#debug">6. 常见问题</a></li>
+<li><a href="#acceptance">7. 本步验收</a></li>
+</ul>
+<h2 id="1">1. 激光雷达原理 <span id="laser"></span></h2>
+<p>Gazebo 的 <code>ray</code> 传感器从激光原点发出多条虚拟射线，检测与场景障碍物的交点，并生成一串距离值。</p>
+<div class="mermaid">graph LR
+  A[laser_frame] --&gt; B[360 条虚拟射线]
+  B --&gt; C[range 距离数组]
+  C --&gt; D[sensor_msgs/LaserScan]
+  D --&gt; E[/scan/]
+</div>
+<p><code>LaserScan</code> 中最关键的数据：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>header.stamp</code></td>
+<td>扫描时间</td>
+</tr>
+<tr>
+<td><code>header.frame_id</code></td>
+<td>激光坐标系</td>
+</tr>
+<tr>
+<td><code>angle_min</code>、<code>angle_max</code></td>
+<td>扫描角范围</td>
+</tr>
+<tr>
+<td><code>angle_increment</code></td>
+<td>相邻射线夹角</td>
+</tr>
+<tr>
+<td><code>range_min</code>、<code>range_max</code></td>
+<td>最小和最大量程</td>
+</tr>
+<tr>
+<td><code>ranges[]</code></td>
+<td>每个角度的距离</td>
+</tr>
+</tbody>
+</table>
+<p>激光的 <code>frame_id</code> 必须存在于 TF 树中，否则 SLAM 和导航无法把激光数据放到机器人坐标系里。</p>
+<h2 id="2">2. 激光插件配置 <span id="laser-plugin"></span></h2>
+<pre class="highlight"><code class="language-xml">&lt;gazebo reference="laser_frame"&gt;
+  &lt;sensor type="ray" name="laser_sensor"&gt;
+    &lt;always_on&gt;true&lt;/always_on&gt;
+    &lt;update_rate&gt;10&lt;/update_rate&gt;
+    &lt;visualize&gt;false&lt;/visualize&gt;
+    &lt;ray&gt;
+      &lt;scan&gt;
+        &lt;horizontal&gt;
+          &lt;samples&gt;360&lt;/samples&gt;
+          &lt;resolution&gt;1&lt;/resolution&gt;
+          &lt;min_angle&gt;-3.14159265359&lt;/min_angle&gt;
+          &lt;max_angle&gt;3.14159265359&lt;/max_angle&gt;
+        &lt;/horizontal&gt;
+      &lt;/scan&gt;
+      &lt;range&gt;
+        &lt;min&gt;0.10&lt;/min&gt;
+        &lt;max&gt;10.0&lt;/max&gt;
+        &lt;resolution&gt;0.01&lt;/resolution&gt;
+      &lt;/range&gt;
+    &lt;/ray&gt;
+    &lt;plugin name="laser_controller" filename="libgazebo_ros_laser.so"&gt;
+      &lt;topicName&gt;/scan&lt;/topicName&gt;
+      &lt;frameName&gt;laser_frame&lt;/frameName&gt;
+    &lt;/plugin&gt;
+  &lt;/sensor&gt;
+&lt;/gazebo&gt;</code></pre>
+<blockquote>
+<p>本虚拟机或本仓库使用的 Gazebo ROS 版本没有安装 <code>libgazebo_ros_ray_sensor.so</code>，因此使用仓库现有示例中的 <code>libgazebo_ros_laser.so</code>。两种插件的功能相同，区别是参数名和输出类型配置方式不同。</p>
+</blockquote>
+<p>参数影响：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>增大后的影响</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samples</code></td>
+<td>角度更密，数据更精细，CPU 更高</td>
+<td>初学用 180 或 360 点</td>
+</tr>
+<tr>
+<td><code>update_rate</code></td>
+<td>数据更快，计算量更高</td>
+<td>初学用 5-10 Hz</td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td>探测距离更远</td>
+<td>室内用 8-10 m</td>
+</tr>
+<tr>
+<td><code>visualize</code></td>
+<td>Gazebo 中显示射线</td>
+<td>调试时打开，平时关闭</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3">3. 相机传感器配置 <span id="camera"></span></h2>
+<pre class="highlight"><code class="language-xml">&lt;gazebo reference="camera_link"&gt;
+  &lt;sensor type="camera" name="camera_sensor"&gt;
+    &lt;always_on&gt;true&lt;/always_on&gt;
+    &lt;update_rate&gt;30&lt;/update_rate&gt;
+    &lt;visualize&gt;false&lt;/visualize&gt;
+    &lt;camera name="camera"&gt;
+      &lt;horizontal_fov&gt;1.047&lt;/horizontal_fov&gt;
+      &lt;image&gt;
+        &lt;width&gt;640&lt;/width&gt;
+        &lt;height&gt;480&lt;/height&gt;
+        &lt;format&gt;R8G8B8&lt;/format&gt;
+      &lt;/image&gt;
+      &lt;clip&gt;
+        &lt;near&gt;0.05&lt;/near&gt;
+        &lt;far&gt;20.0&lt;/far&gt;
+      &lt;/clip&gt;
+    &lt;/camera&gt;
+  &lt;/sensor&gt;
+&lt;/gazebo&gt;</code></pre>
+<p>相机参数：</p>
+<ul>
+<li><code>horizontal_fov</code>：水平视场角，约为 60 度；</li>
+<li><code>width</code>、<code>height</code>：图像分辨率；</li>
+<li><code>near</code>、<code>far</code>：可见距离范围；</li>
+<li><code>update_rate</code>：图像帧率。</li>
+</ul>
+<p>相机分辨率提高会明显增加 Gazebo 渲染和图像传输负载，初学者先用 640 x 480。</p>
+<h2 id="4">4. 相机插件配置 <span id="camera-plugin"></span></h2>
+<pre class="highlight"><code class="language-xml">&lt;plugin name="camera_controller" filename="libgazebo_ros_camera.so"&gt;
+  &lt;cameraName&gt;camera&lt;/cameraName&gt;
+  &lt;imageTopicName&gt;image_raw&lt;/imageTopicName&gt;
+  &lt;cameraInfoTopicName&gt;camera_info&lt;/cameraInfoTopicName&gt;
+  &lt;frameName&gt;camera_link&lt;/frameName&gt;
+&lt;/plugin&gt;</code></pre>
+<p>话题图：</p>
+<div class="mermaid">graph LR
+  S[Gazebo 相机传感器] --&gt; P[camera 插件]
+  P --&gt; I[/camera/image_raw/]
+  P --&gt; C[/camera/camera_info/]
+  I --&gt; V[rqt_image_view]
+  C --&gt; V2[视觉算法]
+</div>
+<p><code>camera_info</code> 包含焦距、主点、畸变参数，真实相机标定和视觉定位都会使用。</p>
+<h2 id="5_1">5. 数据流验证 <span id="verify"></span></h2>
+<p>传感器正确输出后，相机和激光的数据形态可参考下图：</p>
+<p><img alt="相机与激光雷达效果示意" src="../images/gazebo_platform/sensor_effect.png"/></p>
+<p>启动仿真后：</p>
+<pre class="highlight"><code class="language-bash">rostopic list | grep -E "scan|camera"
+rostopic info /scan
+rostopic info /camera/image_raw
+rostopic info /camera/camera_info
+rostopic hz /scan
+rostopic hz /camera/image_raw
+rostopic echo -n 1 /scan</code></pre>
+<p>检查 TF：</p>
+<pre class="highlight"><code class="language-bash">rosrun tf tf_echo base_link laser_frame
+rosrun tf tf_echo base_link camera_link</code></pre>
+<p>查看图像：</p>
+<pre class="highlight"><code class="language-bash">rosrun rqt_image_view rqt_image_view</code></pre>
+<p>在窗口中选择 <code>/camera/image_raw</code>，应看到 Gazebo 场景图像。</p>
+<h2 id="6">6. 常见问题 <span id="debug"></span></h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>没有 <code>/scan</code></td>
+<td>激光插件未加载或 topic 名错误</td>
+<td>检查 Gazebo 日志与 <code>&lt;topicName&gt;</code></td>
+</tr>
+<tr>
+<td><code>/scan</code> 无数据</td>
+<td><code>range_min</code> 到 <code>range_max</code> 内没有障碍</td>
+<td>在场景中添加墙体或靠近地面</td>
+</tr>
+<tr>
+<td><code>/scan</code> 频率低</td>
+<td>点数或更新率过高</td>
+<td>降低 <code>samples</code> 或 <code>update_rate</code></td>
+</tr>
+<tr>
+<td>相机没有图像</td>
+<td>插件或话题名错误</td>
+<td>检查 <code>/camera/image_raw</code></td>
+</tr>
+<tr>
+<td>图像卡顿</td>
+<td>分辨率过高或 CPU 不足</td>
+<td>降低分辨率与帧率</td>
+</tr>
+<tr>
+<td>激光建图错位</td>
+<td><code>frameName</code> 与 TF 不一致</td>
+<td>统一起见使用 <code>laser_frame</code></td>
+</tr>
+<tr>
+<td>相机坐标错误</td>
+<td>相机 TF 或安装方向错误</td>
+<td>检查 <code>camera_joint</code> 的 origin 和 rpy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7">7. 本步验收 <span id="acceptance"></span></h2>
+<ul>
+<li>[ ] <code>/scan</code> 话题存在且有 360 个范围值；</li>
+<li>[ ] <code>/camera/image_raw</code> 和 <code>/camera/camera_info</code> 存在；</li>
+<li>[ ] <code>tf_echo base_link laser_frame</code> 能查询成功；</li>
+<li>[ ] <code>tf_echo base_link camera_link</code> 能查询成功；</li>
+<li>[ ] <code>rqt_image_view</code> 能看到相机图像；</li>
+<li>[ ] 能解释传感器数据为什么要绑定 frame。</li>
+</ul>
+<hr/>
+<ul>
+<li>上一步：<a href="../gazebo_04_diff_drive/">差速驱动与里程计</a></li>
+<li>返回<a href="../gazebo_platform_simulation/">教程总览</a></li>
+<li>下一步：<a href="../gazebo_06_world_launch/">步骤 6：世界文件与 launch</a></li>
+</ul></div>
+</div>
+</div><footer>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+</span>
+</div>
+<script src="../../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../../..";</script>
+<script src="../../../js/theme_extra.js"></script>
+<script src="../../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../../js/umlconvert.js"></script>
+<script src="../../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script>mermaid.initialize({});</script></body>
+</html>

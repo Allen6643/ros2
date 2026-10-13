@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>水下机器人物理仿真与 6-DOF 键盘运动控制 - 模拟器的 ROS 文档</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u6c34\u4e0b\u673a\u5668\u4eba\u7269\u7406\u4eff\u771f\u4e0e 6-DOF \u952e\u76d8\u8fd0\u52a8\u63a7\u5236";
+        var mkdocs_page_input_path = "water\\rov_physical_simulation.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ubuntu20.04/">安装 ROS</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap4/">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap5/">5. 机器人感知</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="#">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#1">1. 概述与目标</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#_1">核心任务目标</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#2">2. 数学物理模型与计算原理</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#21">2.1 空间运动学与坐标系定义</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#22">2.2 重力与阿基米德浮力平衡方程</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#23">2.3 各向异性流体动力阻力模型</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#24">2.4 三层级联海洋洋流模型</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#3-ros-2">3. 软件架构与 ROS 2 节点设计</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#31">3.1 话题与通信接口设计</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#32">3.2 键盘遥控控制键位映射表</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#4">4. 关键源代码实现解析</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#41-mujoco_sim_nodepy">4.1 仿真物理步进与推力注入 (mujoco_sim_node.py)</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#42-keyboard_teleop_nodepy">4.2 非阻塞键盘读取与指令广播 (keyboard_teleop_node.py)</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#5-step-by-step">5. 仿真运行步骤指南 (Step-by-Step)</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#51">5.1 支持与测试环境声明</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#52-0-prerequisites">5.2 步骤 0：环境准备与依赖安装 (Prerequisites)</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#53-1">5.3 步骤 1：编译与配置工作空间</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#54-2">5.4 步骤 2：自动化单元验证测试</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#55-3">5.5 步骤 3：多场景运行与交互模式</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#56-4-faq-troubleshooting">5.6 步骤 4：虚拟机常见问题排查 (FAQ / Troubleshooting)</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#6-gif">6. 实验结果与动图演示 (GIF)</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#61-6-dof">6.1 键盘 6-DOF 运动控制效果演示</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#62">6.2 话题通信与数据流监测</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#7">7. 结论与扩展支持</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rov_e2e/">静水环境下单目视觉水下 ROV 端到端神经网络控制</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a></li>
+<li class="breadcrumb-item">水域载具</li>
+<li class="breadcrumb-item active">水下机器人物理仿真与 6-DOF 键盘运动控制</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/water/rov_physical_simulation.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="mujoco-6-dof">水下机器人 MuJoCo 物理仿真与 6-DOF 键盘运动控制</h1>
+<hr/>
+<h2 id="1">1. 概述与目标</h2>
+<p>本模块旨在建立水下遥控无人潜水器（Remote Operated Vehicle, ROV）在真实水下流体介质中的物理仿真环境，实现六自由度（6-DOF）空间动力学响应计算，并通过标准 ROS 2 话题架构接入键盘遥控输入，完成全向运动操控。</p>
+<h3 id="_1">核心任务目标</h3>
+<ol>
+<li><strong>真实水下多物理场建模</strong>：在 MuJoCo 物理引擎中解算重力、阿基米德静态浮力、各向异性流体阻尼以及三层级联海洋洋流干扰力。</li>
+<li><strong>ROS 2 原生节点封装</strong>：将仿真引擎封装为符合 ROS 2 Humble 规范的独立节点 <code>mujoco_sim_node</code>，具备 500 Hz 物理内核步进与 50 Hz 传感器数据广播能力。</li>
+<li><strong>6-DOF 全向键盘运动控制</strong>：设计 <code>keyboard_teleop_node</code> 节点，发布标准 <code>geometry_msgs/msg/Twist</code> 速度控制指令。</li>
+<li><strong>一键 Launch 启动</strong>：提供规范的主入口脚本（<code>main.py</code>、<code>main.sh</code>、<code>main.launch.py</code>），满足规范化构建与一键测试运行要求。</li>
+</ol>
+<hr/>
+<h2 id="2">2. 数学物理模型与计算原理</h2>
+<p>水下航行体的空间动力学计算采用 <strong>Fossen 水下航行体理论模型</strong> 与 <strong>Newton-Euler 空间运动学方程</strong>。</p>
+<h3 id="21">2.1 空间运动学与坐标系定义</h3>
+<p>定义地球固定坐标系（NED 惯性系）与航行体固定坐标系（Body-fixed 系）：</p>
+<ul>
+<li>空间位置与姿态角：<script type="math/tex">\boldsymbol{\eta} = [x, y, z, \phi, \theta, \psi]^T</script>
+</li>
+<li>体坐标系下线速度与角速度：<script type="math/tex">\boldsymbol{\nu} = [u, v, w, p, q, r]^T</script>
+</li>
+</ul>
+<p>坐标转换关系为：
+<script type="math/tex; mode=display">
+\dot{\boldsymbol{\eta}} = \boldsymbol{J}(\boldsymbol{\eta}) \boldsymbol{\nu}
+</script>
+</p>
+<h3 id="22">2.2 重力与阿基米德浮力平衡方程</h3>
+<p>设水下航行体长方体尺寸为 <script type="math/tex">L \times W \times H = (2d_x) \times (2d_y) \times (2d_z)</script>，航行体质量为 <script type="math/tex">m</script>，流体介质密度为 <script type="math/tex">\rho</script>（海水通常取 <script type="math/tex">1025 \, \text{kg/m}^3</script>，清水取 <script type="math/tex">1000 \, \text{kg/m}^3</script>）：</p>
+<p>航行体体积：
+<script type="math/tex; mode=display">
+V = 8 d_x d_y d_z
+</script>
+</p>
+<p>航行体受到的重力向量与浮力向量分别为：
+<script type="math/tex; mode=display">
+\boldsymbol{F}_g = \begin{bmatrix} 0 \\ 0 \\ -m g \end{bmatrix}, \quad
+\boldsymbol{F}_b = \begin{bmatrix} 0 \\ 0 \\ \rho V g \end{bmatrix}
+</script>
+</p>
+<p>净静态恢复力（沿 <script type="math/tex">Z</script> 轴）：
+<script type="math/tex; mode=display">
+\Delta F_z = F_b - F_g = (\rho V - m) g
+</script>
+当 <script type="math/tex">\rho V > m</script> 时，航行体呈现正浮力，具有水下天然自保安全上浮特性。</p>
+<h3 id="23">2.3 各向异性流体动力阻力模型</h3>
+<p>由于 ROV 外壳几何形状非对称，各向迎水投影截面积不同。在 MuJoCo 椭球流体模型中，流体阻力与阻力矩表示为相对流速的二次函数：
+<script type="math/tex; mode=display">
+\boldsymbol{F}_{drag} = -\frac{1}{2} \rho \boldsymbol{C}_D \boldsymbol{A} \odot |\boldsymbol{v}_{rel}| \boldsymbol{v}_{rel}
+</script>
+其中相对水流速度为：
+<script type="math/tex; mode=display">
+\boldsymbol{v}_{rel} = \boldsymbol{v}_{robot} - \boldsymbol{v}_{current}
+</script>
+</p>
+<p>阻力系数向量 <script type="math/tex">\boldsymbol{C}_{fluid} = [c_{x}, c_{y}, c_{z}, c_{\phi}, c_{\theta}, c_{\psi}]</script>：</p>
+<ul>
+<li>迎水端面阻力系数 <script type="math/tex">c_x = 0.40</script>（端面流线型迎水，阻力小）</li>
+<li>侧面迎水阻力系数 <script type="math/tex">c_y = 7.79</script>（侧面迎水截面大，阻力大）</li>
+<li>垂直迎水阻力系数 <script type="math/tex">c_z = 2.81</script>
+</li>
+</ul>
+<h3 id="24">2.4 三层级联海洋洋流模型</h3>
+<p>水下环境叠加三层级联非平稳洋流扰动：
+<script type="math/tex; mode=display">
+\boldsymbol{v}_{current}(x, y, z, t) = \boldsymbol{v}_{GM}(t) + \boldsymbol{v}_{stratified}(z) + \boldsymbol{v}_{turbulent}(x, y, z, t)
+</script>
+</p>
+<ol>
+<li><strong>第一层 Gauss-Markov 时间波动流</strong>：
+   一阶随机连续微分方程离散化更新：
+   <script type="math/tex; mode=display">
+   \dot{\boldsymbol{v}}_{GM} + \mu \boldsymbol{v}_{GM} = \boldsymbol{w}(t), \quad \boldsymbol{w}(t) \sim \mathcal{N}(0, \sigma^2)
+   </script>
+</li>
+<li><strong>第二层 Stratified 深度垂直剪切流</strong>：
+   洋流速度随下潜深度 <script type="math/tex">z</script> 呈现梯度分层，通过剖面插值计算：
+   <script type="math/tex; mode=display">
+   v_{strat}(z) = v_k + \frac{z - z_k}{z_{k+1} - z_k} (v_{k+1} - v_k)
+   </script>
+</li>
+<li><strong>第三层 Turbulent 空间相关湍流扰动</strong>：
+   空间距离相关指数衰减扰动，表征局部水流微漩涡。</li>
+</ol>
+<hr/>
+<h2 id="3-ros-2">3. 软件架构与 ROS 2 节点设计</h2>
+<p>系统基于 ROS 2 Humble 架构解耦设计，节点拓扑如下：</p>
+<div class="mermaid">flowchart LR
+    subgraph Layer1["控制输入层"]
+        KB["keyboard_teleop_node<br/>键盘按键解析"]
+    end
+
+    subgraph Layer2["核心物理仿真层"]
+        SIM["mujoco_sim_node<br/>MuJoCo 物理引擎内核 (500Hz)"]
+        ENV["流体/浮力/洋流级联力学注入"]
+    end
+
+    subgraph Layer3["状态广播与应用层"]
+        ODOM["/rov/odom<br/>nav_msgs/Odometry"]
+        DEPTH["/rov/depth<br/>std_msgs/Float64"]
+        JOINT["/joint_states<br/>sensor_msgs/JointState"]
+        GUI["3D 可视化交互视窗 / RViz2"]
+    end
+
+    KB --&gt;|"/cmd_vel (geometry_msgs/Twist)"| SIM
+    ENV &lt;--&gt; SIM
+    SIM --&gt; ODOM
+    SIM --&gt; DEPTH
+    SIM --&gt; JOINT
+    SIM -.-&gt; GUI
+</div>
+<h3 id="31">3.1 话题与通信接口设计</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">话题名称</th>
+<th style="text-align: left;">消息类型</th>
+<th style="text-align: left;">发布/订阅</th>
+<th style="text-align: left;">频率</th>
+<th style="text-align: left;">功能描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/cmd_vel</code></td>
+<td style="text-align: left;"><code>geometry_msgs/msg/Twist</code></td>
+<td style="text-align: left;">仿真节点订阅</td>
+<td style="text-align: left;">20 Hz (按键事件)</td>
+<td style="text-align: left;">6-DOF 速度控制向量（线速度 + 角速度）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/rov/odom</code></td>
+<td style="text-align: left;"><code>nav_msgs/msg/Odometry</code></td>
+<td style="text-align: left;">仿真节点发布</td>
+<td style="text-align: left;">50 Hz</td>
+<td style="text-align: left;">ROV 空间位姿 (X, Y, Z, 四元数) 与线速度</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/rov/depth</code></td>
+<td style="text-align: left;"><code>std_msgs/msg/Float64</code></td>
+<td style="text-align: left;">仿真节点发布</td>
+<td style="text-align: left;">50 Hz</td>
+<td style="text-align: left;">水下深度实时标量（单位：米）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/joint_states</code></td>
+<td style="text-align: left;"><code>sensor_msgs/msg/JointState</code></td>
+<td style="text-align: left;">仿真节点发布</td>
+<td style="text-align: left;">50 Hz</td>
+<td style="text-align: left;">机械臂 6 个关节与夹爪位置、角速度</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32">3.2 键盘遥控控制键位映射表</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">控制动作</th>
+<th style="text-align: left;">核心推荐按键</th>
+<th style="text-align: left;">数字键/小键盘映射</th>
+<th style="text-align: left;">作用物理自由度</th>
+<th style="text-align: left;">物理响应说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>前进 / 后退</strong></td>
+<td style="text-align: left;"><strong><code>↑</code> / <code>↓</code></strong></td>
+<td style="text-align: left;"><code>W</code> / <code>S</code></td>
+<td style="text-align: left;">
+<script type="math/tex">X</script> 轴线速度 (<script type="math/tex">u</script>)</td>
+<td style="text-align: left;">驱动水平主推进器产生纵向位移</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>原地左转 / 右转</strong></td>
+<td style="text-align: left;"><strong><code>←</code> / <code>→</code></strong></td>
+<td style="text-align: left;"><code>4</code> / <code>6</code> (或 <code>J</code> / <code>L</code>)</td>
+<td style="text-align: left;">
+<script type="math/tex">Z</script> 轴角速度 (<script type="math/tex">r</script>)</td>
+<td style="text-align: left;">偏航转向力矩，旋转调整艏向角</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>垂直上浮 / 下潜</strong></td>
+<td style="text-align: left;"><strong><code>8</code> / <code>2</code></strong></td>
+<td style="text-align: left;"><code>Q</code> / <code>E</code></td>
+<td style="text-align: left;">
+<script type="math/tex">Z</script> 轴线速度 (<script type="math/tex">w</script>)</td>
+<td style="text-align: left;">垂直推进器推力，平滑调节巡航深度</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>左横移 / 右横移</strong></td>
+<td style="text-align: left;"><strong><code>7</code> / <code>9</code></strong></td>
+<td style="text-align: left;"><code>A</code> / <code>D</code></td>
+<td style="text-align: left;">
+<script type="math/tex">Y</script> 轴线速度 (<script type="math/tex">v</script>)</td>
+<td style="text-align: left;">侧向推进器推力，实现水下横向平移</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>俯仰角调节</strong></td>
+<td style="text-align: left;"><strong><code>1</code> / <code>3</code></strong></td>
+<td style="text-align: left;"><code>I</code> / <code>K</code></td>
+<td style="text-align: left;">
+<script type="math/tex">Y</script> 轴角速度 (<script type="math/tex">q</script>)</td>
+<td style="text-align: left;">纵摇俯仰力矩，调整机身抬头与低头倾角</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>急停悬停</strong></td>
+<td style="text-align: left;"><strong><code>空格</code> / <code>5</code> / <code>0</code></strong></td>
+<td style="text-align: left;"><code>空格</code></td>
+<td style="text-align: left;">全部 6 自由度</td>
+<td style="text-align: left;">立即将所有执行推力清零并锁定当前深度</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>推力比例调节</strong></td>
+<td style="text-align: left;"><strong><code>+</code> / <code>-</code></strong></td>
+<td style="text-align: left;"><code>+</code> / <code>-</code></td>
+<td style="text-align: left;">控制增益缩放</td>
+<td style="text-align: left;">动态增加或减小单次操作推力倍率</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="4">4. 关键源代码实现解析</h2>
+<h3 id="41-mujoco_sim_nodepy">4.1 仿真物理步进与推力注入 (<code>mujoco_sim_node.py</code>)</h3>
+<p>在每步物理循环中，将 <code>/cmd_vel</code> 映射的推力与环境浮力、洋流力叠加后注入 <code>data.xfrc_applied</code>：</p>
+<pre class="highlight"><code class="language-python">def _sim_step_callback(self):
+    """500 Hz 物理高频计算回调"""
+    dt = self.model.opt.timestep
+
+    # 1. 恒定阿基米德浮力注入 (Z轴)
+    self.data.xfrc_applied[self.body_id, 2] = self.buoyancy_force
+
+    # 2. 三层级联洋流拖曳力计算与注入
+    if self.ocean_current:
+        pos = self.data.sensor("pos").data[:3]
+        v_current = self.ocean_current.get_velocity(pos[0], pos[1], pos[2], dt)
+        self._apply_current_drag(self.data, self.body_id, v_current, self.drag_coeff)
+
+    # 3. 映射键盘 6-DOF 控制指令为推进器推力与力矩
+    self.data.xfrc_applied[self.body_id, 0] += self.cmd_vel.linear.x * self.force_scale
+    self.data.xfrc_applied[self.body_id, 1] += self.cmd_vel.linear.y * self.force_scale
+    self.data.xfrc_applied[self.body_id, 2] += self.cmd_vel.linear.z * self.force_scale
+    self.data.xfrc_applied[self.body_id, 3] += self.cmd_vel.angular.x * self.torque_scale
+    self.data.xfrc_applied[self.body_id, 4] += self.cmd_vel.angular.y * self.torque_scale
+    self.data.xfrc_applied[self.body_id, 5] += self.cmd_vel.angular.z * self.torque_scale
+
+    # 4. 执行 MuJoCo 物理积分推进
+    mujoco.mj_step(self.model, self.data)</code></pre>
+<h3 id="42-keyboard_teleop_nodepy">4.2 非阻塞键盘读取与指令广播 (<code>keyboard_teleop_node.py</code>)</h3>
+<p>利用 Linux 下 <code>termios</code> 与 <code>select</code> 实现低延迟非阻塞按键监听：</p>
+<pre class="highlight"><code class="language-python">def _get_key(self, timeout=0.05):
+    """设置终端为原始模式，非阻塞等待单字符输入"""
+    tty.setraw(sys.stdin.fileno())
+    rlist, _, _ = select.select([sys.stdin], [], [], timeout)
+    key = sys.stdin.read(1) if rlist else ''
+    termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.settings)
+    return key</code></pre>
+<hr/>
+<h2 id="5-step-by-step">5. 仿真运行步骤指南 (Step-by-Step)</h2>
+<h3 id="51">5.1 支持与测试环境声明</h3>
+<p>为确保所有开发者在不同系统与设备上均能稳定复现实验效果，功能包经过了跨平台严格测试：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">配置项</th>
+<th style="text-align: left;">Ubuntu 20.04（官方教学虚拟机）</th>
+<th style="text-align: left;">Ubuntu 22.04 / WSL2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>操作系统</strong></td>
+<td style="text-align: left;">Ubuntu 20.04 LTS</td>
+<td style="text-align: left;">Ubuntu 22.04 LTS</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>ROS 2 版本</strong></td>
+<td style="text-align: left;">ROS 2 Humble（虚拟机预装）</td>
+<td style="text-align: left;">ROS 2 Humble</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Python 版本</strong></td>
+<td style="text-align: left;"><strong>Python 3.8</strong>（系统默认，严格要求）</td>
+<td style="text-align: left;"><strong>Python 3.10</strong>（系统原生默认）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>图形渲染</strong></td>
+<td style="text-align: left;">虚拟机 3D 加速 / 纯终端模式</td>
+<td style="text-align: left;">本地 OpenGL 3.3+ / 终端模式</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Python 版本与 ROS 2 底层 ABI 绑定提醒</p>
+<ul>
+<li><strong>Ubuntu 20.04 虚拟机</strong>：ROS 2 Humble 的底层 C 语言扩展库（<code>_rclpy_pybind11</code>）是针对系统默认的 <strong>Python 3.8</strong> 编译链接的。因此在虚拟机中<strong>必须使用 Python 3.8</strong> 运行（系统原生 <code>python3</code> 或 <code>conda activate &lt;py38&gt;</code>）。若在 20.04 下切换为 Python 3.10 环境运行，解释器将因找不到对应 ABI 动态库而报错退出。</li>
+<li><strong>Ubuntu 22.04 系统</strong>：系统原生搭载的 ROS 2 Humble 对应为 <strong>Python 3.10</strong>。</li>
+</ul>
+</div>
+<hr/>
+<h3 id="52-0-prerequisites">5.2 步骤 0：环境准备与依赖安装 (Prerequisites)</h3>
+<p>在运行仿真或执行测试前，必须确保安装了 MuJoCo 物理引擎及科学计算依赖库，否则将提示 <code>ModuleNotFoundError: No module named 'mujoco'</code>：</p>
+<pre class="highlight"><code class="language-bash"># 1. 激活 ROS 2 Humble 环境 (虚拟机已配置时可跳过)
+source /opt/ros/humble/setup.bash
+
+# 2. 进入 ROS 2 工作空间根目录
+cd ~/ros2
+
+# 3. 安装功能包核心依赖清单
+pip3 install -r src/water/rov_mujoco/requirements.txt
+
+# 注：若国内网络下载较慢，推荐使用清华大学镜像源加速：
+# pip3 install -r src/water/rov_mujoco/requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple</code></pre>
+<p><code>requirements.txt</code> 声明的核心依赖项如下：</p>
+<ul>
+<li><code>mujoco&gt;=3.0.0</code>：DeepMind MuJoCo 高保真多体动力学与流体物理引擎；</li>
+<li><code>numpy&gt;=1.20.0</code>：空间坐标转换与洋流向量解算；</li>
+<li><code>scipy&gt;=1.7.0</code>：三维空间旋转（Rotation）与插值运算；</li>
+<li><code>pyyaml</code>：仿真参数解析。</li>
+</ul>
+<hr/>
+<h3 id="53-1">5.3 步骤 1：编译与配置工作空间</h3>
+<p>在 Ubuntu 20.04 / 22.04 终端中执行编译，并加载环境变量：</p>
+<pre class="highlight"><code class="language-bash">cd ~/ros2
+
+# 编译 rov_mujoco 功能包
+colcon build --packages-select rov_mujoco --symlink-install
+
+# 加载当前工作空间构建环境 (关键步骤，每次新开终端均需执行)
+source install/setup.bash</code></pre>
+<p><strong>预期编译输出</strong>：
+</p><pre class="highlight"><code class="language-text">Starting &gt;&gt;&gt; rov_mujoco
+Finished &lt;&lt;&lt; rov_mujoco [2.85s]
+
+Summary: 1 package finished [3.12s]</code></pre>
+<hr/>
+<h3 id="54-2">5.4 步骤 2：自动化单元验证测试</h3>
+<p>在启动实际仿真前，推荐先运行自动化单元测试，快速验证 MuJoCo 物理引擎加载、流体环境步进与 6-DOF 键盘响应逻辑：</p>
+<pre class="highlight"><code class="language-bash"># 方式 A：直接运行 Python 测试脚本（推荐快速自检）
+python3 src/water/rov_mujoco/test/test_sim_teleop.py
+
+# 方式 B：通过 colcon 执行标准化回归测试
+colcon test --packages-select rov_mujoco &amp;&amp; colcon test-result --all</code></pre>
+<p><strong>预期测试输出</strong>：
+</p><pre class="highlight"><code class="language-text">============================================================
+  水下机器人仿真及 6-DOF 键盘运动控制单元测试
+============================================================
+
+[Step 1] 验证基础流体环境与洋流推进步进...
+  -&gt; 初始位置 (X, Y, Z): [-0.0180, 0.0023, -0.9852] m
+  -&gt; 初始速度 (X, Y, Z): [-0.0012, 0.0004, -0.0001] m/s
+
+[Step 2] 模拟键盘按下 'W' (前进推力)...
+  -&gt; 前进后位置 X: 0.3466 m (位移: 0.3646 m)
+  -&gt; 前进后速度 X: 0.0821 m/s
+  -&gt; ✅ 前进控制测试通过！
+
+[Step 3] 模拟键盘按下 'Q' (垂直上浮)...
+  -&gt; 上浮后深度 Z: -0.8521 m (位移: +0.1331 m)
+  -&gt; 上浮后垂直速度: 0.0543 m/s
+  -&gt; ✅ 上浮控制测试通过！
+
+[Step 4] 模拟键盘按下 'A' (横向左移)...
+  -&gt; 侧移后位置 Y: 0.1852 m (位移: +0.1829 m)
+  -&gt; ✅ 横移控制测试通过！
+
+[Step 5] 模拟偏航角转向与急停恢复...
+  -&gt; 转向后角速度 Z: 0.1520 rad/s
+  -&gt; 执行急停 Space 键: 推力与角速度全部安全归零
+  -&gt; ✅ 偏航与急停控制测试通过！
+
+============================================================
+🎉 仿真与遥控核心功能测试全部通过！(5/5 passed)
+============================================================</code></pre>
+<hr/>
+<h3 id="55-3">5.5 步骤 3：多场景运行与交互模式</h3>
+<p>根据不同硬件环境与实验目的，系统提供三种运行模式：</p>
+<h4 id="a">模式 A：终端独立交互模式（推荐在虚拟机/无独立显卡环境使用）</h4>
+<p>无需依赖图形显卡驱动，直接在当前终端窗口中完成按键控制与状态反馈，并自动向 ROS 2 广播话题：
+</p><pre class="highlight"><code class="language-bash">python3 src/water/rov_mujoco/main.py</code></pre>
+- <strong>操作方式</strong>：在终端直接按键盘字符键（<code>W/S/A/D</code>、<code>Q/E</code>、<code>J/L</code>、<code>I/K</code>、空格），终端将实时打印推力比例与位置变化；按 <kbd>Ctrl</kbd> + <kbd>C</kbd> 安全退出。
+<h4 id="b-ros-2-launch">模式 B：标准 ROS 2 Launch 多节点模式（标准部署方式）</h4>
+<p>在标准 ROS 2 体系下同时拉起物理仿真内核节点 <code>mujoco_sim_node</code> 与按键监听节点 <code>keyboard_teleop_node</code>：
+</p><pre class="highlight"><code class="language-bash">ros2 launch rov_mujoco main.launch.py</code></pre>
+- <strong>验证与话题监测</strong>：新开一个终端，执行以下命令即可观察 ROV 实时发布的物理仿真数据：
+  <pre class="highlight"><code class="language-bash">source /opt/ros/humble/setup.bash
+source install/setup.bash
+
+# 查看当前活跃话题
+ros2 topic list
+
+# 监听实时深度变化 (50Hz)
+ros2 topic echo /rov/depth
+
+# 监听空间位姿里程计
+ros2 topic echo /rov/odom</code></pre>
+<h4 id="c3d">模式 C：3D 可视化视窗交互模式（录屏与直观查看推荐）</h4>
+<p>拉起 MuJoCo 官方原生 3D 渲染窗口，呈现水下池体、ROV 机械臂本体与洋流扰动动态效果：
+</p><pre class="highlight"><code class="language-bash">python3 src/water/rov_mujoco/main.py --gui</code></pre>
+- <strong>操作方式</strong>：鼠标左键拖拽旋转视角，右键平移缩放；在终端窗口中按下方向键或数字键控制航行。
+<hr/>
+<h3 id="56-4-faq-troubleshooting">5.6 步骤 4：虚拟机常见问题排查 (FAQ / Troubleshooting)</h3>
+<h4 id="q1-modulenotfounderror-no-module-named-mujoco">Q1: 运行提示 <code>ModuleNotFoundError: No module named 'mujoco'</code></h4>
+<ul>
+<li><strong>原因</strong>：当前 Python 环境未安装 MuJoCo 引擎。</li>
+<li><strong>解决</strong>：执行 <code>pip3 install -r src/water/rov_mujoco/requirements.txt</code> 或 <code>pip3 install mujoco numpy scipy pyyaml</code>。</li>
+</ul>
+<h4 id="q2-ubuntu-2004-vmware-virtualbox-gui-glfw-error">Q2: 在 Ubuntu 20.04 虚拟机 (VMware / VirtualBox) 中运行 <code>--gui</code> 视窗报错 <code>GLFW error</code> 或黑屏</h4>
+<ul>
+<li><strong>原因</strong>：虚拟机未开启 3D 图形加速，或虚拟显卡驱动的 OpenGL 版本低于 3.3。</li>
+<li><strong>解决方式</strong>：</li>
+<li><strong>开启 3D 加速</strong>：关闭虚拟机，在 VMware 中进入“虚拟机设置 -&gt; 显示器”，勾选“加速 3D 图形”；</li>
+<li><strong>强制指定 OpenGL 驱动版本</strong>：在终端运行前注入 MESA 兼容参数：
+     <pre class="highlight"><code class="language-bash">export MESA_GL_VERSION_OVERRIDE=3.3
+python3 src/water/rov_mujoco/main.py --gui</code></pre></li>
+<li><strong>使用纯终端模式（最佳替代方案）</strong>：虚拟机中若完全没有 GPU 驱动，可直接运行 <strong>模式 A</strong>（<code>python3 src/water/rov_mujoco/main.py</code>），核心物理动力学计算与键盘控制完全一致且不受显卡限制。</li>
+</ul>
+<h4 id="q3-ros2-launch-package-rov_mujoco-not-found">Q3: 运行 <code>ros2 launch</code> 报错 <code>Package 'rov_mujoco' not found</code></h4>
+<ul>
+<li><strong>原因</strong>：编译后未加载当前工作空间的 setup 脚本。</li>
+<li><strong>解决</strong>：在运行指令的终端中执行 <code>source install/setup.bash</code>。</li>
+</ul>
+<h4 id="q4-modulenotfounderror-no-module-named-rclpy">Q4: 提示 <code>ModuleNotFoundError: No module named 'rclpy'</code></h4>
+<ul>
+<li><strong>原因</strong>：未加载 ROS 2 基础环境变量。</li>
+<li><strong>解决</strong>：执行 <code>source /opt/ros/humble/setup.bash</code>。</li>
+</ul>
+<h4 id="q5-cannot-import-name-_rclpy_pybind11-the-c-extension-cpython-310-x86_64-linux-gnuso-isnt-present">Q5: 运行提示 <code>cannot import name '_rclpy_pybind11' ... The C extension '...cpython-310-x86_64-linux-gnu.so' isn't present</code></h4>
+<ul>
+<li><strong>原因</strong>：在 Ubuntu 20.04 虚拟机中激活了 Python 3.10 环境（如 Conda <code>nn_3.10</code>）。由于 Ubuntu 20.04 教学镜像中的 ROS 2 Humble 底层 C 语言扩展库仅针对系统默认的 Python 3.8 编译（文件名为 <code>cpython-38</code> 结尾），无法在 Python 3.10 解释器中被加载。</li>
+<li><strong>解决</strong>：在 Ubuntu 20.04 虚拟机中必须切换至 <strong>Python 3.8</strong> 环境运行：
+  <pre class="highlight"><code class="language-bash"># 退出高版本 Python 环境，使用系统原生默认的 Python 3.8
+conda deactivate
+# 或切换激活 Python 3.8 虚拟环境
+conda activate nn_3.8
+python3 src/water/rov_mujoco/test/test_sim_teleop.py</code></pre></li>
+</ul>
+<hr/>
+<h2 id="6-gif">6. 实验结果与动图演示 (GIF)</h2>
+<blockquote>
+<p><strong>录屏规范</strong>：推荐使用 <a href="https://www.screentogif.com/">ScreenToGif</a> 录制窗口，保持输出动图文件体积一般小于 10MB（最大不超过 20MB）。</p>
+</blockquote>
+<h3 id="61-6-dof">6.1 键盘 6-DOF 运动控制效果演示</h3>
+<p><img alt="水下机器人键盘运动控制演示" src="../../img/water/rov_keyboard_teleop.gif"/></p>
+<p><em>图 1.1：通过键盘 W/S/A/D 与 Q/E 键实时控制水下 ROV 航行体在虚拟水体中前进、平移与沉浮过程（文件体积：8.12 MB）。</em></p>
+<h3 id="62">6.2 话题通信与数据流监测</h3>
+<p>在控制运行时开启新终端，执行话题监听验证数据流连续性：
+</p><pre class="highlight"><code class="language-bash">ros2 topic echo /rov/depth</code></pre>
+<pre class="highlight"><code class="language-text">data: -1.2483
+---
+data: -1.2135
+---
+data: -1.1820</code></pre>
+表明下潜深度值伴随推力控制实时精确更新。
+<hr/>
+<h2 id="7">7. 结论与扩展支持</h2>
+<p>本模块成功实现了水下机器人在 MuJoCo 物理引擎中的 6-DOF 动力学闭环建模，完成了标准 ROS 2 Launch 启动与键盘实时控制，并全面兼容 Ubuntu 20.04 教学虚拟机与 Ubuntu 22.04 环境。后续可在此动力学模型基础上进一步扩展多波束前视声呐、水下相机与 IMU 传感器仿真流，并基于感知数据实施轨迹跟踪闭环控制。</p></div>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../WSL_HoloOcean2_ROS2/" title="WSL跑通HoloOcean2的ROS2示例方法"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../rov_trajectory_tracking/" title="水下多传感器感知与 3D 轨迹跟踪控制">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../WSL_HoloOcean2_ROS2/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../rov_trajectory_tracking/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../..";</script>
+<script src="../../js/theme_extra.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../js/umlconvert.js"></script>
+<script src="../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script>mermaid.initialize({});</script></body>
+</html>

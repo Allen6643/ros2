@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>无人机飞行轨迹类型识别与 ROS2 自动任务日志 - 模拟器的 ROS 文档</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u65e0\u4eba\u673a\u98de\u884c\u8f68\u8ff9\u7c7b\u578b\u8bc6\u522b\u4e0e ROS2 \u81ea\u52a8\u4efb\u52a1\u65e5\u5fd7";
+        var mkdocs_page_input_path = "air\\flight_pattern_recognition.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ubuntu20.04/">安装 ROS</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap4/">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap5/">5. 机器人感知</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal current" href="#">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#1-openhutb">1. 在 OpenHUTB 上扩展什么</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_1">环境安装、检查与构建</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_2">仿真器选择与实际验证范围</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#3">3. 数据、标签与防泄漏</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#4">4. 训练、测试、消融</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#5-ros2">5. ROS2 接口与自动日志</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#6-airsim">6. 重新采集或接入正在运行的 AirSim</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#7">7. 文件与限制</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../water/HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_e2e/">静水环境下单目视觉水下 ROV 端到端神经网络控制</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a></li>
+<li class="breadcrumb-item">空域载具</li>
+<li class="breadcrumb-item active">无人机飞行轨迹类型识别与 ROS2 自动任务日志</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/air/flight_pattern_recognition.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="ros2">无人机飞行轨迹类型识别与 ROS2 自动任务日志</h1>
+<p>本模块从无人机最近 6 秒的位置、速度、加速度中识别五类飞行轨迹，通过 ROS2 发布类别、置信分数及稳定任务事件，并显示轨迹和识别时间线。包含真实 AirSim 数据、神经网络训练与测试、消融、模型、ROS2 封装和可复现入口。</p>
+<p>主模型使用时序几何特征的均值/标准差加 MLP；GRU 为序列模型对照。任务属于<strong>已知轨迹家族分类</strong>，不预测未来状态，不做异常检测或路径规划。</p>
+<p><img alt="实际 ROS2 运行窗口" src="results/dashboard_window.png"/></p>
+<p>该图是 Ubuntu 中订阅真实 ROS2 话题的窗口截图：回放 <code>episode_300</code>～<code>304</code> 的 1805 条实际仿真观测，得到 105 个预测和 5 条稳定事件。左下保留了短暂错误及低置信度预测。不是模拟绘制的成功界面，也不是直接订阅飞行指令标签。</p>
+<h2 id="1-openhutb">1. 在 OpenHUTB 上扩展什么</h2>
+<p>复用 <a href="https://github.com/OpenHUTB/ros2/blob/master/docs/air/setup_and_connect.md">OpenHUTB AirSim / ROS 连接方式</a> 和 <a href="https://github.com/OpenHUTB/ros2/blob/master/src/air/air_teleop/drone_ros_node.py">air_teleop 状态访问、消息解耦思路</a>，新增 ROS2 遥测分类节点、任务事件、防抖和可视化。采集器改编自状态预测课程项目的 AirSim 采集程序，保留边界检查、稳定起点和降落确认；不依赖其他未合并模块才能运行。</p>
+<table>
+<thead>
+<tr>
+<th>项目方向</th>
+<th>输入 / 输出</th>
+<th>本项目区别</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>状态预测（PR #121）</td>
+<td>历史状态 → 未来位置、速度</td>
+<td>本项目输出离散轨迹类型</td>
+</tr>
+<tr>
+<td>遥测异常检测（PR #138）</td>
+<td>状态 → 异常分数、告警</td>
+<td>本项目训练正常任务类别，不注入故障</td>
+</tr>
+<tr>
+<td>避障、PPO 导航、PID 跟踪</td>
+<td>感知/目标 → 控制动作</td>
+<td>分类和日志节点不发送飞行控制指令</td>
+</tr>
+<tr>
+<td>YOLO 图像检测</td>
+<td>图像 → 目标框</td>
+<td>本项目仅使用飞行遥测</td>
+</tr>
+</tbody>
+</table>
+<p>2026-10-02 核查 OpenHUTB 主分支目录及最近 100 个 PR 标题/范围，未发现相同轨迹分类与任务日志模块；这不代表其他仓库不存在相关研究。上游基线为 <code>c10e1331a5b24dd2d9a0d37bafe91cecdb5ae92b</code>。</p>
+<p><img alt="系统架构" src="results/architecture.png"/></p>
+<h2 id="_1">环境安装、检查与构建</h2>
+<p>以下假设仓库位于 <code>~/ros2</code>；若克隆位置不同，请修改第一行路径。已有环境可跳过创建；首次安装需使用与系统 ROS2 匹配的 <code>/usr/bin/python3</code>，避免 Conda 的 <code>python3</code> 被误用：</p>
+<pre class="highlight"><code class="language-bash">cd ~/ros2/src/air/flight_pattern_recognition
+source /opt/ros/humble/setup.bash
+/usr/bin/python3 -m venv --system-site-packages ~/uav_prediction_env
+source ~/uav_prediction_env/bin/activate
+python -m pip install -r requirements.txt
+bash main.sh doctor
+bash main.sh build</code></pre>
+<p><code>requirements.txt</code> 一次安装 CPU 版 PyTorch、NumPy、Matplotlib、colcon 构建插件、ROS launch 所需的 Lark 和可选仿真客户端的前置依赖；不需要另装 CUDA。ROS2 的 <code>rclpy</code>/消息包和 Tk 来自系统 ROS/Python 安装，不能用 pip 安装 ROS2 代替。若创建 venv 报缺少 ensurepip，先安装系统 <code>python3-venv</code>；没有图形窗口时检查 <code>python3-tk</code>。</p>
+<p>如果旧环境在 <code>doctor</code> 中报 <code>launch_ros: No module named 'lark'</code>，请在本模块目录、已激活的虚拟环境中重新运行 <code>python -m pip install -r requirements.txt</code>，再运行 <code>bash main.sh doctor</code>。依赖表已显式包含 <code>lark==1.1.9</code>，无需重建环境；不要用隐藏缺包错误或跳过 <code>launch_ros</code> 检查的方式继续构建。</p>
+<p>已经由 Conda 创建且无法导入 ROS2 的环境，建议保留原环境，另建一个系统 Python venv（例如 <code>~/ros2_course_env</code>），激活后运行同一个 requirements 命令。<code>main.sh</code> 优先使用 <code>UAV_ENV</code> 指定的目录，其次使用当前已激活的 <code>VIRTUAL_ENV</code>，最后才使用 <code>~/uav_prediction_env</code>；<code>ROS_SETUP</code> 可指定 ROS setup 文件。每个新终端都要激活环境，或使用会加载环境的 <code>main.sh</code>。</p>
+<pre class="highlight"><code class="language-bash">source ~/uav_prediction_env/bin/activate</code></pre>
+<p>构建通过当前 Python 调用 <code>colcon_core.command.main</code>，不依赖非标准的 <code>python -m colcon</code> 兼容模块。<code>doctor</code> 检查 ROS2、神经网络库和构建插件，打印实际解释器并保存 <code>artifacts/environment.json</code>；该环境记录已随本 PR 提交。</p>
+<p>目录和 ROS 包已统一更名为 <code>flight_pattern_recognition</code>。请在新目录重新执行 build；旧路径生成的 <code>build/</code>、<code>install/</code>、<code>log/</code> 不要复制到新目录。回放使用随附模型和数据，<strong>无需先启动或下载仿真器</strong>：</p>
+<pre class="highlight"><code class="language-bash">bash main.sh demo</code></pre>
+<p>先在另一桌面终端运行 <code>bash main.sh dashboard</code>，再启动 demo；五类回放约 95 秒后正常结束。</p>
+<h2 id="_2">仿真器选择与实际验证范围</h2>
+<p>新部署推荐使用维护者提供的 <a href="https://github.com/OpenHUTB/hutb/releases">OpenHUTB 模拟器发布页</a>，选择支持无人机的场景及 AirSim 兼容接口。先使用现有场景和回放验证项目，再按需要下载对应平台版本。</p>
+<p>本提交的既有训练数据、曲线和截图来自 Windows Blocks / AirSim 的实际运行，<strong>尚未将这些结果重新标为 OpenHUTB 模拟器实测</strong>。可复用 AirSim RPC 客户端，但具体场景、车辆名、主机地址及端口需按实际配置检查。配置示例随代码保存在 <code>config/airsim_settings.json</code>；示例中的 <code>192.168.239.1</code> 和 <code>PredictionDrone</code> 不应在其他机器盲目照抄。</p>
+<p>只有重新采集或实时接入才需要额外安装仿真客户端。先完成核心 requirements，再运行：</p>
+<pre class="highlight"><code class="language-bash">python -m pip install -r requirements_airsim.txt</code></pre>
+<p>核心 requirements 已安装 <code>numpy</code> 与 <code>msgpack-rpc-python</code>，满足旧版 AirSim 安装脚本的前置导入要求；回放不导入 AirSim。重新采集程序会控制仿真无人机；回放、推理和只读桥接不下发飞控指令。</p>
+<h2 id="3">3. 数据、标签与防泄漏</h2>
+<p>数据来自实际运行的 AirSim <code>getMultirotorState</code>，保留 CSV、采集参数、时间戳和 SHA256。不是按轨迹方程直接生成的理想状态。轨迹方程仅生成控制目标，数据包含仿真飞行控制器实际响应。</p>
+<table>
+<thead>
+<tr>
+<th>划分</th>
+<th style="text-align: right;">完整飞行数</th>
+<th style="text-align: right;">窗口数</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>旧训练集 000～019</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">280</td>
+<td>归一化及模型训练</td>
+</tr>
+<tr>
+<td>旧验证集 020～024</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">70</td>
+<td>模型家族、权重和拒识阈值选择</td>
+</tr>
+<tr>
+<td>旧保留测试集 025～029</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">70</td>
+<td>独立报告原始测试表现</td>
+</tr>
+<tr>
+<td>新最终测试集 300～314</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">315</td>
+<td>冻结模型后重新采集，每类 3 次</td>
+</tr>
+</tbody>
+</table>
+<p>旧数据 8430 条状态，新最终测试数据 5416 条，共 13846 条有效状态。另保留一次采样失败的原始记录，<strong>不计入有效数据或测试</strong>。源数据包的旧 <code>raw/manifest.json</code> 原样保留；其 <code>samples</code> 字段为前项目记录，本项目样本数按 CSV 实际行数统计。</p>
+<p>五个标签是采集任务家族，来自采集元数据：</p>
+<table>
+<thead>
+<tr>
+<th>标签</th>
+<th>采集任务含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>line</code></td>
+<td>水平直线往返，正弦速度变化</td>
+</tr>
+<tr>
+<td><code>circle</code></td>
+<td>水平圆形轨迹</td>
+</tr>
+<tr>
+<td><code>figure_eight</code></td>
+<td>水平八字轨迹</td>
+</tr>
+<tr>
+<td><code>climb</code></td>
+<td>水平位移伴随周期性升降，不是单向爬升</td>
+</tr>
+<tr>
+<td><code>stop_go</code></td>
+<td>平滑停留/换向轨迹，不是硬切换停车</td>
+</tr>
+</tbody>
+</table>
+<p>采样约 20 Hz，坐标统一 NED（x 北、y 东、z 向下）。输入只含 9 个位置/速度/加速度字段；类别、飞行编号、控制指令、随机种子均不进入网络。按整段飞行划分，之后才生成滑动窗口；归一化仅用训练集拟合。每段前 1 秒作为起始过渡，7 秒后开始使用过去 6 秒；以 0.1 秒网格插值为 61 点，约每 0.5 秒预测一次。仅使用预测时刻及之前的数据。</p>
+<p>8 个几何特征为水平速度、垂直速度、切向加速度、有符号法向加速度、垂直加速度、水平相对位移、相对高度及路径效率。它们对整体平移和绕竖直轴旋转不变；这不等于对所有飞行速度或姿态变化不变。时间间隔超过 150 ms、非有限值、时钟回退或来源分段变化都会重置历史。</p>
+<p><code>results/frozen_protocol.json</code> 记录最终采集前固定的模型及算法 SHA256。第 308 段首次采集出现重复时间戳和 0.576 秒停顿，依据质量规则拒绝；用相同种子和任务参数重采后通过。失败 CSV 在数据包 <code>rejected_raw/</code>，原始及替代哈希在 <code>results/collection_quality.json</code>。替代发生在读取任何最终分类结果之前。</p>
+<h2 id="4">4. 训练、测试、消融</h2>
+<p>主模型：8 维序列取时间均值和标准差，得到 16 维输入；<code>Linear(16,32) → ReLU → Linear(32,5)</code>。训练采用交叉熵、Adam、固定随机种子、梯度裁剪，最多 120 轮，验证损失连续 20 轮不改善则停止。GRU 使用 32 维隐状态。位置特征消融保持 MLP 结构，将前五个速度/加速度通道的归一化值置零，只保留位移、高度和路径效率。</p>
+<p>验证损失支持选择 MLP 而非 GRU；主模型固定使用种子 42，43/44 用于稳定性对比。最近质心是非神经网络基线，使用相同的 16 维统计特征。它在验证集上优于神经网络，因此结果不支持“神经网络在所有数据上都优于简单方法”。</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th style="text-align: right;">旧测试准确率</th>
+<th style="text-align: right;">旧测试宏 F1</th>
+<th style="text-align: right;">新最终测试准确率</th>
+<th style="text-align: right;">新最终测试宏 F1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MLP，种子 42（主模型）</td>
+<td style="text-align: right;">75.71%</td>
+<td style="text-align: right;">0.716</td>
+<td style="text-align: right;">96.51%</td>
+<td style="text-align: right;">0.965</td>
+</tr>
+<tr>
+<td>MLP，种子 43</td>
+<td style="text-align: right;">74.29%</td>
+<td style="text-align: right;">0.675</td>
+<td style="text-align: right;">97.46%</td>
+<td style="text-align: right;">0.975</td>
+</tr>
+<tr>
+<td>MLP，种子 44</td>
+<td style="text-align: right;">78.57%</td>
+<td style="text-align: right;">0.751</td>
+<td style="text-align: right;">97.78%</td>
+<td style="text-align: right;">0.978</td>
+</tr>
+<tr>
+<td>GRU，种子 42</td>
+<td style="text-align: right;">58.57%</td>
+<td style="text-align: right;">0.510</td>
+<td style="text-align: right;">67.62%</td>
+<td style="text-align: right;">0.607</td>
+</tr>
+<tr>
+<td>MLP，仅位置几何特征</td>
+<td style="text-align: right;">37.14%</td>
+<td style="text-align: right;">0.317</td>
+<td style="text-align: right;">60.95%</td>
+<td style="text-align: right;">0.605</td>
+</tr>
+<tr>
+<td>最近质心基线</td>
+<td style="text-align: right;">75.71%</td>
+<td style="text-align: right;">0.745</td>
+<td style="text-align: right;">94.29%</td>
+<td style="text-align: right;">0.942</td>
+</tr>
+</tbody>
+</table>
+<p>以上是<strong>全部窗口的原始分类指标</strong>，错误不会因低置信度而删除。主模型最终测试接受率为 99.37%，接受部分准确率 96.81%；旧测试接受率 82.86%，接受部分准确率 79.31%。阈值 0.53 由验证集规则确定（接受准确率至少 90%，且覆盖至少 20%）；softmax 分数没有经过概率校准，拒识机制未作为未知轨迹检测器验证。</p>
+<p>整段多数投票准确率分别为旧测试 4/5、新测试 15/15；多数投票只用于离线统计，不是实时稳定事件的评分。CPU 模型单次前向耗时中位数约 0.021 ms、P95 约 0.029 ms，不含 ROS 传输、窗口计算和界面刷新。模型首次输出需约 7 秒历史，任务事件还需连续 3 次一致预测，通常再等待约 1 秒。</p>
+<p><img alt="两组测试并列对比" src="results/test_set_comparison.png"/>
+<img alt="训练曲线" src="results/loss.png"/>
+<img alt="混淆矩阵" src="results/confusion_matrix.png"/>
+<img alt="预测与采集标签" src="results/prediction_timeline.png"/></p>
+<p>旧测试的直线样本大多被判断为停走，八字样本部分被判断为圆形，说明短时间窗口内的运动模式存在重叠。新测试任务更长（约 18 秒，旧数据约 14 秒），参数、初始稳定过程也存在差异；两组结果应分别解释，不能用新测试高分覆盖旧测试低分。窗口彼此重叠，315 个窗口不能当作 315 次独立飞行。</p>
+<p>复现入口（先激活已有 Python/ROS2 环境）：</p>
+<pre class="highlight"><code class="language-bash">python main.py prepare
+python main.py test
+python main.py evaluate --split final --output results/recomputed_final
+python main.py evaluate --split test --output results/recomputed_original</code></pre>
+<p>从头重新训练全部对照模型，保存到新目录，不覆盖随附权重：</p>
+<pre class="highlight"><code class="language-bash">python main.py reproduce --output models/retrained_run</code></pre>
+<p>该入口依次训练五组模型，并分别评估旧测试和新最终测试。若只训练一个模型：</p>
+<pre class="highlight"><code class="language-bash">python main.py train --variant mlp --seed 42 --output models/retrained_mlp_42</code></pre>
+<p><code>python main.py report</code> 从随附实验 JSON/CSV 和 loss 记录重新绘制图表；<code>python verify_stream.py</code> 校验离线与逐条输入的预测一致性。随附结果已核对全部 315 个最终窗口，概率误差容限为 2e-6。</p>
+<h2 id="5-ros2">5. ROS2 接口与自动日志</h2>
+<table>
+<thead>
+<tr>
+<th>话题</th>
+<th>消息</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/uav/pattern/telemetry</code></td>
+<td><code>std_msgs/String</code> JSON</td>
+<td>整数纳秒时间戳、匿名分段标识、9 维状态</td>
+</tr>
+<tr>
+<td><code>/uav/pattern/prediction</code></td>
+<td>同上</td>
+<td>原始类别、接受类别、5 类分数、稳定类别</td>
+</tr>
+<tr>
+<td><code>/uav/pattern/task_events</code></td>
+<td>同上</td>
+<td>连续 3 次稳定后的类别变化事件</td>
+</tr>
+<tr>
+<td><code>/uav/pattern/status</code></td>
+<td>同上</td>
+<td>暖机、识别、坏数据、断流、回放结束</td>
+</tr>
+<tr>
+<td><code>/uav/pattern/replay_status</code></td>
+<td>同上</td>
+<td>回放完成及样本数</td>
+</tr>
+</tbody>
+</table>
+<p>所有字段定义可在 <code>ros_pattern.py</code>、<code>pattern_stream.py</code> 中查看。使用 JSON 是为了避免额外自定义消息构建；时间戳保持整数，不经过 float 转换。CSV 回放生成的 <code>segment_000</code> 等匿名标识仅用于重置历史，不包含真实任务标签。分段边界来自数据源，本模块不声称自动发现未知任务的真实起止边界。</p>
+<p>启动文件为 <code>launch/pattern.launch.py</code>，必填参数为 <code>files</code>（分号分隔的 CSV 路径）、<code>model</code>，可选 <code>log</code>。回放进程退出会触发识别节点退出，日志每行立即写入；虚拟机停顿超过 150 ms 时延后回放墙钟起点，保留原始仿真时间戳并避免集中补发挤满消息队列；<code>main.sh demo</code> 已封装此调用。</p>
+<p>9 项单元测试覆盖因果性、不变性、采样间断、跨段重置、时钟回退、NaN 和防抖。真实 ROS2 集成检查另外验证 361 条消息、21 次预测、1 条事件、坏 JSON、NaN 和壁钟断流重置，结果见 <code>results/ros_integration.json</code>。重新执行：</p>
+<pre class="highlight"><code class="language-bash">source /opt/ros/humble/setup.bash
+source ~/uav_prediction_env/bin/activate
+ROS_DOMAIN_ID=76 PYTHONPATH="$PWD:$PYTHONPATH" python tests/ros_smoke.py</code></pre>
+<h2 id="6-airsim">6. 重新采集或接入正在运行的 AirSim</h2>
+<p><code>collect_final.py</code> 会在已有场景中实际控制仿真无人机，包含碰撞、区域边界、起点稳定和降落确认。模型推理、回放、界面和 <code>pattern_live.py</code> 均不控制无人机。主机默认 <code>192.168.239.1</code>、载具 <code>PredictionDrone</code>；配置示例见 <code>assets/airsim_settings.json</code>。</p>
+<p>已有场景启动且无人机在地面时，可采集到独立新目录：</p>
+<pre class="highlight"><code class="language-bash">python collect_final.py --host 192.168.239.1 --start 400 --episodes 5 --output data/new_collection</code></pre>
+<p>采集器拒绝覆盖文件。新增数据不是随附最终测试集的一部分；若用于训练，应重新设计完整飞行划分，并保留新的未见测试集。</p>
+<p>只读实时桥接：</p>
+<pre class="highlight"><code class="language-bash">python main.py live --ros-args -p host:=192.168.239.1 -p vehicle:=PredictionDrone</code></pre>
+<p>在另一个已加载 ROS 和包环境的终端启动识别节点：</p>
+<pre class="highlight"><code class="language-bash">ros2 run flight_pattern_recognition pattern_recognizer --ros-args -p model:="$PWD/models/mlp_42" -p log:="$PWD/results/live_predictions.jsonl"</code></pre>
+<p>飞行需要独立控制器。五类训练数据不覆盖起飞、降落、悬停、故障和任意复杂任务；这些阶段的输出没有准确性保证。当前提交的识别截图与指标来自真实仿真数据的 ROS2 回放，不冒充对新实时飞行完成了全流程精度验证。</p>
+<p><img alt="实际采集时的 AirSim 相机帧" src="results/airsim_scene.png"/></p>
+<p>此图为采集第 300 段时由 AirSim API 返回的原始相机帧（256×144）；不参与模型输入。两次采集程序都记录 <code>LANDED_VERIFIED True</code>，见 <code>results/pattern_collection.log</code> 和 <code>results/pattern_retry.log</code>。</p>
+<h2 id="7">7. 文件与限制</h2>
+<p><code>assets/flight_corpus.zip</code> 为自包含原始数据；<code>models/</code> 为权重、训练 loss 和配置；<code>results/</code> 为实验原始指标、预测 CSV、图表、真实截图及运行日志；<code>tests/</code> 为校验；<code>main.py</code>/<code>main.sh</code> 为统一入口。<code>data/</code>、ROS 构建目录及再训练输出由本地生成。</p>
+<p>本实验仅使用一个 AirSim Blocks / SimpleFlight 场景和有限参数范围，未验证实机、跨场景、跨控制器、风扰动或未知轨迹。类别来自采集任务元数据，不是人工逐时刻动作标注。旧测试明显低于新测试，反映样本量和分布敏感性；本模块定位为可复现的课程实验与日志原型。</p>
+<p>AI 使用声明：代码、文档和实验流程在大模型辅助下完成；随附数据来自实际仿真采集，训练、测试、ROS2 日志和截图来自实际运行。提交者负责检查与维护提交内容。</p></div>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../../ground/vehicle_pygame_teleop/" title="车辆键盘遥操作与二维模拟"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../telemetry_diagnostics/" title="无人机遥测异常检测与 ROS2 在线诊断">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../../ground/vehicle_pygame_teleop/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../telemetry_diagnostics/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../..";</script>
+<script src="../../js/theme_extra.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../js/umlconvert.js"></script>
+<script src="../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>Gazebo 机器人平台搭建与首次仿真 - 模拟器的 ROS 文档</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "Gazebo \u673a\u5668\u4eba\u5e73\u53f0\u642d\u5efa\u4e0e\u9996\u6b21\u4eff\u771f";
+        var mkdocs_page_input_path = "chapter\\chap4\\gazebo_platform_simulation.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ubuntu20.04/">安装 ROS</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap5/">5. 机器人感知</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_e2e/">静水环境下单目视觉水下 ROV 端到端神经网络控制</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a></li>
+<li class="breadcrumb-item active">Gazebo 机器人平台搭建与首次仿真</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/chapter/chap4/gazebo_platform_simulation.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="gazebo">Gazebo 机器人平台搭建与首次仿真</h1>
+<p>本实验从零搭建一个可以在 Gazebo 中运行的 ROS 移动机器人平台。机器人名为 <code>mybot</code>，采用两轮差速结构，搭载 2D 激光雷达和 RGB 相机，能够接收 <code>/cmd_vel</code> 速度指令、发布 <code>/odom</code> 里程计、输出 <code>/scan</code> 激光数据和 <code>/camera/image_raw</code> 相机图像，并形成完整的 ROS TF 坐标树。</p>
+<ul>
+<li><a href="#problem">1. 要解决的问题</a></li>
+<li><a href="#method">2. 系统总览与方法</a></li>
+<li><a href="#graph">3. 节点图与数据流解析</a></li>
+<li><a href="#results">4. 运行效果与验收现象</a></li>
+<li><a href="#quickstart">5. 快速开始</a></li>
+<li><a href="#steps">6. 分步教程</a></li>
+<li><a href="#metrics">7. 设计参数与验收指标</a></li>
+<li><a href="#debug">8. 常见问题总览</a></li>
+<li><a href="#references">9. 参考文献与说明</a></li>
+</ul>
+<blockquote>
+<p>完整功能包在 <a href="https://github.com/OpenHUTB/ros2/tree/master/src/chap4/mybot_gazebo"><code>src/chap4/mybot_gazebo/</code></a>，
+包含 URDF、Gazebo 插件、世界文件、launch 文件和最小运动控制脚本。
+本页负责路线总览；逐步操作请从第 6 节进入对应的子页面。</p>
+</blockquote>
+<p><img alt="Gazebo 机器人平台系统总览" src="../images/gazebo_platform/system_overview.svg"/></p>
+<h2 id="1">1. 要解决的问题 <span id="problem"></span></h2>
+<p>直接在真实机器人上学习 ROS 仿真会遇到三个问题：</p>
+<ol>
+<li>硬件、驱动、通信和算法故障混在一起，很难判断问题来自哪一层；</li>
+<li>模型、传感器安装位置、坐标系和控制器参数一旦写错，真实机器人可能损坏；</li>
+<li>没有固定世界和可回放数据，同一个问题很难重复出现。</li>
+</ol>
+<p>Gazebo 的价值不是“画一个好看的机器人”，而是提供一个可重复的物理世界，让机器人模型、传感器、ROS 话题和坐标变换在进入真实平台前先跑通。</p>
+<p>本实验要解决的问题是：</p>
+<ul>
+<li>怎样从 URDF/xacro 开始搭建机器人平台；</li>
+<li>怎样让 Gazebo 中的机器人真正接收 ROS 速度命令；</li>
+<li>怎样让激光、相机和里程计变成 ROS 话题；</li>
+<li>怎样确认 TF 树、话题类型、数据频率和物理运动方向都正确；</li>
+<li>怎样在出错时快速定位是模型、插件、launch、TF 还是控制节点的问题。</li>
+</ul>
+<h2 id="2">2. 系统总览与方法 <span id="method"></span></h2>
+<p>本实验采用“模型 -&gt; 插件 -&gt; 世界 -&gt; 控制 -&gt; 验证”的构建顺序。每一步只增加一种能力，读者可以单独验证，不需要等到最后才发现问题。</p>
+<table>
+<thead>
+<tr>
+<th>层次</th>
+<th>文件或模块</th>
+<th>作用</th>
+<th>产生的结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>机器人模型</td>
+<td><code>urdf/mybot.urdf.xacro</code></td>
+<td>描述车体、车轮、激光、相机和关节</td>
+<td>可检查的 URDF 模型</td>
+</tr>
+<tr>
+<td>Gazebo 驱动</td>
+<td><code>libgazebo_ros_diff_drive.so</code></td>
+<td>把速度命令转换为左右轮运动</td>
+<td><code>/cmd_vel</code>、<code>/odom</code>、里程计 TF</td>
+</tr>
+<tr>
+<td>关节状态</td>
+<td>差速插件的 <code>publishWheelJointState</code></td>
+<td>发布车轮关节状态</td>
+<td><code>/joint_states</code></td>
+</tr>
+<tr>
+<td>激光传感器</td>
+<td><code>libgazebo_ros_laser.so</code></td>
+<td>把射线扫描转换为激光消息</td>
+<td><code>/scan</code></td>
+</tr>
+<tr>
+<td>相机传感器</td>
+<td><code>libgazebo_ros_camera.so</code></td>
+<td>输出 RGB 图像和相机参数</td>
+<td><code>/camera/image_raw</code>、<code>/camera/camera_info</code></td>
+</tr>
+<tr>
+<td>仿真世界</td>
+<td><code>worlds/mybot_empty.world</code></td>
+<td>提供地面、光照和物理参数</td>
+<td>可重复的仿真环境</td>
+</tr>
+<tr>
+<td>启动组织</td>
+<td><code>launch/mybot_gazebo.launch</code></td>
+<td>一条命令启动世界、模型和 TF</td>
+<td>完整仿真系统</td>
+</tr>
+<tr>
+<td>运动示例</td>
+<td><code>scripts/move_square.py</code></td>
+<td>按时间控制机器人走正方形</td>
+<td>首次运动验证</td>
+</tr>
+</tbody>
+</table>
+<p>本实验不会一开始就加入机械臂、深度相机、SLAM 和导航。先把移动平台和最小传感器链跑通，后续实验才有稳定的基础。</p>
+<h2 id="3">3. 节点图与数据流解析 <span id="graph"></span></h2>
+<h3 id="31-ros">3.1 ROS 节点图</h3>
+<p>启动仿真后，ROS 图可以抽象为下面的结构。Gazebo 插件虽然不是普通 Python/C++ 节点，但在 ROS 名称系统里同样会提供发布者和订阅者，因此可以用 <code>rqt_graph</code> 观察。</p>
+<p><img alt="ROS 图与数据方向效果示意" src="../images/gazebo_platform/ros_graph_effect.png"/></p>
+<div class="mermaid">graph LR
+  CMD[cmd_vel 发布者] --&gt; DD[diff_drive 插件]
+  DD --&gt; ODOM[odom]
+  DD --&gt; TF1[TF: odom -&gt; base_link]
+
+  GAZ[Gazebo 激光传感器] --&gt; LASER[laser 插件]
+  LASER --&gt; SCAN[scan]
+
+  GCAM[Gazebo 相机传感器] --&gt; CAM[camera 插件]
+  CAM --&gt; IMG[camera/image_raw]
+  CAM --&gt; INFO[camera/camera_info]
+
+  JOINT_GAZ[Gazebo 关节状态] --&gt; DD
+  DD --&gt; JS[joint_states]
+  JS --&gt; RSP[robot_state_publisher]
+  RSP --&gt; TF2[TF: base_link -&gt; 传感器和车轮]
+</div>
+<p>节点图里最重要的是方向，而不是节点数量：</p>
+<ul>
+<li>控制方向：控制节点或 <code>rostopic pub</code> 发布 <code>/cmd_vel</code>，差速插件订阅；</li>
+<li>反馈方向：差速插件发布 <code>/odom</code>，导航、建图和控制节点订阅；</li>
+<li>传感器方向：Gazebo 插件发布 <code>/scan</code> 和相机话题，感知节点订阅；</li>
+<li>TF 方向：差速插件发布里程计 TF，<code>robot_state_publisher</code> 发布机器人内部 TF。</li>
+</ul>
+<h3 id="32">3.2 话题与插件对照表</h3>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>发布者</th>
+<th>订阅者</th>
+<th>本实验用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/cmd_vel</code></td>
+<td><code>geometry_msgs/Twist</code></td>
+<td>控制节点或命令行</td>
+<td>差速插件</td>
+<td>控制前进、后退和旋转</td>
+</tr>
+<tr>
+<td><code>/odom</code></td>
+<td><code>nav_msgs/Odometry</code></td>
+<td>差速插件</td>
+<td>控制、导航、可视化</td>
+<td>估计机器人位姿和速度</td>
+</tr>
+<tr>
+<td><code>/joint_states</code></td>
+<td><code>sensor_msgs/JointState</code></td>
+<td>差速插件</td>
+<td><code>robot_state_publisher</code></td>
+<td>更新车轮等关节 TF</td>
+</tr>
+<tr>
+<td><code>/scan</code></td>
+<td><code>sensor_msgs/LaserScan</code></td>
+<td>激光插件</td>
+<td>建图、避障、rviz</td>
+<td>感知二维障碍</td>
+</tr>
+<tr>
+<td><code>/camera/image_raw</code></td>
+<td><code>sensor_msgs/Image</code></td>
+<td>相机插件</td>
+<td>视觉节点、<code>rqt_image_view</code></td>
+<td>获取仿真图像</td>
+</tr>
+<tr>
+<td><code>/camera/camera_info</code></td>
+<td><code>sensor_msgs/CameraInfo</code></td>
+<td>相机插件</td>
+<td>视觉节点</td>
+<td>获取相机内参</td>
+</tr>
+<tr>
+<td><code>/tf</code></td>
+<td><code>tf2_msgs/TFMessage</code></td>
+<td>差速插件、<code>robot_state_publisher</code></td>
+<td>TF 监听者</td>
+<td>维护动态坐标变换</td>
+</tr>
+<tr>
+<td><code>/tf_static</code></td>
+<td><code>tf2_msgs/TFMessage</code></td>
+<td><code>robot_state_publisher</code></td>
+<td>TF 监听者</td>
+<td>发布固定安装关系</td>
+</tr>
+</tbody>
+</table>
+<h3 id="33-tf">3.3 TF 坐标树</h3>
+<p>机器人能否导航，关键不在“有没有激光数据”，而在“激光数据位于哪个坐标系”。本实验的 TF 树应为：</p>
+<div class="mermaid">graph TD
+  ODOM[odom] --&gt; BASE[base_link]
+  BASE --&gt; LW[left_wheel_link]
+  BASE --&gt; RW[right_wheel_link]
+  BASE --&gt; CASTER[caster_link]
+  BASE --&gt; LASER[laser_frame]
+  BASE --&gt; CAMERA[camera_link]
+</div>
+<p>三个关键判断：</p>
+<ol>
+<li><code>odom -&gt; base_link</code> 是否随时间变化，表示机器人是否被正确定位；</li>
+<li><code>base_link -&gt; laser_frame</code> 是否固定且与建模安装位置一致；</li>
+<li><code>base_link -&gt; camera_link</code> 是否固定且相机朝向正确。</li>
+</ol>
+<p>对应检查命令：</p>
+<pre class="highlight"><code class="language-bash">rosrun rqt_graph rqt_graph
+rosrun rqt_tf_tree rqt_tf_tree
+rostopic info /cmd_vel
+rostopic info /odom
+rostopic info /scan
+rosrun tf tf_echo odom base_link
+rosrun tf tf_echo base_link laser_frame</code></pre>
+<h3 id="34">3.4 一次控制指令的完整传播链</h3>
+<p>以“让机器人向前移动”为例，一次控制不是只发布一条消息，而是经过以下完整链路：</p>
+<ol>
+<li>控制节点构造 <code>geometry_msgs/Twist</code>，设置 <code>linear.x</code>；</li>
+<li>消息发布到 <code>/cmd_vel</code>；</li>
+<li>Gazebo 差速插件订阅 <code>/cmd_vel</code>；</li>
+<li>插件根据轮距、轮径和最大力矩计算左右轮目标速度；</li>
+<li>Gazebo 驱动物理关节，机器人开始运动；</li>
+<li>插件根据轮子运动计算 <code>/odom</code>；</li>
+<li>插件发布 <code>odom -&gt; base_link</code>；</li>
+<li>差速插件通过 <code>publishWheelJointState</code> 发布 <code>/joint_states</code>；</li>
+<li><code>robot_state_publisher</code> 更新车轮和传感器 TF；</li>
+<li>rviz 或导航节点通过 TF 和话题看到结果。</li>
+</ol>
+<p>如果机器人不动，不要直接修改控制算法。应按“话题是否存在 -&gt; 是否有发布者 -&gt; 插件是否订阅 -&gt; 关节名是否一致 -&gt; 轮子是否转动 -&gt; TF 是否更新”的顺序排查。</p>
+<h2 id="4">4. 运行效果与验收现象 <span id="results"></span></h2>
+<h3 id="41-gazebo">4.1 Gazebo 中的预期现象</h3>
+<p>启动 <code>mybot_gazebo.launch</code> 后，应当看到：</p>
+<ul>
+<li>蓝色车体位于地面附近，不会持续下沉或自动翻倒；</li>
+<li>左右黑色驱动轮和后部灰色支撑轮与地面接触；</li>
+<li>红色激光雷达和绿色相机固定在车体上；</li>
+<li>发布 <code>/cmd_vel</code> 后机器人能够前进和旋转；</li>
+<li><code>rqt_image_view</code> 可以显示相机画面；</li>
+<li>rviz 中可以显示 TF、激光和里程计数据。</li>
+</ul>
+<h3 id="42">4.2 话题与频率验收</h3>
+<table>
+<thead>
+<tr>
+<th>话题</th>
+<th style="text-align: right;">预期频率</th>
+<th>验证命令</th>
+<th>成功现象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/odom</code></td>
+<td style="text-align: right;">约 50 Hz</td>
+<td><code>rostopic hz /odom</code></td>
+<td>位置随时间变化</td>
+</tr>
+<tr>
+<td><code>/joint_states</code></td>
+<td style="text-align: right;">约 50 Hz</td>
+<td><code>rostopic hz /joint_states</code></td>
+<td>车轮关节状态更新</td>
+</tr>
+<tr>
+<td><code>/scan</code></td>
+<td style="text-align: right;">约 10 Hz</td>
+<td><code>rostopic hz /scan</code></td>
+<td>有 360 个范围数据</td>
+</tr>
+<tr>
+<td><code>/camera/image_raw</code></td>
+<td style="text-align: right;">约 30 Hz</td>
+<td><code>rostopic hz /camera/image_raw</code></td>
+<td>图像持续发布</td>
+</tr>
+<tr>
+<td><code>/tf</code></td>
+<td style="text-align: right;">不低于 30 Hz</td>
+<td><code>rostopic hz /tf</code></td>
+<td>包含 <code>odom -&gt; base_link</code></td>
+</tr>
+</tbody>
+</table>
+<p>频率是设计目标。实际结果会受到电脑性能、Gazebo 实时因子和传感器分辨率影响。</p>
+<h3 id="43">4.3 效果示意</h3>
+<p>下面图片根据 <code>mybot.urdf.xacro</code> 的尺寸、Gazebo 插件和话题设计绘制，用于在运行前说明正确效果。它们是“效果示意”，不是真实 Gazebo 截图；维护者完成运行验证后，可以替换为实际环境截图。</p>
+<p><img alt="mybot 平台效果示意" src="../images/gazebo_platform/robot_platform_preview.png"/></p>
+<p><img alt="ROS 图与数据方向效果示意" src="../images/gazebo_platform/ros_graph_effect.png"/></p>
+<p><img alt="相机与激光雷达效果示意" src="../images/gazebo_platform/sensor_effect.png"/></p>
+<p><img alt="自动正方形轨迹效果示意" src="../images/gazebo_platform/square_path_effect.png"/></p>
+<h3 id="44">4.4 真实运行截图</h3>
+<p>下面图片来自 Ubuntu 20.04 + ROS Noetic + Gazebo Classic 11 虚拟机的实际运行结果。Gazebo 中已经生成 <code>mybot</code>，右侧终端执行 <code>rostopic hz /odom</code>，平均频率稳定在 50 Hz，说明差速插件和里程计链路已经工作。</p>
+<p><img alt="Gazebo 中运行 mybot 并检查 odom 频率" src="../images/gazebo_platform/runtime/01_gazebo_and_odom.png"/></p>
+<p>用 <code>rqt_graph</code> 观察运行中的节点和话题关系：</p>
+<p><img alt="rqt_graph 真实运行截图" src="../images/gazebo_platform/runtime/02_rqt_graph_runtime.png"/></p>
+<h2 id="5">5. 快速开始 <span id="quickstart"></span></h2>
+<p>已熟悉 catkin 工作空间的读者可以直接执行：</p>
+<pre class="highlight"><code class="language-bash">source /opt/ros/noetic/setup.bash
+mkdir -p ~/catkin_ws/src
+cp -r src/chap4/mybot_gazebo ~/catkin_ws/src/   # 在仓库根目录执行
+cd ~/catkin_ws
+catkin_make
+source devel/setup.bash
+
+xacro src/mybot_gazebo/urdf/mybot.urdf.xacro &gt; /tmp/mybot.urdf
+check_urdf /tmp/mybot.urdf
+
+roslaunch mybot_gazebo mybot_gazebo.launch</code></pre>
+<p>也可以使用包内统一入口：</p>
+<pre class="highlight"><code class="language-bash">cd ~/catkin_ws/src/mybot_gazebo
+./main.sh</code></pre>
+<p>另开终端运行：</p>
+<pre class="highlight"><code class="language-bash">source ~/catkin_ws/devel/setup.bash
+rosrun mybot_gazebo move_square.py</code></pre>
+<p>第一次运行建议不要直接执行自动控制节点，先按分步教程逐个确认话题、TF 和手动速度控制。</p>
+<h2 id="6">6. 分步教程 <span id="steps"></span></h2>
+<p>每一步都是独立页面，完成后再进入下一步。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>内容</th>
+<th>完成后应得到</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../gazebo_01_environment/">1. 环境检查与 Gazebo 验证</a></td>
+<td>Ubuntu、ROS Noetic、Gazebo 11 和依赖检查</td>
+<td>可以独立启动 Gazebo</td>
+</tr>
+<tr>
+<td><a href="../gazebo_02_package/">2. 工作空间与功能包</a></td>
+<td>创建 catkin 工作空间并编译 <code>mybot_gazebo</code></td>
+<td><code>rospack find</code> 能找到功能包</td>
+</tr>
+<tr>
+<td><a href="../gazebo_03_urdf_model/">3. URDF 与 xacro 建模</a></td>
+<td>车体、车轮、支撑轮、激光、相机和惯性</td>
+<td><code>check_urdf</code> 通过</td>
+</tr>
+<tr>
+<td><a href="../gazebo_04_diff_drive/">4. 差速驱动与里程计</a></td>
+<td>配置差速插件和车轮关节状态输出</td>
+<td><code>/cmd_vel</code>、<code>/odom</code>、<code>odom -&gt; base_link</code> 正常</td>
+</tr>
+<tr>
+<td><a href="../gazebo_05_sensor_plugins/">5. 激光与相机插件</a></td>
+<td>配置激光和 RGB 相机</td>
+<td><code>/scan</code> 与相机话题正常</td>
+</tr>
+<tr>
+<td><a href="../gazebo_06_world_launch/">6. 世界文件与 launch</a></td>
+<td>组装世界、模型生成、TF 和启动参数</td>
+<td>一条 launch 命令启动系统</td>
+</tr>
+<tr>
+<td><a href="../gazebo_07_first_simulation/">7. 首次启动与验证</a></td>
+<td>启动 Gazebo、检查话题、TF 和传感器</td>
+<td>模型稳定、话题完整、TF 连通</td>
+</tr>
+<tr>
+<td><a href="../gazebo_08_manual_control/">8. 手动速度控制</a></td>
+<td>命令行发布 <code>/cmd_vel</code></td>
+<td>前进、旋转、停车方向正确</td>
+</tr>
+<tr>
+<td><a href="../gazebo_09_auto_motion/">9. 自动轨迹控制</a></td>
+<td>运行正方形轨迹节点</td>
+<td>机器人完成近似正方形运动</td>
+</tr>
+<tr>
+<td><a href="../gazebo_10_tuning_debug/">10. 参数调整与故障排查</a></td>
+<td>尺寸、速度、传感器负载和故障表</td>
+<td>能独立修改参数并定位问题</td>
+</tr>
+<tr>
+<td><a href="../gazebo_11_extension_summary/">11. 扩展任务与总结</a></td>
+<td>IMU、障碍、rosbag、SLAM 和导航</td>
+<td>能规划后续实验</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7">7. 设计参数与验收指标 <span id="metrics"></span></h2>
+<p>本实验的设计参数如下，参数修改后需要同步检查 URDF、Gazebo 插件和控制脚本。</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th style="text-align: right;">数值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>车体尺寸</td>
+<td style="text-align: right;">0.42 m x 0.28 m x 0.12 m</td>
+<td>由 <code>base_length</code> 等参数控制</td>
+</tr>
+<tr>
+<td>轮半径</td>
+<td style="text-align: right;">0.05 m</td>
+<td>影响速度换算和初始高度</td>
+</tr>
+<tr>
+<td>轮距</td>
+<td style="text-align: right;">0.28 m</td>
+<td>影响旋转和里程计</td>
+</tr>
+<tr>
+<td>最大车轮力矩</td>
+<td style="text-align: right;">20 N·m</td>
+<td>过低会带不动模型，过高容易抖动</td>
+</tr>
+<tr>
+<td>里程计频率</td>
+<td style="text-align: right;">50 Hz</td>
+<td>差速插件输出</td>
+</tr>
+<tr>
+<td>激光点数</td>
+<td style="text-align: right;">360</td>
+<td>输出 <code>/scan</code></td>
+</tr>
+<tr>
+<td>激光量程</td>
+<td style="text-align: right;">0.10-10.0 m</td>
+<td>影响建图范围</td>
+</tr>
+<tr>
+<td>相机分辨率</td>
+<td style="text-align: right;">640 x 480</td>
+<td>降低分辨率可提升实时因子</td>
+</tr>
+<tr>
+<td>相机帧率</td>
+<td style="text-align: right;">30 Hz</td>
+<td>可由插件参数调整</td>
+</tr>
+</tbody>
+</table>
+<p>本实验的验收条件：</p>
+<ol>
+<li><code>check_urdf</code> 通过，模型在 Gazebo 中稳定站立；</li>
+<li><code>/cmd_vel</code>、<code>/odom</code>、<code>/scan</code>、相机和 <code>/joint_states</code> 话题存在；</li>
+<li><code>odom -&gt; base_link -&gt; laser_frame</code> 和 <code>camera_link</code> TF 连通；</li>
+<li>发布非零速度后机器人按预期方向运动；</li>
+<li>能说出一次速度命令从 ROS 话题到 Gazebo 物理运动的完整路径。</li>
+</ol>
+<h2 id="8">8. 常见问题总览 <span id="debug"></span></h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>第一层检查</th>
+<th>第二层检查</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gazebo 中没有模型</td>
+<td><code>spawn_model</code> 日志、xacro 展开</td>
+<td><code>robot_description</code> 参数、模型名称</td>
+</tr>
+<tr>
+<td>模型下沉或抖动</td>
+<td>初始 z、碰撞体尺寸</td>
+<td>质量、惯性、支撑轮高度</td>
+</tr>
+<tr>
+<td><code>/cmd_vel</code> 无订阅者</td>
+<td><code>rostopic info /cmd_vel</code></td>
+<td>差速插件是否加载、关节名是否匹配</td>
+</tr>
+<tr>
+<td>机器人不动</td>
+<td>Gazebo 是否暂停</td>
+<td>轮子关节方向、最大力矩、控制频率</td>
+</tr>
+<tr>
+<td><code>odom -&gt; base_link</code> 缺失</td>
+<td><code>/odom</code> 是否发布</td>
+<td>插件 TF 开关、<code>use_sim_time</code></td>
+</tr>
+<tr>
+<td>没有 <code>/scan</code></td>
+<td>激光插件是否加载</td>
+<td><code>frame_name</code>、TF 树和激光量程</td>
+</tr>
+<tr>
+<td>相机没有图像</td>
+<td>话题是否存在</td>
+<td>相机插件、分辨率、渲染和 <code>/camera_info</code></td>
+</tr>
+<tr>
+<td>rviz 与 Gazebo 不一致</td>
+<td>TF 是否完整</td>
+<td>Gazebo 是物理模型，rviz 主要是 TF 和消息可视化</td>
+</tr>
+</tbody>
+</table>
+<p>详细排查过程见<a href="../gazebo_10_tuning_debug/">步骤 10</a>。</p>
+<h2 id="9">9. 参考文献与说明 <span id="references"></span></h2>
+<p>参考内容：</p>
+<ul>
+<li>ROS Wiki：URDF、TF、ros_control、Gazebo ROS 插件；</li>
+<li>Gazebo Classic 官方文档：SDF、物理引擎、传感器模型；</li>
+<li>ROS Noetic <code>gazebo_ros</code> 包中的 diff drive、laser 和 camera 插件示例；</li>
+<li>本仓库已有的 catkin 功能包与实验文档组织方式。</li>
+</ul>
+<h2 id="_1">人工智能使用声明</h2>
+<p>本文档在整理过程中使用了大型语言模型辅助进行结构梳理、文字组织和示例代码检查。示例代码需要在实际 Ubuntu 20.04 + ROS Noetic + Gazebo Classic 11 环境中运行验证，提交前应完成书中的全部验收步骤。</p>
+<hr/>
+<ul>
+<li>返回<a href="../">第 4 章机器人仿真</a></li>
+<li>下一步：<a href="../gazebo_01_environment/">环境检查与 Gazebo 验证</a></li>
+</ul></div>
+</div>
+</div><footer>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+</span>
+</div>
+<script src="../../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../../..";</script>
+<script src="../../../js/theme_extra.js"></script>
+<script src="../../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../../js/umlconvert.js"></script>
+<script src="../../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script>mermaid.initialize({});</script></body>
+</html>

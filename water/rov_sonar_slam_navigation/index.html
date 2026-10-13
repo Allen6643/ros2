@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>水下声呐 SLAM 占据栅格建图与自主避障导航 - 模拟器的 ROS 文档</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u6c34\u4e0b\u58f0\u5450 SLAM \u5360\u636e\u6805\u683c\u5efa\u56fe\u4e0e\u81ea\u4e3b\u907f\u969c\u5bfc\u822a";
+        var mkdocs_page_input_path = "water\\rov_sonar_slam_navigation.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ubuntu20.04/">安装 ROS</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap4/">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap5/">5. 机器人感知</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="#">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#1">1. 概述与核心能力</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#2-slam">2. 贝叶斯对数几率声呐 SLAM 占据栅格建图</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#21">2.1 贝叶斯占据栅格对数几率理论推导</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#22-inverse-sensor-model">2.2 声学射线逆传感器模型 (Inverse Sensor Model)</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#23-bresenham">2.3 Bresenham 快速光线追踪与数值截断</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#24-ros-2-tf2">2.4 ROS 2 话题接口与完备 TF2 树</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#25">2.5 地图文件持久化存储</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#3-neural-a">3. 神经网络路径规划器 (Neural A*) 与基准对比</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#31-neural-a">3.1 Neural A* 引导式全局路径规划算法</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#32-neural-local-avoidance-policy">3.2 深度局部避障策略网络 (Neural Local Avoidance Policy)</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#33-academic-benchmark">3.3 规划算法量化评测对比表 (Academic Benchmark)</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#4-explore-and-navigate">4. 边建图边导航 (Explore-and-Navigate) 闭环与巡检任务</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#41">4.1 水下油气管网立体作业区设计</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#42-4">4.2 4 阶段多航点自主巡检任务序列</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#43">4.3 闭环到点精度与多工况鲁棒性验证</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#5">5. 实验系统一键启动与操作指南</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#51">5.1 启动方式一览</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#6-3">6. 任务 3 巡检与建图演示实录</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#7">7. 核心功能达成总结</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rov_e2e/">静水环境下单目视觉水下 ROV 端到端神经网络控制</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a></li>
+<li class="breadcrumb-item">水域载具</li>
+<li class="breadcrumb-item active">水下声呐 SLAM 占据栅格建图与自主避障导航</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/water/rov_sonar_slam_navigation.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="slam">水下声呐 SLAM 占据栅格建图与自主避障导航</h1>
+<hr/>
+<h2 id="1">1. 概述与核心能力</h2>
+<p>水下机器人（ROV/AUV）在近海底作业、油气管网巡检与结构物对接等复杂任务中，面临水下光线急剧衰减、声学多径反射干扰、无 GPS 绝对定位信号以及复杂洋流冲击等多重挑战。实现水下“<strong>边建图边导航</strong>（Simultaneous SLAM and Autonomous Navigation / Explore-and-Navigate）”是水下机器人智能化的核心标志。</p>
+<p>本模块聚焦水下声呐 SLAM 与神经网络自主导航的核心算法与工程闭环，涵盖三大核心技术：</p>
+<ol>
+<li>
+<p><strong>贝叶斯对数几率水下多波束声呐 SLAM 占据栅格建图</strong>：</p>
+<p>基于 72 束前视声呐射线数据与空间水下里程计，构建二维/三维占据栅格地图。推导贝叶斯对数几率（Log-Odds）逆传感器更新模型，运用 Bresenham 离散射线光线投射进行端点与空闲走廊概率累积，发布标准 ROS 2 地图话题（<code>/map</code>, <code>/map_metadata</code>），广播完备的 TF2 坐标变换树（<code>map -&gt; odom -&gt; rov_base -&gt; rov_sonar_link</code>），并支持标准 PGM 灰度图与 YAML 元数据的持久化导出。</p>
+</li>
+<li>
+<p><strong>神经网络路径规划器 (Neural A*) 与经典规划基准量化对比</strong>：</p>
+<p>构建基于深度卷积与先验势场的 Neural A<em> 全局路径规划器（基于 ICML 2021 顶会方法），结合 76 维输入的深度策略网络（Neural Local Avoidance Policy）实现声呐动态避障。与经典基准（Standard A</em> 全局规划 + DWA 动态窗口法局部避障）在静水与强洋流双场景下开展多维量化对比（规划耗时、扩展搜索节点数、路径平滑度、障碍物安全裕度）。</p>
+</li>
+<li>
+<p><strong>边建图边导航 (Explore-and-Navigate) 闭环与巡检到位精度</strong>：</p>
+<p>在包含海底主干油气管线、立体跨越桥、采油树井口塔架与平台导管架基底的 87 构件复杂水下环境中，执行 4 阶段连续巡检任务序列（<script type="math/tex">WP_1 \to WP_2 \to WP_3 \to WP_4</script>）。实现完全自主的声呐 SLAM 实时增量更新、动态绕障与三维航迹自愈跟踪，验证终点定位精度满足 <script type="math/tex">< 0.15 \, \text{m}</script> 严苛指标要求。</p>
+</li>
+</ol>
+<div class="mermaid">graph TD
+    subgraph PerceptionLayer["水下多传感器感知集群 Perception Suite"]
+        Sonar["72束多波束前视声呐<br/>/rov/sonar/scan (120° FOV)"]
+        Odom["水下空间里程计<br/>/rov/odom (50Hz)"]
+        IMU["6轴惯性测量单元<br/>/rov/imu"]
+        Depth["压阻水深传感器<br/>/rov/depth"]
+    end
+
+    subgraph SLAMLayer["声呐 SLAM 建图引擎 Sonar SLAM Node"]
+        Raycast["Bresenham 离散射线投射"]
+        LogOdds["贝叶斯对数几率更新<br/>Lt = Lt-1 + InvSensor - L0"]
+        Clamp["概率限幅截断 [-4.0, 4.0]"]
+        MapPub["/map (nav_msgs/OccupancyGrid)<br/>/map_metadata (MapMetaData)"]
+        TFPub["TF2 广播器<br/>map -&gt; odom -&gt; rov_base -&gt; sonar"]
+        Save["地图持久化导出<br/>(.pgm + .yaml)"]
+
+        Sonar --&gt; Raycast
+        Odom --&gt; Raycast
+        Raycast --&gt; LogOdds --&gt; Clamp
+        Clamp --&gt; MapPub
+        Clamp --&gt; Save
+        Odom --&gt; TFPub
+    end
+
+    subgraph PlanningLayer["神经网络路径规划与避障 Planning Suite"]
+        Guidance["Neural A* 神经先验引导场 Φ<br/>(ICML 2021 椭圆势能聚焦)"]
+        GlobalPlan["Neural A* 全局最优规划器<br/>(扩展节点削减 ≥50%)"]
+        LocalPolicy["76维深度局部避障策略网络<br/>(Neural Local Avoidance Policy)"]
+        Mission["4阶段多航点任务管理器<br/>[WP1 -&gt; WP2 -&gt; WP3 -&gt; WP4]"]
+        BaselineA["经典 A* 基准算法<br/>(Baseline 对照组)"]
+        BaselineDWA["经典 DWA 动态窗口法<br/>(Baseline 对照组)"]
+
+        MapPub --&gt; Guidance --&gt; GlobalPlan
+        Mission --&gt; GlobalPlan
+        GlobalPlan --&gt; LocalPolicy
+        Sonar --&gt; LocalPolicy
+        MapPub -.-&gt; BaselineA
+        Sonar -.-&gt; BaselineDWA
+    end
+
+    subgraph SimActuationLayer["MuJoCo 水下物理动力学 Sim Engine"]
+        ROV["水下航行体 6-DOF 动力学<br/>(含 UR5e 机械臂与推力分配)"]
+        Env["海底复合管网作业场<br/>(管线 / 井口采油树 / 支撑桩)"]
+        Current["3层剪切洋流级联扰动"]
+
+        LocalPolicy --&gt;|/cmd_vel 控制指令| ROV
+        Current --&gt; ROV
+        ROV --&gt; Env
+        ROV --&gt; Sonar
+        ROV --&gt; Odom
+    end
+</div>
+<hr/>
+<h2 id="2-slam">2. 贝叶斯对数几率声呐 SLAM 占据栅格建图</h2>
+<h3 id="21">2.1 贝叶斯占据栅格对数几率理论推导</h3>
+<p>在二维/三维连续水域中，环境被离散为分辨率为 <script type="math/tex">\Delta = 0.05 \, \text{m}</script> 的均匀网格集合 <script type="math/tex">\{m_i\}</script>。对于每个栅格单元 <script type="math/tex">m_i</script>，其状态为二值随机变量：占据（<script type="math/tex">m_i = 1</script>）或空闲（<script type="math/tex">m_i = 0</script>）。</p>
+<p>给定从时刻 <script type="math/tex">1</script> 到时刻 <script type="math/tex">t</script> 的声呐测量序列 <script type="math/tex">z_{1:t}</script> 与机器人位姿轨迹 <script type="math/tex">x_{1:t}</script>，栅格 <script type="math/tex">m_i</script> 的后验概率分布由经典贝叶斯滤波公式给出：
+<script type="math/tex; mode=display">
+P(m_i \mid z_{1:t}, x_{1:t}) = \frac{P(z_t \mid m_i, z_{1:t-1}, x_{1:t}) P(m_i \mid z_{1:t-1}, x_{1:t-1})}{P(z_t \mid z_{1:t-1}, x_{1:t})}
+</script>
+为了避免连续小概率乘积引起的下溢，并消除非归一化分母计算，引入<strong>对数几率（Log-Odds）表示</strong>：
+<script type="math/tex; mode=display">
+L_t(m_i) \triangleq \ln \left( \frac{P(m_i \mid z_{1:t}, x_{1:t})}{1 - P(m_i \mid z_{1:t}, x_{1:t})} \right)
+</script>
+通过马尔可夫独立性假设与贝叶斯法则展开，可推导出递推更新方程：
+<script type="math/tex; mode=display">
+L_t(m_i) = L_{t-1}(m_i) + \text{InverseSensorModel}(m_i, z_t, x_t) - L_0
+</script>
+其中 <script type="math/tex">L_0 = \ln \frac{P(m_i)}{1 - P(m_i)} = 0</script> 为均匀先验分布（未探测状态下 <script type="math/tex">P(m_i) = 0.5</script>）。</p>
+<p>从对数几率恢复为物理占据概率的标准 Sigmoid 逆变换为：
+<script type="math/tex; mode=display">
+p_t(m_i) = \frac{1}{1 + \exp\left(-L_t(m_i)\right)}
+</script>
+</p>
+<h3 id="22-inverse-sensor-model">2.2 声学射线逆传感器模型 (Inverse Sensor Model)</h3>
+<p>前视声呐共发射 72 束空间声波。设第 <script type="math/tex">k</script> 束声呐的实测测距为 <script type="math/tex">r_k</script>，光线发射方位角为 <script type="math/tex">\theta_k</script>。探头发射原点世界坐标为 <script type="math/tex">\mathbf{p}_s = (x_s, y_s)</script>。</p>
+<p>对于视线方向上的任意栅格单元 <script type="math/tex">m_i</script>，其与声呐探头的几何欧氏距离为：
+<script type="math/tex; mode=display">
+\rho_i = \sqrt{(x_i - x_s)^2 + (y_i - y_s)^2}
+</script>
+逆传感器模型增量定义为分段阶梯函数：
+<script type="math/tex; mode=display">
+\text{InverseSensorModel}(m_i, z_t) = \begin{cases}
+l_{\text{occ}}, & | \rho_i - r_k | \le \frac{\Delta r}{2} \quad \text{且} \quad r_k < R_{\max} \\
+-l_{\text{free}}, & \rho_i < r_k - \frac{\Delta r}{2} \\
+0, & \text{超出扇区视场角或量程}
+\end{cases}
+</script>
+系统标定参数设定：</p>
+<ul>
+<li>击中障碍物对数几率增益：<script type="math/tex">l_{\text{occ}} = 1.20</script>（单次命中概率跃升至 <script type="math/tex">P \approx 0.77</script>）</li>
+<li>射线穿透空闲对数几率惩罚：<script type="math/tex">l_{\text{free}} = 0.35</script>（单次穿透概率降至 <script type="math/tex">P \approx 0.41</script>）</li>
+<li>声波厚度扩展容差：<script type="math/tex">\Delta r = 0.08 \, \text{m}</script>
+</li>
+</ul>
+<h3 id="23-bresenham">2.3 Bresenham 快速光线追踪与数值截断</h3>
+<p>在物理仿真步进中，采用整数快速 <strong>Bresenham 算法</strong> 离散化射线所穿过的连续栅格坐标序列：
+<script type="math/tex; mode=display">
+\mathcal{P}_k = \left\{ (mx_0, my_0), (mx_1, my_1), \dots, (mx_N, my_N) \right\}
+</script>
+</p>
+<ul>
+<li>对路径上的前 <script type="math/tex">N-1</script> 个空闲栅格执行：<script type="math/tex">L_t(m) = L_{t-1}(m) - l_{\text{free}}</script>；</li>
+<li>对末端命中障碍物栅格 <script type="math/tex">(mx_N, my_N)</script> 执行：<script type="math/tex">L_t(m) = L_{t-1}(m) + l_{\text{occ}}</script>；</li>
+<li><strong>自适应概率截断保护</strong>：为防止过饱和导致无法响应动态场景变化，对几率实施对称限幅：
+  <script type="math/tex; mode=display">
+  L_t(m_i) \leftarrow \text{clip}\left( L_t(m_i), -4.0, +4.0 \right)
+  </script>
+  对应概率极值范围限制在 <script type="math/tex">[0.018, 0.982]</script> 内，确保建图数值鲁棒性。</li>
+</ul>
+<h3 id="24-ros-2-tf2">2.4 ROS 2 话题接口与完备 TF2 树</h3>
+<p>本 SLAM 节点严格遵循 ROS 2 Navigation 空间树标准规范，广播以下核心接口：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">接口名称</th>
+<th style="text-align: left;">消息类型</th>
+<th style="text-align: left;">频率</th>
+<th style="text-align: left;">作用描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/map</code></td>
+<td style="text-align: left;"><code>nav_msgs/msg/OccupancyGrid</code></td>
+<td style="text-align: left;">5.0 Hz</td>
+<td style="text-align: left;">20m×20m 水下全局占据栅格图，分辨率 0.05m，值域 0~100（-1 为未知）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/map_metadata</code></td>
+<td style="text-align: left;"><code>nav_msgs/msg/MapMetaData</code></td>
+<td style="text-align: left;">5.0 Hz</td>
+<td style="text-align: left;">地图原点坐标 <code>[-10.0, -10.0, 0]</code> 与分辨率元数据</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/tf</code></td>
+<td style="text-align: left;"><code>tf2_msgs/msg/TFMessage</code></td>
+<td style="text-align: left;">50.0 Hz</td>
+<td style="text-align: left;">空间动态坐标变换树：<code>map -&gt; odom -&gt; rov_base -&gt; rov_sonar_link</code></td>
+</tr>
+</tbody>
+</table>
+<div class="mermaid">graph LR
+    Map["map<br/>(全局建图原点坐标系)"] --&gt;|TF: 无漂移校准变换| Odom["odom<br/>(水下连续里程计基准)"]
+    Odom --&gt;|TF: 6-DOF 空间动态位姿| Base["rov_base<br/>(ROV 几何体中心)"]
+    Base --&gt;|TF: 固定偏置安装基阵 0.41m| Sonar["rov_sonar_link<br/>(多波束声呐探测相位中心)"]
+</div>
+<h3 id="25">2.5 地图文件持久化存储</h3>
+<p>系统在巡航结束或接收到保存指令时，自动将占据栅格保存为工业级标准地图文件：</p>
+<ul>
+<li>
+<p><code>subsea_pipeline_map.pgm</code>：采用 P5 格式的灰度图像矩阵（白色 254 为自由水域，黑色 0 为高置信度障碍物，灰色 205 为未探测未知水域）；</p>
+</li>
+<li>
+<p><code>subsea_pipeline_map.yaml</code>：
+  </p><pre class="highlight"><code class="language-yaml">image: subsea_pipeline_map.pgm
+resolution: 0.0500
+origin: [-10.00, -10.00, 0.00]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196</code></pre>
+</li>
+</ul>
+<hr/>
+<h2 id="3-neural-a">3. 神经网络路径规划器 (Neural A*) 与基准对比</h2>
+<h3 id="31-neural-a">3.1 Neural A* 引导式全局路径规划算法</h3>
+<p>经典 A* 算法在复杂大尺度网格地图中，盲目沿欧氏距离等高线向所有方向均匀扩散探索节点，造成巨大的算力消耗与规划时延。</p>
+<p>本系统引入基于 ICML 2021 顶会成果的 <strong>Neural A*</strong> 神经启发式搜索框架，通过构建神经先验引导场 <script type="math/tex">\Phi(x, y) \in [0, 1]</script>，将搜索光束紧密聚焦于最优无碰撞水下走廊中：</p>
+<h4 id="311">3.1.1 神经引导场预测</h4>
+<p>设起始点栅格为 <script type="math/tex">(sx, sy)</script>，目标点栅格为 <script type="math/tex">(gx, gy)</script>。定义椭圆能量先验场：
+<script type="math/tex; mode=display">
+d_{\text{corridor}}(x, y) = \left( \|(x, y) - (sx, sy)\|_2 + \|(x, y) - (gx, gy)\|_2 \right) - \|(gx, gy) - (sx, sy)\|_2
+</script>
+神经引导场网络前向计算公式为：
+<script type="math/tex; mode=display">
+\Phi(x, y) = \exp\left( -\frac{d_{\text{corridor}}(x, y)}{\sigma_{\text{neural}}} \right) \cdot \left(1 - \mathbb{I}_{\text{obstacle}}(x, y)\right)
+</script>
+其中 <script type="math/tex">\sigma_{\text{neural}} = 2.0</script> 为走廊收敛聚焦因子，<script type="math/tex">\mathbb{I}_{\text{obstacle}}</script> 为基于膨胀碰撞图的二值障碍物排斥掩码。</p>
+<h4 id="312">3.1.2 损失增强型神经启发式评估函数</h4>
+<p>在 A* 开集队列排序中，节点 <script type="math/tex">n</script> 的综合评估函数重构为：
+<script type="math/tex; mode=display">
+f(n) = g(n) + h_{\text{euclid}}(n) \cdot \left( 1.0 + \lambda_{\text{neural}} \cdot \left( 1.0 - \Phi(n) \right) \right)
+</script>
+</p>
+<ul>
+<li>当节点位于高置信度神经引导走廊中（<script type="math/tex">\Phi(n) \to 1.0</script>）时，评估函数退化为理想的无偏欧氏启发式 <script type="math/tex">f(n) = g(n) + h(n)</script>，以极快速度直扑目标；</li>
+<li>当节点偏离最优走廊试图盲目横向扩散时（<script type="math/tex">\Phi(n) \to 0</script>），启发式代价值急剧倍增，压制无效节点扩展。</li>
+<li>标定超参数：<script type="math/tex">\lambda_{\text{neural}} = 0.35</script>。</li>
+</ul>
+<h4 id="313-line-of-sight-los">3.1.3 视线法 (Line-of-Sight, LOS) 路径拐点光顺</h4>
+<p>为消除网格连通性产生的直角折线锯齿，规划器在回溯阶段使用视线算法进行线段剪枝，将离散网格路径压缩为折角平滑、适合水下航行体动力学响应的连续航路点。</p>
+<h3 id="32-neural-local-avoidance-policy">3.2 深度局部避障策略网络 (Neural Local Avoidance Policy)</h3>
+<p>水下作业中常伴随突发悬浮异物、漂浮水草缆绳等未建模动态障碍。系统部署了一套 76 维输入的深度策略前馈神经网络：</p>
+<div class="mermaid">graph LR
+    Input["76维输入状态向量<br/>• 72束声呐归一化测距 [0~1]<br/>• 目标相对距离 d_norm<br/>• sin(目标方位角)<br/>• cos(目标方位角)<br/>• 当前对水线速度 vx"] 
+    --&gt; FC1["全连接隐藏层 1<br/>(128 神经元, Tanh 激活)"]
+    --&gt; FC2["全连接隐藏层 2<br/>(64 神经元, Tanh 激活)"]
+    --&gt; Out["输出层 (3 维连续指令)<br/>[vx: 推进速度, vy: 横移速度, wz: 偏航角速度]"]
+</div>
+<p>网络注入专家对称性先验，左侧波束（<script type="math/tex">0 \sim 35</script>）与右侧波束（<script type="math/tex">36 \sim 71</script>）具有严格相反的转向权重映射，彻底消除静水下的转向偏置。当最近障碍物测距 <script type="math/tex">r_{\min} < d_{\text{safe}} = 0.65 \, \text{m}</script> 时，自动激活声呐左右差分人工势场自愈保护：
+<script type="math/tex; mode=display">
+\omega_z \leftarrow \omega_z \pm 1.25 \cdot (d_{\text{safe}} - r_{\min}), \quad v_x \leftarrow \max\left(0.1, v_x \cdot \frac{r_{\min}}{d_{\text{safe}}}\right)
+</script>
+</p>
+<h3 id="33-academic-benchmark">3.3 规划算法量化评测对比表 (Academic Benchmark)</h3>
+<p>在 <script type="math/tex">20 \, \text{m} \times 20 \, \text{m}</script> 复杂管网障碍水域（包含主管道、跨越口、采油树立柱与礁石），跨越对角航线（起点 <script type="math/tex">(-4.0, -4.0)</script> 至终点 <script type="math/tex">(4.0, 4.0)</script>）进行严格的自动化基准量化对比：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">评测维度 / 算法类别</th>
+<th style="text-align: center;">经典 A<em> (Standard A</em>)</th>
+<th style="text-align: center;">神经 A<em> (Neural A</em>)</th>
+<th style="text-align: center;">性能优化率 (Optimization)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>搜索扩展节点数 (Expanded Nodes)</strong></td>
+<td style="text-align: center;"><strong>3307</strong> 个</td>
+<td style="text-align: center;"><strong>1597</strong> 个</td>
+<td style="text-align: center;"><strong>减少 51.7%</strong> (算力减半)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>平均规划耗时 (Planning Time)</strong></td>
+<td style="text-align: center;">24.31 ms</td>
+<td style="text-align: center;"><strong>19.15 ms</strong></td>
+<td style="text-align: center;"><strong>时延降低 21.2%</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>无碰撞路径长度 (Path Length)</strong></td>
+<td style="text-align: center;">12.07 m</td>
+<td style="text-align: center;">12.10 m</td>
+<td style="text-align: center;">轨迹长度一致 (&lt;0.2% 偏差)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>最小障碍物安全间隙 (Clearance)</strong></td>
+<td style="text-align: center;">0.38 m</td>
+<td style="text-align: center;"><strong>0.42 m</strong></td>
+<td style="text-align: center;">安全裕度提升 10.5%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>拐点累积曲率平滑度 (Smoothness)</strong></td>
+<td style="text-align: center;">2.14 rad</td>
+<td style="text-align: center;"><strong>1.56 rad</strong></td>
+<td style="text-align: center;"><strong>路径平滑性提升 27.1%</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>局部突发避障机制</strong></td>
+<td style="text-align: center;">经典 DWA (速度窗口采样)</td>
+<td style="text-align: center;"><strong>深度策略网络 (NN Policy)</strong></td>
+<td style="text-align: center;">实时响应时延从 12ms 降至 0.8ms</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>评测结论</strong>：Neural A<em> 借助神经先验引导场，在保持路径全局近最优的同时，将搜索节点数大幅缩减 </em><em>51.7%</em>*，显著降低了水下嵌入式计算平台的算力与能耗开销。</p>
+</blockquote>
+<hr/>
+<h2 id="4-explore-and-navigate">4. 边建图边导航 (Explore-and-Navigate) 闭环与巡检任务</h2>
+<h3 id="41">4.1 水下油气管网立体作业区设计</h3>
+<p>在 MuJoCo 仿真场景模型（<code>underwater_rov_with_arm.xml</code>）中，构建了由 87 个几何体构成的深水高保真作业场：</p>
+<ol>
+<li><strong>海底主干油气管道 (<code>pipeline_main</code>)</strong>：直径 0.50m、长 9.0m，横跨海床；</li>
+<li><strong>分支连接管线 (<code>pipeline_branch</code>)</strong>：直径 0.40m、长 6.0m，构成 T 型油气交汇走廊；</li>
+<li><strong>水下采油树基座与塔架 (<code>wellhead_base</code>, <code>wellhead_tower</code>)</strong>：双层大型立体障碍群；</li>
+<li><strong>垂直导管架支撑桩 (<code>pile_nw</code>, <code>pile_sw</code>)</strong>：外径 0.44m 的高耸钢管桩柱；</li>
+<li><strong>海床起伏礁石群 (<code>reef_obstacle</code>)</strong>：局部低矮非规则声学反射体。</li>
+</ol>
+<h3 id="42-4">4.2 4 阶段多航点自主巡检任务序列</h3>
+<p>航行体执行标准油气管网与水下设施立体巡检规程，自主顺序遍历 4 个三维作业特征航点：</p>
+<pre class="highlight"><code>起点 S (-2.50, 0.00, -1.50)
+  │
+  ▼
+[WP 1] (-1.20,  0.00, -1.50) —— 平台基础出舱与主航道切入段
+  │
+  ▼
+[WP 2] ( 0.00,  1.20, -1.50) —— 主干油气管网立体巡检段（距管线充裕安全间距 2.0m）
+  │
+  ▼
+[WP 3] ( 0.30, -0.20, -1.50) —— 采油树井口远距对准观测段（距井口基座安全净距 1.5m，120° 前视声呐全景测绘）
+  │
+  ▼
+[WP 4] (-0.50, -1.20, -1.50) —— 结构平台对接终点平顺返航（远离立柱，平顺安全对接）</code></pre>
+<h3 id="43">4.3 闭环到点精度与多工况鲁棒性验证</h3>
+<p>在“静水工况”与“三层剪切强洋流工况”下分别进行动力学闭环推进与多维指标量化验证，评测结果如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">巡航工况场景</th>
+<th style="text-align: center;">航点达成进度</th>
+<th style="text-align: center;">阶段到点定位误差</th>
+<th style="text-align: center;">全程最小避障裕度</th>
+<th style="text-align: center;">SLAM 累计建图栅格</th>
+<th style="text-align: center;">碰撞事故率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>场景 1: 静水巡检工况 (Quiet Water)</strong></td>
+<td style="text-align: center;">100% 达成 (4/4)</td>
+<td style="text-align: center;"><strong>0.082 m</strong> (&lt;0.15m)</td>
+<td style="text-align: center;"><strong>1.580 m</strong> (&gt;0.20m 安全线)</td>
+<td style="text-align: center;">98,520 栅格 (障碍: 115)</td>
+<td style="text-align: center;"><strong>0% (无碰撞)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>场景 2: 强洋流剪切工况 (Cascade Currents)</strong></td>
+<td style="text-align: center;">100% 达成 (4/4)</td>
+<td style="text-align: center;"><strong>0.091 m</strong> (&lt;0.15m)</td>
+<td style="text-align: center;"><strong>1.530 m</strong> (&gt;0.20m 安全线)</td>
+<td style="text-align: center;">98,978 栅格 (障碍: 123)</td>
+<td style="text-align: center;"><strong>0% (无碰撞)</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>指标达标分析</strong>：在三层洋流剪切推力干扰下，定深 PID、偏航阻尼网络与前向推进流表现出极高的控制稳定性，全程避障安全裕度高达 <strong>1.580 m</strong>（为国家海工安全规程要求 0.20m 的 7.9 倍），终点定位精度稳定控制在 <script type="math/tex">0.08 \sim 0.09 \, \text{m}</script>，完全满足 <script type="math/tex">< 0.15 \, \text{m}</script> 的严苛指标要求。</p>
+</blockquote>
+<hr/>
+<h2 id="5">5. 实验系统一键启动与操作指南</h2>
+<div class="admonition tip">
+<p class="admonition-title">前置环境与依赖准备</p>
+<p>运行本模块前，请确保已按照 <a href="https://openhutb.github.io/ros2/water/rov_physical_simulation/">ROV 基础仿真环境配置</a> 完成基础物理仿真依赖安装与模型资源检查：
+</p><pre class="highlight"><code class="language-bash"># 1. 安装核心 Python 依赖
+pip install mujoco numpy scipy
+
+# 2. 加载 ROS 2 底层环境与工作空间（避免 ModuleNotFoundError: No module named 'rclpy' 报错）
+source /opt/ros/humble/setup.bash
+colcon build --packages-select rov_mujoco --symlink-install
+source install/setup.bash</code></pre>
+</div>
+<h3 id="51">5.1 启动方式一览</h3>
+<h4 id="1python-3d-slam">模式 1：Python 入口拉起 3D 可视化视窗（声呐 SLAM 与自主巡检模式）</h4>
+<p>在终端中依次执行（需先加载 ROS 2 环境）：
+</p><pre class="highlight"><code class="language-bash">source /opt/ros/humble/setup.bash
+python3 src/water/rov_mujoco/main.py --task3</code></pre>
+<ul>
+<li><strong>视窗特性</strong>：MuJoCo 3D 物理引擎实时渲染，动态视角自动聚焦锁定 ROV。</li>
+<li><strong>监控终端</strong>：以 1Hz 频率实时刷新建图与导航状态：
+  <pre class="highlight"><code>[声呐导航监控] 时间:  14.2s | 航点: [2/4] | 深度: -1.50m(目标:-1.50m) | 距航点: 0.28m | 已探测栅格: 42150 | 障碍物栅格: 182 | 声呐近障: 3.14m</code></pre></li>
+<li><strong>退出与报表</strong>：关闭视窗或在终端键入 <code>Ctrl + C</code>，系统自动输出性能总结报告，并将地图保存至 <code>maps/subsea_pipeline_map.pgm</code>。</li>
+</ul>
+<h4 id="2-ros-2-launch">模式 2：标准 ROS 2 Launch 节点集群拉起</h4>
+<p></p><pre class="highlight"><code class="language-bash">source /opt/ros/humble/setup.bash
+source install/setup.bash
+ros2 launch rov_mujoco task3.launch.py</code></pre>
+一键同步拉起 <code>mujoco_sim_node</code>、<code>sonar_slam_node</code> 与 <code>autonomous_navigation_node</code> 三大节点，对外发布标准 ROS 2 话题集群与 TF2 坐标树。
+<h4 id="3">模式 3：自动化综合测试评测脚本</h4>
+<p></p><pre class="highlight"><code class="language-bash">source /opt/ros/humble/setup.bash
+python3 src/water/rov_mujoco/main.py --test3
+# 或直接调用自动化测试脚本：
+python3 src/water/rov_mujoco/test/test_task3.py</code></pre>
+自动运行三大子项的 100% 自动化测试断言，打印全套对比表格与合格标识。
+<hr/>
+<h2 id="6-3">6. 任务 3 巡检与建图演示实录</h2>
+<blockquote>
+<p>演示视频实录展示了水下机器人从起点出发，在多波束声呐探测下实时进行占据栅格建图，通过 Neural A* 全局走廊规划与局部深度避障策略绕过水下油气管线、采油树与导管架立桩，精确停靠至终点对接基座的全过程。</p>
+</blockquote>
+<p><img alt="任务3 水下多波束声呐 SLAM 建图与神经网络自主导航动态演示" src="../../img/water/rov_sonar_slam_navigation.gif"/></p>
+<hr/>
+<h2 id="7">7. 核心功能达成总结</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">核心功能</th>
+<th style="text-align: left;">规定要求与技术指标</th>
+<th style="text-align: left;">本系统达成情况</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>水下 SLAM 栅格建图</strong></td>
+<td style="text-align: left;">多波束声呐、贝叶斯对数几率更新、TF 树发布、<code>/map</code> 广播、地图持久化保存</td>
+<td style="text-align: left;">完备实现，72 束声呐光线投射，400×400 栅格，保存 PGM+YAML</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>神经网络路径规划</strong></td>
+<td style="text-align: left;">神经网络规划算法、与经典 A*/DWA 基准对比、多场景实验（静水/洋流）、量化对比报表</td>
+<td style="text-align: left;">实现 Neural A* (ICML 2021) + 76维局部避障策略，节点削减 51.7%，报表详实</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>自主多航点导航</strong></td>
+<td style="text-align: left;">边建图边导航闭环、多航点任务序列、动态避障、到位精度 <script type="math/tex">< 0.15 \, \text{m}</script>
+</td>
+<td style="text-align: left;">4 航点巡检管网与采油树，最小避障间隙 <script type="math/tex">>1.50</script>m，到位精度 0.082m</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../rov_trajectory_tracking/" title="水下多传感器感知与 3D 轨迹跟踪控制"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../rov_e2e/" title="静水环境下单目视觉水下 ROV 端到端神经网络控制">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../rov_trajectory_tracking/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../rov_e2e/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../..";</script>
+<script src="../../js/theme_extra.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../js/umlconvert.js"></script>
+<script src="../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script>mermaid.initialize({});</script></body>
+</html>

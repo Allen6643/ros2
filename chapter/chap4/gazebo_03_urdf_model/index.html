@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>步骤 3：URDF 与 xacro 建模 - 模拟器的 ROS 文档</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u6b65\u9aa4 3\uff1aURDF \u4e0e xacro \u5efa\u6a21";
+        var mkdocs_page_input_path = "chapter\\chap4\\gazebo_03_urdf_model.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ubuntu20.04/">安装 ROS</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap5/">5. 机器人感知</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_e2e/">静水环境下单目视觉水下 ROV 端到端神经网络控制</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a></li>
+<li class="breadcrumb-item active">步骤 3：URDF 与 xacro 建模</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/chapter/chap4/gazebo_03_urdf_model.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="3urdf-xacro">步骤 3：URDF 与 xacro 建模</h1>
+<blockquote>
+<p>前置条件：完成<a href="../gazebo_02_package/">步骤 2</a>。
+本步目标：理解并验证 <code>mybot.urdf.xacro</code>，得到一个结构合法的移动机器人模型。
+预计时间：60-90 分钟。</p>
+</blockquote>
+<ul>
+<li><a href="#components">1. 模型组成</a></li>
+<li><a href="#frames">2. 坐标约定</a></li>
+<li><a href="#properties">3. 参数化</a></li>
+<li><a href="#body">4. 车体与车轮</a></li>
+<li><a href="#sensors">5. 支撑轮与传感器</a></li>
+<li><a href="#check">6. 检查模型</a></li>
+<li><a href="#debug">7. 常见问题</a></li>
+<li><a href="#acceptance">8. 本步验收</a></li>
+</ul>
+<h2 id="1">1. 模型组成 <span id="components"></span></h2>
+<p><code>mybot</code> 由以下部件构成：</p>
+<table>
+<thead>
+<tr>
+<th>Link</th>
+<th>类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>base_link</code></td>
+<td>根链接</td>
+<td>车体本体</td>
+</tr>
+<tr>
+<td><code>left_wheel_link</code></td>
+<td>刚体</td>
+<td>左驱动轮</td>
+</tr>
+<tr>
+<td><code>right_wheel_link</code></td>
+<td>刚体</td>
+<td>右驱动轮</td>
+</tr>
+<tr>
+<td><code>caster_link</code></td>
+<td>刚体</td>
+<td>后部支撑轮</td>
+</tr>
+<tr>
+<td><code>laser_frame</code></td>
+<td>传感器 frame</td>
+<td>2D 激光雷达</td>
+</tr>
+<tr>
+<td><code>camera_link</code></td>
+<td>传感器 frame</td>
+<td>前视 RGB 相机</td>
+</tr>
+</tbody>
+</table>
+<p>关节：</p>
+<table>
+<thead>
+<tr>
+<th>Joint</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>left_wheel_joint</code></td>
+<td>continuous</td>
+<td>左轮连续旋转</td>
+</tr>
+<tr>
+<td><code>right_wheel_joint</code></td>
+<td>continuous</td>
+<td>右轮连续旋转</td>
+</tr>
+<tr>
+<td><code>caster_joint</code></td>
+<td>continuous</td>
+<td>支撑轮旋转</td>
+</tr>
+<tr>
+<td><code>laser_joint</code></td>
+<td>fixed</td>
+<td>激光固定安装</td>
+</tr>
+<tr>
+<td><code>camera_joint</code></td>
+<td>fixed</td>
+<td>相机固定安装</td>
+</tr>
+</tbody>
+</table>
+<p>URDF 中三种几何标签的含义必须分清：</p>
+<pre class="highlight"><code class="language-xml">&lt;visual&gt;...&lt;/visual&gt;    &lt;!-- 只负责显示 --&gt;
+&lt;collision&gt;...&lt;/collision&gt; &lt;!-- 参与物理碰撞 --&gt;
+&lt;inertial&gt;...&lt;/inertial&gt;   &lt;!-- 决定质量和转动惯量 --&gt;</code></pre>
+<p>只写 <code>visual</code> 的模型在 rviz 中可能可见，但进入 Gazebo 后会掉落、穿地或无法稳定接触地面。</p>
+<h2 id="2">2. 坐标约定 <span id="frames"></span></h2>
+<p>本实验固定使用 ROS 常见坐标方向：</p>
+<pre class="highlight"><code class="language-text">x：机器人前方
+y：机器人左侧
+z：机器人上方</code></pre>
+<p>因此：</p>
+<ul>
+<li>车体相机安装在正前方，<code>camera_joint</code> 的 x 为正；</li>
+<li>左右轮通过 y 方向镜像；</li>
+<li><code>odom -&gt; base_link</code> 表示机器人在里程计坐标系中的位姿；</li>
+<li><code>base_link -&gt; laser_frame</code> 与 <code>base_link -&gt; camera_link</code> 描述传感器安装位置。</li>
+</ul>
+<h2 id="3">3. 参数化 <span id="properties"></span></h2>
+<p>xacro 文件首先定义可复用参数：</p>
+<pre class="highlight"><code class="language-xml">&lt;xacro:property name="base_length" value="0.42"/&gt;
+&lt;xacro:property name="base_width" value="0.28"/&gt;
+&lt;xacro:property name="base_height" value="0.12"/&gt;
+&lt;xacro:property name="wheel_radius" value="0.05"/&gt;
+&lt;xacro:property name="wheel_width" value="0.03"/&gt;
+&lt;xacro:property name="wheel_separation" value="0.28"/&gt;
+&lt;xacro:property name="wheel_offset_z" value="-0.07"/&gt;
+&lt;xacro:property name="caster_radius" value="0.035"/&gt;
+&lt;xacro:property name="caster_offset_z" value="-0.085"/&gt;</code></pre>
+<p>修改这些参数后，必须同步考虑：</p>
+<ul>
+<li>车轮是否仍然接触地面；</li>
+<li>车体是否与地面碰撞；</li>
+<li>差速插件中的轮径和轮距是否一致；</li>
+<li>Gazebo 生成模型的 <code>z</code> 初值是否需要变化。</li>
+</ul>
+<h2 id="4">4. 车体与车轮 <span id="body"></span></h2>
+<p>车体使用 <code>box</code> 几何体：</p>
+<pre class="highlight"><code class="language-xml">&lt;link name="base_link"&gt;
+  &lt;visual&gt;
+    &lt;geometry&gt;
+      &lt;box size="${base_length} ${base_width} ${base_height}"/&gt;
+    &lt;/geometry&gt;
+  &lt;/visual&gt;
+  &lt;collision&gt;
+    &lt;geometry&gt;
+      &lt;box size="${base_length} ${base_width} ${base_height}"/&gt;
+    &lt;/geometry&gt;
+  &lt;/collision&gt;
+  &lt;inertial&gt;
+    &lt;mass value="5.0"/&gt;
+    &lt;inertia ixx="0.090" ixy="0" ixz="0"
+             iyy="0.120" iyz="0" izz="0.155"/&gt;
+  &lt;/inertial&gt;
+&lt;/link&gt;</code></pre>
+<p>车轮使用 xacro 宏，左右轮共用同一套设置：</p>
+<pre class="highlight"><code class="language-xml">&lt;xacro:macro name="wheel" params="prefix reflect"&gt;
+  &lt;link name="${prefix}_wheel_link"&gt;
+    &lt;visual&gt;
+      &lt;origin xyz="0 0 0" rpy="1.57079632679 0 0"/&gt;
+      &lt;geometry&gt;
+        &lt;cylinder radius="${wheel_radius}" length="${wheel_width}"/&gt;
+      &lt;/geometry&gt;
+    &lt;/visual&gt;
+  &lt;/link&gt;
+
+  &lt;joint name="${prefix}_wheel_joint" type="continuous"&gt;
+    &lt;parent link="base_link"/&gt;
+    &lt;child link="${prefix}_wheel_link"/&gt;
+    &lt;origin xyz="0 ${reflect * wheel_separation / 2.0} ${wheel_offset_z}"/&gt;
+    &lt;axis xyz="0 1 0"/&gt;
+  &lt;/joint&gt;
+&lt;/xacro:macro&gt;</code></pre>
+<p>最容易出错的地方：</p>
+<ul>
+<li>圆柱默认轴是 z，忘记旋转 90 度会让车轮像圆盘一样直立；</li>
+<li>左右轮镜像方向错误，会让机器人不能直行；</li>
+<li>关节轴写错，差速插件给速度后车轮不会正确滚动。</li>
+</ul>
+<h2 id="5">5. 支撑轮与传感器 <span id="sensors"></span></h2>
+<p>支撑轮让两轮机器人保持三点接触：</p>
+<pre class="highlight"><code class="language-xml">&lt;joint name="caster_joint" type="continuous"&gt;
+  &lt;parent link="base_link"/&gt;
+  &lt;child link="caster_link"/&gt;
+  &lt;origin xyz="-0.15 0 ${caster_offset_z}"/&gt;
+  &lt;axis xyz="0 1 0"/&gt;
+&lt;/joint&gt;</code></pre>
+<p>激光和相机：</p>
+<pre class="highlight"><code class="language-xml">&lt;joint name="laser_joint" type="fixed"&gt;
+  &lt;parent link="base_link"/&gt;
+  &lt;child link="laser_frame"/&gt;
+  &lt;origin xyz="0 0 0.09"/&gt;
+&lt;/joint&gt;
+
+&lt;joint name="camera_joint" type="fixed"&gt;
+  &lt;parent link="base_link"/&gt;
+  &lt;child link="camera_link"/&gt;
+  &lt;origin xyz="0.20 0 0.06"/&gt;
+&lt;/joint&gt;</code></pre>
+<p>传感器安装位置错误不会立刻让 Gazebo 崩溃，但会让地图、视觉和导航结果全部偏移。</p>
+<h2 id="6">6. 检查模型 <span id="check"></span></h2>
+<p>展开 xacro：</p>
+<pre class="highlight"><code class="language-bash">xacro ~/catkin_ws/src/mybot_gazebo/urdf/mybot.urdf.xacro &gt; /tmp/mybot.urdf</code></pre>
+<p>检查结构和链接关系：</p>
+<pre class="highlight"><code class="language-bash">check_urdf /tmp/mybot.urdf
+urdf_to_graphiz /tmp/mybot.urdf</code></pre>
+<p><code>check_urdf</code> 通过只代表结构合法，不代表物理参数正确。物理稳定性要在 Gazebo 中验证。</p>
+<p>在 rviz 中查看 TF 和模型：</p>
+<p>如果没有安装额外的 URDF 查看工具，本步骤只要求 <code>check_urdf</code> 通过；完整模型、TF 和传感器的首次显示安排在<a href="../gazebo_07_first_simulation/">步骤 7</a>中进行。若环境已安装 <code>urdf_tutorial</code>，也可以运行：</p>
+<pre class="highlight"><code class="language-bash">roslaunch urdf_tutorial display.launch model:=/tmp/mybot.urdf</code></pre>
+<h2 id="7">7. 常见问题 <span id="debug"></span></h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>xacro 展开失败</td>
+<td>XML 语法或 <code>${}</code> 表达式错误</td>
+<td>检查标签是否闭合</td>
+</tr>
+<tr>
+<td><code>check_urdf</code> 报错</td>
+<td>link/joint 父子关系不合法</td>
+<td>检查 joint 的 parent 和 child</td>
+</tr>
+<tr>
+<td>模型在 Gazebo 中下陷</td>
+<td>初始高度或支撑轮高度不对</td>
+<td>调整 <code>-z</code> 和关节 origin</td>
+</tr>
+<tr>
+<td>模型抖动</td>
+<td>质量或惯性矩阵不合理</td>
+<td>让质量和几何尺寸匹配</td>
+</tr>
+<tr>
+<td>车轮方向错误</td>
+<td>关节轴或镜像方向错误</td>
+<td>检查 <code>axis</code> 和 <code>reflect</code></td>
+</tr>
+<tr>
+<td>相机看不到目标</td>
+<td>相机朝向错误</td>
+<td>检查 <code>camera_joint</code> 的 origin 和 rpy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="8">8. 本步验收 <span id="acceptance"></span></h2>
+<ul>
+<li>[ ] 能解释 URDF 中 link 和 joint 的层级关系；</li>
+<li>[ ] 能说明 visual、collision 和 inertial 的区别；</li>
+<li>[ ] <code>xacro</code> 展开成功；</li>
+<li>[ ] <code>check_urdf</code> 通过；</li>
+<li>[ ] 能说出车轮、激光、相机的安装位置和坐标方向。</li>
+</ul>
+<hr/>
+<ul>
+<li>上一步：<a href="../gazebo_02_package/">工作空间与功能包</a></li>
+<li>返回<a href="../gazebo_platform_simulation/">教程总览</a></li>
+<li>下一步：<a href="../gazebo_04_diff_drive/">步骤 4：差速驱动与里程计</a></li>
+</ul></div>
+</div>
+</div><footer>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+</span>
+</div>
+<script src="../../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../../..";</script>
+<script src="../../../js/theme_extra.js"></script>
+<script src="../../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../../js/umlconvert.js"></script>
+<script src="../../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+</body>
+</html>
