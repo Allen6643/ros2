@@ -1,0 +1,4 @@
+# 保证 shell 脚本在检出后始终是 LF 行尾。
+# 仓库在 Windows 上若开启 core.autocrlf=true，会把 .sh 检出成 CRLF，
+# 导致 Linux 下 `bash main.sh` 报 "$'\r': command not found"。
+*.sh text eol=lf

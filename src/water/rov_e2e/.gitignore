@@ -1,0 +1,9 @@
+# 训练产物：体积大，且必须由本机运行 train.py 复现（不入版本库）
+# 复现方式见 docs/water/rov_e2e.md 第 6.4 节
+model.pth
+training_curve.png
+test_infer_result.png
+
+# Python 缓存
+__pycache__/
+*.pyc

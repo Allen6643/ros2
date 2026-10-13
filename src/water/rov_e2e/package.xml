@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>rov_e2e</name>
+  <version>0.1.0</version>
+  <description>静水环境下单目视觉水下 ROV 前进-转向端到端神经网络控制（MuJoCo + ROS 2 + PyTorch）</description>
+  <maintainer email="1769670648@qq.com">Allen6643</maintainer>
+  <license>MIT</license>
+
+  <!-- ROS 2 运行时依赖 -->
+  <depend>rclpy</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+
+  <!-- 仿真环境依赖：本包的 main.launch.py 需要拉起 rov_mujoco 的 mujoco_sim_node -->
+  <exec_depend>rov_mujoco</exec_depend>
+  <exec_depend>ros2launch</exec_depend>
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
