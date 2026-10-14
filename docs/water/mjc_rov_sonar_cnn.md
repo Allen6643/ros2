@@ -66,6 +66,8 @@ Input (1×64×64)
 
 三类声呐样例图（CNN 推理 probs 均为 1.0）：
 
+![CNN 分类动画](images/pr2_classify.gif)
+
 ![礁石类](images/pr2_rock.png)
 ![管道类](images/pr2_pipe.png)
 ![残骸类](images/pr2_wreck.png)
