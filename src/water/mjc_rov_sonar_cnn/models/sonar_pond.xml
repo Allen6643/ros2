@@ -1,0 +1,39 @@
+<!--
+  sonar_pond.xml: 侧扫声呐仿真场景。
+  池底散布三类目标：礁石(圆柱)、管道(长条盒)、残骸(不规则盒)。
+  只用基本几何体，无外部资产。
+-->
+<mujoco model="sonar_pond">
+  <option timestep="0.002" gravity="0 0 -2"/>
+  <default>
+    <geom condim="1" friction="0.1 0.1 0.1" density="200"/>
+  </default>
+  <asset>
+    <texture builtin="checker" rgb1="0.25 0.30 0.35" rgb2="0.10 0.12 0.16"
+             width="256" height="256" name="floor_tex"/>
+    <material texture="floor_tex" texrepeat="8 8" name="floor_mat"/>
+  </asset>
+  <worldbody>
+    <light pos="0 0 6" dir="0 0 -1" diffuse="0.8 0.8 0.8"/>
+    <geom name="pool_floor" type="plane" size="5 5 0.1" material="floor_mat"/>
+
+    <!-- 礁石（圆柱）-->
+    <geom name="reef1" type="cylinder" pos="1.5 1.5 0.25" size="0.3 0.25" rgba="0.4 0.35 0.3 1"/>
+    <geom name="reef2" type="cylinder" pos="-2.0 -1.0 0.2" size="0.25 0.2" rgba="0.35 0.3 0.25 1"/>
+
+    <!-- 管道（长条盒）-->
+    <geom name="pipe1" type="box" pos="-1.5 2.0 0.15" size="1.0 0.08 0.08" rgba="0.3 0.5 0.7 1"/>
+    <geom name="pipe2" type="box" pos="2.5 -2.0 0.12" size="0.8 0.06 0.06" rgba="0.3 0.5 0.7 1"/>
+
+    <!-- 残骸（不规则盒）-->
+    <geom name="wreck1" type="box" pos="-2.5 -2.5 0.3" size="0.5 0.4 0.3" rgba="0.6 0.3 0.2 1"/>
+    <geom name="wreck2" type="box" pos="2.0 2.5 0.25" size="0.4 0.3 0.25" rgba="0.6 0.3 0.2 1"/>
+
+    <!-- ROV -->
+    <body name="rov" pos="0.0 0.0 0.5">
+      <freejoint/>
+      <geom name="hull" type="box" size="0.25 0.15 0.08" rgba="0.8 0.25 0.2 1"/>
+      <camera name="forward_cam" pos="0.26 0.0 0.05" euler="0.0 90.0 0.0" fovy="60"/>
+    </body>
+  </worldbody>
+</mujoco>
