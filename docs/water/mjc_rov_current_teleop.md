@@ -66,7 +66,7 @@ sudo apt install libosmesa6
 
 **实测结果**：专家 4/4 航点到达，MLP 2/4，MAE 1.60m / 1.67m
 
-![ROV 轨迹](images/pr1_trajectory.png)
+![ROV 巡航动画](images/pr1_trajectory.gif)
 
 ![前视相机](images/pr1_camera.png)
 
