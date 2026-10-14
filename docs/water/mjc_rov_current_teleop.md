@@ -64,6 +64,12 @@ sudo apt install libosmesa6
 2. `train`：Adam 优化器，200 epoch，CPU 上 <1 分钟收敛
 3. `test`：闭环评估，统计 MAE 与航点到达率
 
+**实测结果**：专家 4/4 航点到达，MLP 2/4，MAE 1.60m / 1.67m
+
+![ROV 轨迹](images/pr1_trajectory.png)
+
+![前视相机](images/pr1_camera.png)
+
 ## 运行步骤
 
 ```bash
