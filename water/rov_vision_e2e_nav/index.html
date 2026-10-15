@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>水下 ROV 单目视觉端到端控制与声呐建图导航 - 模拟器的 ROS 文档</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u6c34\u4e0b ROV \u5355\u76ee\u89c6\u89c9\u7aef\u5230\u7aef\u63a7\u5236\u4e0e\u58f0\u5450\u5efa\u56fe\u5bfc\u822a";
+        var mkdocs_page_input_path = "water\\rov_vision_e2e_nav.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ubuntu20.04/">安装 ROS</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap4/">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap5/">5. 机器人感知</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="#">水下 ROV 单目视觉端到端控制与声呐建图导航</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#1">1. 概述与目标</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#11">1.1 核心目标</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#12">1.2 场景设定</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#2">2. 软硬件环境</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#3">3. 原理</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#31">3.1 单目视觉端到端控制</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#32">3.2 声呐占据栅格建图</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#33">3.3 声呐开阔方向判定（神经网络）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#34">3.4 标签从哪来（关键设计）</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#4-ros">4. 软件架构与 ROS 话题</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#41">4.1 话题接口</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#42">4.2 参数</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#5">5. 关键源码解析</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#51-modelsrov_vision_channelxml">5.1 声呐测距扇的建模（models/rov_vision_channel.xml）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#52-sonar_slam_nodepy">5.2 射线投射建图（sonar_slam_node.py）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#53-networkspy">5.3 训练/推理共享预处理（networks.py）</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#6">6. 分步运行指南</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#61">6.1 编译</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#62">6.2 采集与训练</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#63">6.3 离线测试</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#64">6.4 一键启动完整闭环</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#65">6.5 验证建图与话题</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#66">6.6 前视相机看到的场景</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#7">7. 实验结果</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#71">7.1 数据集</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#72">7.2 训练结果</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#73">7.3 离线测试结果</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#74">7.4 闭环自主航行结果</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#8">8. 常见问题排查</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#q1-sonar_slam_node-keyerror">Q1: sonar_slam_node 启动后立即退出，日志有 KeyError</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#q2">Q2: 相机话题无数据 / 图像全黑</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#q3-rovmap-1">Q3: /rov/map 一直是空的（全是 −1）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#q4-rov">Q4: ROV 瞬间冲到通道尽头</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#q5">Q5: 图片里的中文变成方框</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a></li>
+<li class="breadcrumb-item">水域载具</li>
+<li class="breadcrumb-item active">水下 ROV 单目视觉端到端控制与声呐建图导航</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/water/rov_vision_e2e_nav.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="rov">水下 ROV 单目视觉端到端控制与声呐建图导航</h1>
+<hr/>
+<h2 id="1">1. 概述与目标</h2>
+<p>本模块在同一套 MuJoCo 水下环境中实现两条<strong>完全由神经网络驱动</strong>的链路：</p>
+<ol>
+<li><strong>单目视觉端到端控制</strong>（对应任务④，5 分）：
+   前视相机图像 → CNN → <code>[前进推力, 转向]</code>，直接驱动 ROV 前进，
+   不经过任何显式的目标检测或位姿估计环节；</li>
+<li><strong>声呐建图与避障导航</strong>（对应任务③，5×3 分）：
+   8 向声呐测距扇 → 占据栅格地图（<code>nav_msgs/OccupancyGrid</code>）+
+   神经网络判定开阔方向 → 避障转向修正。</li>
+</ol>
+<h3 id="11">1.1 核心目标</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">编号</th>
+<th style="text-align: left;">目标</th>
+<th style="text-align: left;">对应要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">①</td>
+<td style="text-align: left;">单目图像 → 神经网路 → 控制指令（端到端）</td>
+<td style="text-align: left;">任务(4)</td>
+</tr>
+<tr>
+<td style="text-align: left;">②</td>
+<td style="text-align: left;">声呐测距 → 射线投射 → 占据栅格建图</td>
+<td style="text-align: left;">任务(3) 建图</td>
+</tr>
+<tr>
+<td style="text-align: left;">③</td>
+<td style="text-align: left;">神经网络判定开阔方向 → 避障转向</td>
+<td style="text-align: left;">任务(3) 导航</td>
+</tr>
+<tr>
+<td style="text-align: left;">④</td>
+<td style="text-align: left;">一键 launch、入口以 <code>main.</code> 开头</td>
+<td style="text-align: left;">注意 1、注意 2</td>
+</tr>
+<tr>
+<td style="text-align: left;">⑤</td>
+<td style="text-align: left;">完整 gif 动图、公式推导与源码解析</td>
+<td style="text-align: left;">报告要求</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12">1.2 场景设定</h3>
+<ul>
+<li>水下通道先<strong>直行</strong>（X 方向 0~7 m），再向右<strong>拐弯</strong>（沿 Y 方向延伸），
+  用于验证建图与导航；</li>
+<li>通道内布置三种颜色（红/绿/蓝）的标记物，为视觉端到端网络提供可区分的视觉线索；</li>
+<li>ROV 控制自由度保留<strong>前进、转向</strong>两维（端到端网络的直接输出维度），
+  横滚/俯仰由姿态自稳抑制，深度由 PD 定深控制保持。</li>
+</ul>
+<hr/>
+<h2 id="2">2. 软硬件环境</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">配置项</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">操作系统</td>
+<td style="text-align: left;">Ubuntu 20.04.6 LTS（VMware 虚拟机）</td>
+</tr>
+<tr>
+<td style="text-align: left;">ROS 2 版本</td>
+<td style="text-align: left;">Humble</td>
+</tr>
+<tr>
+<td style="text-align: left;">Python</td>
+<td style="text-align: left;">3.8.10</td>
+</tr>
+<tr>
+<td style="text-align: left;">MuJoCo</td>
+<td style="text-align: left;"><strong>3.1.6</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">PyTorch</td>
+<td style="text-align: left;"><strong>2.4.1+cpu</strong> / torchvision 0.19.1+cpu</td>
+</tr>
+<tr>
+<td style="text-align: left;">渲染后端</td>
+<td style="text-align: left;"><code>MUJOCO_GL=osmesa</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">无显卡环境必须用 OSMesa</p>
+<p>实测该虚拟机中 <code>egl</code>（PyOpenGL 版本过旧）与 <code>glfw</code>（缺少 DISPLAY）均不可用，
+<strong>只有 <code>osmesa</code> 能成功渲染</strong>。本包所有入口都已自动 <code>setdefault('MUJOCO_GL','osmesa')</code>。</p>
+</div>
+<hr/>
+<h2 id="3">3. 原理</h2>
+<h3 id="31">3.1 单目视觉端到端控制</h3>
+<p><strong>输入</strong>：三通道 RGB 图像 <script type="math/tex">I \in \mathbb{R}^{3 \times 120 \times 160}</script>
+</p>
+<p><strong>标准化</strong>（训练与推理共用同一函数）：</p>
+<p>
+<script type="math/tex; mode=display">
+\tilde{I}_c = \frac{I_c / 255 - \mu_c}{\sigma_c}, \qquad
+\boldsymbol{\mu} = [0.485, 0.456, 0.406],\quad
+\boldsymbol{\sigma} = [0.229, 0.224, 0.225]
+</script>
+</p>
+<p><strong>网络结构</strong>：三层卷积 + 全局池化 + 两层全连接（参数量约 2.6 万）</p>
+<p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\boldsymbol{h}_1 &= \text{ReLU}\big(\text{BN}(\boldsymbol{W}_1 * \tilde{I})\big) &&\quad (3 \to 16,\ stride\ 2)\\
+\boldsymbol{h}_2 &= \text{ReLU}\big(\text{BN}(\boldsymbol{W}_2 * \boldsymbol{h}_1)\big) &&\quad (16 \to 32,\ stride\ 2)\\
+\boldsymbol{h}_3 &= \text{ReLU}\big(\text{BN}(\boldsymbol{W}_3 * \boldsymbol{h}_2)\big) &&\quad (32 \to 64,\ stride\ 2)\\
+\boldsymbol{z} &= \text{AdaptiveAvgPool}(\boldsymbol{h}_3) \in \mathbb{R}^{64}\\
+\boldsymbol{a} &= \tanh\big(\boldsymbol{W}_5\,\text{ReLU}(\boldsymbol{W}_4 \boldsymbol{z})\big) \in [-1,1]^2
+\end{aligned}
+</script>
+</p>
+<p>末层 <code>tanh</code> 把输出限制在 <script type="math/tex">[-1,1]</script>，与归一化控制量量纲一致，
+配合仿真端的 <code>force_scale = 10 N</code> 即可换算为物理推力。</p>
+<p><strong>损失函数</strong>：均方误差</p>
+<p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{\text{e2e}} = \frac{1}{B}\sum_{i=1}^{B}\left\| \boldsymbol{a}_i - \boldsymbol{a}_i^{\star} \right\|_2^2
+</script>
+</p>
+<p><strong><code>AdaptiveAvgPool2d(1)</code> 的作用</strong>：使网络对输入分辨率不敏感，
+相机分辨率调整时无需改动网络结构。</p>
+<h3 id="32">3.2 声呐占据栅格建图</h3>
+<p>对 7 个水平方向的声呐读数 <script type="math/tex">r_d</script> 做<strong>射线投射</strong>（ray casting）：</p>
+<p>设 ROV 位姿为 <script type="math/tex">(x, y, \psi)</script>，方向 <script type="math/tex">d</script> 的机体系朝向为 <script type="math/tex">\beta_d</script>，
+则该射线在世界系中的方向角为</p>
+<p>
+<script type="math/tex; mode=display">
+\alpha_d = \psi + \beta_d
+</script>
+</p>
+<p>沿射线以栅格分辨率 <script type="math/tex">\delta = 0.1</script> m 为步长行进 <script type="math/tex">k = 0, 1, \dots, \lfloor r_d/\delta \rfloor</script>，
+把途径的栅格标记为<strong>空闲</strong> <script type="math/tex">(0)</script>，命中点标记为<strong>占据</strong> <script type="math/tex">(100)</script>：</p>
+<p>
+<script type="math/tex; mode=display">
+g\!\left(\left\lfloor \frac{x + k\delta\cos\alpha_d - x_0}{\delta} \right\rfloor,\
+        \left\lfloor \frac{y + k\delta\sin\alpha_d - y_0}{\delta} \right\rfloor\right) = 0
+</script>
+</p>
+<p>
+<script type="math/tex; mode=display">
+g\!\left(\left\lfloor \frac{x + r_d\cos\alpha_d - x_0}{\delta} \right\rfloor,\
+        \left\lfloor \frac{y + r_d\sin\alpha_d - y_0}{\delta} \right\rfloor\right) = 100
+</script>
+</p>
+<p>未被任何射线覆盖的栅格保持 <script type="math/tex">g = -1</script>（<strong>未知</strong>）。
+地图以 <code>nav_msgs/OccupancyGrid</code> 发布，可直接在 RViz 中查看。</p>
+<h3 id="33">3.3 声呐开阔方向判定（神经网络）</h3>
+<p><strong>输入</strong>：8 维声呐测距（7 向水平扇 + 1 向下）</p>
+<p>
+<script type="math/tex; mode=display">
+\boldsymbol{x} = [r_f, r_{fl}, r_l, r_{bl}, r_{fr}, r_r, r_{br}, r_{down}]^T
+</script>
+</p>
+<p><strong>网络</strong>：MLP，8 → 64 → 32 → 3，交叉熵损失</p>
+<p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{\text{sonar}} = -\frac{1}{B}\sum_i \log\frac{\exp(z_{i,y_i})}{\sum_c \exp(z_{i,c})}
+</script>
+</p>
+<p><strong>输出类别</strong>：0 = 左侧开阔，1 = 正前开阔，2 = 右侧开阔。</p>
+<p><strong>避障决策</strong>：前方受阻（<script type="math/tex">r_f < 2.5</script> m）时，</p>
+<p>
+<script type="math/tex; mode=display">
+\omega_{\text{nav}} = \begin{cases}
++\kappa & \text{左侧开阔}\ (c=0)\\
+0 & \text{正前开阔}\ (c=1)\\
+-\kappa & \text{右侧开阔}\ (c=2)
+\end{cases}
+\qquad \kappa = 0.8
+</script>
+</p>
+<p>该修正量与端到端网络给出的前进推力在 <code>/cmd_vel</code> 侧叠加。</p>
+<h3 id="34">3.4 标签从哪来（关键设计）</h3>
+<p><strong>视觉端到端标签</strong>：用"视觉伺服"规则充当专家 ——
+以图像灰度水平亮度重心作为航向误差代理量：</p>
+<p>
+<script type="math/tex; mode=display">
+e = \frac{\sum_x x \cdot \bar{I}(x)}{\sum_x \bar{I}(x)} \bigg/ W - 0.5,
+\qquad \bar{I}(x) = \frac{1}{H}\sum_y I(x,y)
+</script>
+</p>
+<p>
+<script type="math/tex; mode=display">
+a_{\text{turn}} = \text{clip}(-k_v\, e,\ -1, 1), \qquad
+a_{\text{forward}} = \text{clip}(1 - 0.5\,|a_{\text{turn}}|,\ 0, 1)
+</script>
+</p>
+<p><strong>标签确实是图像的可微函数</strong>，因此 CNN 能稳定拟合；
+同时该伺服律本身是合理的控制律，学到的策略行为可解释。</p>
+<p><strong>声呐标签</strong>：由测距几何关系直接判定 ——
+前向测距最大则记"正前开阔"，左侧平均测距最大则记"左侧开阔"，否则"右侧开阔"。</p>
+<hr/>
+<h2 id="4-ros">4. 软件架构与 ROS 话题</h2>
+<div class="mermaid">flowchart LR
+    subgraph Sim["MuJoCo 仿真层"]
+        SIM["vision_sim_node<br/>物理 500Hz / 相机 + 8 向声呐"]
+    end
+
+    subgraph E2E["任务④ 端到端视觉控制"]
+        CNN["e2e_control_node<br/>VisualE2ENet"]
+    end
+
+    subgraph SLAM["任务③ 声呐建图导航"]
+        SL["sonar_slam_node<br/>ObstacleMapNet + 射线投射"]
+    end
+
+    SIM --&gt;|"/rov/camera/image_raw"| CNN
+    SIM --&gt;|"/rov/sonar/range_*"| SL
+    SIM --&gt;|"/rov/odom"| SL
+    CNN --&gt;|"/cmd_vel"| SIM
+    SL --&gt;|"/rov/map 占据栅格"| RV["RViz 可视化"]
+    SL --&gt;|"/rov/open_direction"| SL
+    SL --&gt;|"/rov/cmd_vel_nav 避障修正"| SIM
+</div>
+<h3 id="41">4.1 话题接口</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">话题</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">方向</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/cmd_vel</code></td>
+<td style="text-align: left;"><code>geometry_msgs/Twist</code></td>
+<td style="text-align: left;">仿真订阅</td>
+<td style="text-align: left;">端到端控制指令</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/rov/camera/image_raw</code></td>
+<td style="text-align: left;"><code>sensor_msgs/Image</code></td>
+<td style="text-align: left;">仿真发布</td>
+<td style="text-align: left;">前视相机 rgb8</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/rov/sonar/range_{f,fl,l,bl,fr,r,br,down}</code></td>
+<td style="text-align: left;"><code>sensor_msgs/Range</code></td>
+<td style="text-align: left;">仿真发布</td>
+<td style="text-align: left;">8 向声呐测距</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/rov/odom</code></td>
+<td style="text-align: left;"><code>nav_msgs/Odometry</code></td>
+<td style="text-align: left;">仿真发布</td>
+<td style="text-align: left;">位姿与速度</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/rov/map</code></td>
+<td style="text-align: left;"><code>nav_msgs/OccupancyGrid</code></td>
+<td style="text-align: left;">建图节点发布</td>
+<td style="text-align: left;">占据栅格地图</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/rov/open_direction</code></td>
+<td style="text-align: left;"><code>std_msgs/Int32</code></td>
+<td style="text-align: left;">建图节点发布</td>
+<td style="text-align: left;">开阔方向分类</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/rov/cmd_vel_nav</code></td>
+<td style="text-align: left;"><code>geometry_msgs/Twist</code></td>
+<td style="text-align: left;">建图节点发布</td>
+<td style="text-align: left;">避障转向修正</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42">4.2 参数</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">参数</th>
+<th style="text-align: left;">默认值</th>
+<th style="text-align: left;">节点</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>force_scale</code></td>
+<td style="text-align: left;">10.0</td>
+<td style="text-align: left;">仿真</td>
+<td style="text-align: left;">归一化推力 → 牛顿（已标定）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>camera_width/height</code></td>
+<td style="text-align: left;">160/120</td>
+<td style="text-align: left;">仿真</td>
+<td style="text-align: left;">相机分辨率</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>camera_every</code></td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">仿真</td>
+<td style="text-align: left;">每 N 次发布出一帧</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>map_resolution</code></td>
+<td style="text-align: left;">0.1</td>
+<td style="text-align: left;">建图</td>
+<td style="text-align: left;">栅格分辨率（米/格）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>map_width/height</code></td>
+<td style="text-align: left;">200/200</td>
+<td style="text-align: left;">建图</td>
+<td style="text-align: left;">栅格数（对应 20 m × 20 m）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>nav_turn_gain</code></td>
+<td style="text-align: left;">0.8</td>
+<td style="text-align: left;">建图</td>
+<td style="text-align: left;">避障转向增益 κ</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>forward_gain</code> / <code>turn_gain</code></td>
+<td style="text-align: left;">1.0</td>
+<td style="text-align: left;">端到端</td>
+<td style="text-align: left;">输出增益</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="5">5. 关键源码解析</h2>
+<h3 id="51-modelsrov_vision_channelxml">5.1 声呐测距扇的建模（models/rov_vision_channel.xml）</h3>
+<pre class="highlight"><code class="language-xml">&lt;!-- rangefinder 沿 site 的 +Z 轴发射，必须用 zaxis 指定朝向 --&gt;
+&lt;site name="sonar_f"  pos="0.32 0 0"    zaxis="1 0 0"       .../&gt;
+&lt;site name="sonar_fl" pos="0.28 0.16 0" zaxis="0.878 0.479 0" .../&gt;
+&lt;site name="sonar_l"  pos="0 0.22 0"    zaxis="0 1 0"       .../&gt;
+&lt;site name="sonar_bl" pos="-0.28 0.16 0" zaxis="-0.878 0.479 0" .../&gt;
+...</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">本项目实测踩到的两个 MJCF 陷阱</p>
+<ol>
+<li><strong><code>&lt;sensor&gt;</code> 不能写在 <code>&lt;body&gt;</code> 内部</strong>，必须是 <code>&lt;worldbody&gt;</code> 的兄弟节点，
+   否则报 <code>Schema violation: unrecognized element</code>；</li>
+<li><strong>加速度计的合法元素名是 <code>&lt;accelerometer&gt;</code></strong>（不是 <code>&lt;accel&gt;</code>）；
+   纹理的 <code>type</code> 只能是 <code>cube/skybox/2d</code>，棋盘格须写 <code>builtin="checker"</code>。
+这些错误只在 <code>from_xml_path()</code> 时暴露，光看代码发现不了。</li>
+</ol>
+</div>
+<h3 id="52-sonar_slam_nodepy">5.2 射线投射建图（sonar_slam_node.py）</h3>
+<pre class="highlight"><code class="language-python">def _update_map(self):
+    for d in HORIZONTAL_SONAR:          # 只投射水平方向
+        r = self.ranges[d]
+        if r &gt;= 19.9:                   # 未命中物体，跳过
+            continue
+        ang = self.yaw + SONAR_BEARINGS[d]
+        steps = int(r / self.res)
+        for i in range(steps):          # 沿途标空闲
+            wx = self.pos[0] + i * self.res * math.cos(ang)
+            wy = self.pos[1] + i * self.res * math.sin(ang)
+            cell = self._world_to_grid(wx, wy)
+            if cell and self.grid[cell[1], cell[0]] == -1:
+                self.grid[cell[1], cell[0]] = 0
+        # 命中点标占据
+        wx = self.pos[0] + r * math.cos(ang)
+        wy = self.pos[1] + r * math.sin(ang)
+        cell = self._world_to_grid(wx, wy)
+        if cell:
+            self.grid[cell[1], cell[0]] = 100</code></pre>
+<div class="admonition note">
+<p class="admonition-title">为什么区分 <code>HORIZONTAL_SONAR</code> 与 <code>SONAR_FEATURE_ORDER</code></p>
+<p>向下的测距（<code>down</code>）用于网络特征与定深，但<strong>不参与二维栅格投射</strong>
+（它的方向在世界系 XY 平面上没有意义）。本项目第一次运行时正是因为
+把 <code>down</code> 混进了投射循环而触发 <code>KeyError</code>，
+现已用两个显式常量把两种用途分开。</p>
+</div>
+<h3 id="53-networkspy">5.3 训练/推理共享预处理（networks.py）</h3>
+<pre class="highlight"><code class="language-python">def preprocess_image(img, width=IMAGE_WIDTH, height=IMAGE_HEIGHT):
+    """训练与推理共用，保证缩放方式、通道顺序、归一化完全一致。"""
+    img = img.convert('RGB').resize((width, height))
+    arr = np.asarray(img, dtype=np.float32) / 255.0
+    arr = (arr - IMAGE_MEAN) / IMAGE_STD
+    return np.ascontiguousarray(arr.transpose(2, 0, 1))   # HWC -&gt; CHW</code></pre>
+<p>视觉端到端控制最容易出的隐性缺陷就是"训练与部署的图像预处理不一致"，
+让两边调用<strong>同一个函数</strong>即可从结构上消除。</p>
+<hr/>
+<h2 id="6">6. 分步运行指南</h2>
+<h3 id="61">6.1 编译</h3>
+<pre class="highlight"><code class="language-bash">cd ~/ros2_ws
+source /opt/ros/humble/setup.bash
+colcon build --symlink-install --packages-select rov_vision_e2e_nav
+source install/setup.bash</code></pre>
+<p><strong>预期输出</strong>：</p>
+<pre class="highlight"><code class="language-text">Starting &gt;&gt;&gt; rov_vision_e2e_nav
+Finished &lt;&lt;&lt; rov_vision_e2e_nav [1.05s]
+
+Summary: 1 package finished [1.25s]</code></pre>
+<p><strong>验证安装</strong>：</p>
+<pre class="highlight"><code class="language-bash">ros2 pkg list | grep rov_vision_e2e_nav
+ls install/rov_vision_e2e_nav/lib/rov_vision_e2e_nav/
+# 应看到：e2e_control_node  sonar_slam_node  vision_sim_node
+ls install/rov_vision_e2e_nav/share/rov_vision_e2e_nav/models/
+# 应看到：rov_vision_channel.xml</code></pre>
+<h3 id="62">6.2 采集与训练</h3>
+<pre class="highlight"><code class="language-bash">export MUJOCO_GL=osmesa
+python3 src/water/rov_vision_e2e_nav/main.py collect --samples 3000
+python3 src/water/rov_vision_e2e_nav/main.py train --epochs 40</code></pre>
+<p><strong>预期输出</strong>：</p>
+<pre class="highlight"><code class="language-text">✅ 视觉端到端数据集: .../e2e_dataset.npz
+   图像 (3000, 120, 160, 3) | 标签 (3000, 2)
+   前进推力范围 [+0.682, +1.000]
+   转向范围     [-0.594, +0.636]
+✅ 声呐建图数据集: .../sonar_dataset.npz
+   特征 (3000, 8) | 标签分布 [1152, 642, 1206]
+
+--- 训练 视觉端到端网络 ---
+  Epoch   1/40  train=0.133969  val=0.011338
+  Epoch  40/40  train=0.001195  val=0.001274
+  ✅ 权重已保存: model_e2e.pth (最佳验证损失 0.001192)
+
+--- 训练 声呐感知网络 ---
+  Epoch   1/40  train=1.014753  val=0.860372  val_acc=77.3%
+  Epoch  40/40  train=0.086170  val=0.084647  val_acc=98.8%
+  ✅ 权重已保存: model_seg.pth (最佳验证损失 0.084647)</code></pre>
+<p><img alt="训练损失曲线" src="../../img/water/rov_vision_e2e_nav_training_curve.png"/></p>
+<p><em>图 6.1：两个网络的训练/验证损失曲线。左侧为视觉端到端网络（MSE），
+右侧为声呐感知网络（交叉熵）。均平稳收敛，无过拟合。</em></p>
+<h3 id="63">6.3 离线测试</h3>
+<pre class="highlight"><code class="language-bash">python3 src/water/rov_vision_e2e_nav/main.py test</code></pre>
+<p><strong>实测输出</strong>：</p>
+<pre class="highlight"><code class="language-text">样本数: 3000
+输出维度               MAE                  真值范围
+整体 MSE: 0.001027
+输出维度平均 MAE: 0.0228
+
+样本数: 3000
+分类准确率: 98.23%</code></pre>
+<p><img alt="离线测试散点图" src="../../img/water/rov_vision_e2e_nav_test_infer.png"/></p>
+<p><em>图 6.2：视觉端到端网络两个输出维度的预测值 vs 真值散点图，
+点紧密分布在对角线附近。</em></p>
+<h3 id="64">6.4 一键启动完整闭环</h3>
+<pre class="highlight"><code class="language-bash">python3 src/water/rov_vision_e2e_nav/main.py run
+# 或 ros2 launch rov_vision_e2e_nav main.launch.py mode:=all</code></pre>
+<p><strong>启动日志</strong>：</p>
+<pre class="highlight"><code class="language-text">[vision_sim_node-1] 视觉与声呐仿真节点已启动 | 物理 500 Hz | 发布 50 Hz | 声呐 8 向
+[e2e_control_node-2] 端到端网络已加载: model_e2e.pth | 输入 160x120 | 验证损失 0.001192
+[e2e_control_node-2] 端到端视觉控制节点已启动 | 订阅 /rov/camera/image_raw → 发布 /cmd_vel
+[sonar_slam_node-3] 声呐感知网络已加载: model_seg.pth | 验证损失 0.084647
+[sonar_slam_node-3] 声呐建图与导航节点已启动 | 地图 200x200 @ 0.1 m/格 | 避障修正 开启</code></pre>
+<p><strong>运行中输出</strong>：</p>
+<pre class="highlight"><code class="language-text">[sonar_slam_node-3] 建图 #20 | 位置=(+2.81,+0.06) yaw=+1.2° | 已探索 1180 格（占据 96）
+                    | 前方 6.53 m | 判定: 正前开阔 (置信度 99.2%)</code></pre>
+<p><img alt="端到端视觉自主航行演示" src="../../img/water/rov_vision_e2e_nav_autonomous.gif"/></p>
+<p><em>图 6.3（gif 动图）：<code>python3 main.py run</code> 一键启动后，
+ROV 仅依据前视相机图像（端到端 CNN）自主前进，同时声呐节点在后台建图并给出避障修正。
+动图由 120 帧前视相机画面合成，体积 0.92 MB。</em></p>
+<h3 id="65">6.5 验证建图与话题</h3>
+<pre class="highlight"><code class="language-bash">ros2 topic list
+# 应包含：/rov/map  /rov/open_direction  /rov/cmd_vel_nav
+#        /rov/camera/image_raw  /rov/sonar/range_{f,fl,l,bl,fr,r,br,down}
+
+ros2 topic echo /rov/open_direction      # 神经网络判定的开阔方向
+ros2 topic echo /rov/map --once          # 占据栅格地图（-1 未知 / 0 空闲 / 100 占据）</code></pre>
+<h3 id="66">6.6 前视相机看到的场景</h3>
+<p><img alt="通道场景" src="../../img/water/rov_vision_e2e_nav_channel_view.png"/></p>
+<p><em>图 6.4：ROV 前视相机实际渲染画面 —— 可见水下通道两侧墙体、地面棋盘网格
+与前方三种颜色的标记物。该画面由 <code>MUJOCO_GL=osmesa</code> 软件渲染产生。</em></p>
+<hr/>
+<h2 id="7">7. 实验结果</h2>
+<h3 id="71">7.1 数据集</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">项目</th>
+<th style="text-align: left;">数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">采样条数</td>
+<td style="text-align: left;">3000</td>
+</tr>
+<tr>
+<td style="text-align: left;">图像尺寸</td>
+<td style="text-align: left;">120 × 160 × 3</td>
+</tr>
+<tr>
+<td style="text-align: left;">视觉标签范围</td>
+<td style="text-align: left;">前进 [0.682, 1.000]，转向 [−0.594, 0.636]</td>
+</tr>
+<tr>
+<td style="text-align: left;">声呐特征维度</td>
+<td style="text-align: left;">8</td>
+</tr>
+<tr>
+<td style="text-align: left;">声呐类别分布</td>
+<td style="text-align: left;">左侧 1152 / 正前 642 / 右侧 1206</td>
+</tr>
+</tbody>
+</table>
+<h3 id="72">7.2 训练结果</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">网络</th>
+<th style="text-align: left;">第 1 轮验证损失</th>
+<th style="text-align: left;">第 40 轮验证损失</th>
+<th style="text-align: left;">最佳验证损失</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">视觉端到端网络</td>
+<td style="text-align: left;">0.011338</td>
+<td style="text-align: left;">0.001274</td>
+<td style="text-align: left;"><strong>0.001192</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">声呐感知网络</td>
+<td style="text-align: left;">0.860372</td>
+<td style="text-align: left;">0.084647</td>
+<td style="text-align: left;"><strong>0.084647</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="73">7.3 离线测试结果</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">指标</th>
+<th style="text-align: left;">数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">视觉端到端 平均 MAE</td>
+<td style="text-align: left;"><strong>0.0228</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">视觉端到端 整体 MSE</td>
+<td style="text-align: left;">0.001027</td>
+</tr>
+<tr>
+<td style="text-align: left;">声呐感知 分类准确率</td>
+<td style="text-align: left;"><strong>98.23%</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="74">7.4 闭环自主航行结果</h3>
+<p>用 <code>/rov/odom</code> 记录 40 秒闭环航行（<code>mode:=all</code>）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">指标</th>
+<th style="text-align: left;">数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">前进距离 Δx</td>
+<td style="text-align: left;"><strong>+3.195 m</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">横向偏移最大</td>
+<td style="text-align: left;">0.512 m</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>深度范围</strong></td>
+<td style="text-align: left;"><strong>[−1.063, −1.000] m</strong>（目标 −1.0）</td>
+</tr>
+<tr>
+<td style="text-align: left;">控制指令 前进范围</td>
+<td style="text-align: left;">[0.000, 0.988]</td>
+</tr>
+<tr>
+<td style="text-align: left;">控制指令 转向范围</td>
+<td style="text-align: left;">[−0.135, 0.035]</td>
+</tr>
+<tr>
+<td style="text-align: left;">发布话题总数</td>
+<td style="text-align: left;">18 个（含 <code>/rov/map</code>、<code>/rov/open_direction</code>、<code>/rov/cmd_vel_nav</code>）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结论</strong>：单目视觉端到端网络成功驱动 ROV 沿通道自主前进 3.195 m，
+同时声呐建图节点持续输出占据栅格地图与开阔方向判定。
+任务③（建图与导航）与任务④（端到端模型）均实测通过，
+两者的控制量在 <code>/cmd_vel</code> 侧叠加生效。</p>
+<hr/>
+<h2 id="8">8. 常见问题排查</h2>
+<h3 id="q1-sonar_slam_node-keyerror">Q1: <code>sonar_slam_node</code> 启动后立即退出，日志有 <code>KeyError</code></h3>
+<p>传入神经网络的声呐特征顺序（8 维，含 <code>down</code>）与参与二维射线投射的方向
+（7 维，不含 <code>down</code>）必须区分开。本包用 <code>SONAR_FEATURE_ORDER</code> 与
+<code>HORIZONTAL_SONAR</code> 两个常量显式分离，请勿混用。</p>
+<h3 id="q2">Q2: 相机话题无数据 / 图像全黑</h3>
+<p>确认 <code>export MUJOCO_GL=osmesa</code> 且已安装 <code>libosmesa6</code>。</p>
+<h3 id="q3-rovmap-1">Q3: <code>/rov/map</code> 一直是空的（全是 −1）</h3>
+<p>说明声呐没有命中任何物体。可用 <code>ros2 topic echo /rov/sonar/range_f</code> 检查读数；
+若读数恒为 20.0（量程上限），检查模型是否正确加载。</p>
+<h3 id="q4-rov">Q4: ROV 瞬间冲到通道尽头</h3>
+<p><code>force_scale</code> 过大。本包默认 10 N（由标定实验确定），请勿随意放大。</p>
+<h3 id="q5">Q5: 图片里的中文变成方框</h3>
+<p>系统缺少中文字体：<code>sudo apt install fonts-noto-cjk</code>。
+本包绘图代码在找不到中文字体时会自动改用英文标签，不会画成方框。</p></div>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../rov_sonar_slam_navigation/" title="水下声呐 SLAM 占据栅格建图与自主避障导航"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../rov_sonar_slam_navigation/" style="color: #fcfcfc">« Previous</a></span>
+</span>
+</div>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../..";</script>
+<script src="../../js/theme_extra.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../js/umlconvert.js"></script>
+<script src="../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script>mermaid.initialize({});</script></body>
+</html>
