@@ -113,6 +113,7 @@ ROS每章节运行代码:
 * [水下多传感器感知与 3D 轨迹跟踪控制](./water/rov_trajectory_tracking.md)
 
 * [水下声呐 SLAM 占据栅格建图与自主避障导航](./water/rov_sonar_slam_navigation.md)
+* [水下 ROV 单目视觉端到端控制与声呐建图导航](./water/rov_vision_e2e_nav.md)
 
 ___
 

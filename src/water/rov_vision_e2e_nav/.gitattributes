@@ -1,0 +1,2 @@
+# 保证 shell 脚本在检出后始终是 LF 行尾
+*.sh text eol=lf

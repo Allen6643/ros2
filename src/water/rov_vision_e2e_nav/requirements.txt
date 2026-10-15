@@ -1,0 +1,30 @@
+# rov_vision_e2e_nav 依赖清单
+#
+# 目标环境：Ubuntu 20.04 + ROS 2 Humble + Python 3.8.10（教学虚拟机，无独立显卡）
+# 安装：
+#   pip3 install -r src/water/rov_vision_e2e_nav/requirements.txt
+#   # 国内加速：-i https://mirrors.aliyun.com/pypi/simple/
+#
+# ---------------------------------------------------------------------------
+
+# MuJoCo 物理引擎（mujoco>=3.2 要求 Python>=3.9，故 Python 3.8 固定 3.1.x）
+mujoco>=3.0.0,<3.2
+
+# 无显卡环境下离屏渲染依赖 PyOpenGL + 系统库 libosmesa6
+#   sudo apt install -y libosmesa6
+PyOpenGL>=3.1.0
+
+numpy>=1.20.0
+pillow>=8.0.0
+PyYAML>=5.3
+
+# 深度学习框架（CPU 版；Python 3.8 最后一个支持版本是 2.4.1）
+# 建议用官方 CPU 索引安装，避免拉到 797 MB 的 CUDA 版：
+#   pip3 install torch==2.4.1+cpu torchvision==0.19.1+cpu \
+#       -i https://mirrors.aliyun.com/pypi/simple/ \
+#       --extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.4.1
+torchvision==0.19.1
+
+# 损失曲线与散点图（可选，缺失时自动跳过绘图）
+matplotlib>=3.3.0

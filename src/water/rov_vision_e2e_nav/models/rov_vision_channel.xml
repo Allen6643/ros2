@@ -1,0 +1,135 @@
+<mujoco model="rov_vision_e2e_channel">
+  <!-- ===================================================================
+       水下 ROV 视觉端到端控制与声呐建图导航场景（完全自包含）
+       ===================================================================
+       与 PR1 的 rov_channel.xml 相互独立，本文件专为「视觉 + 声呐」任务设计：
+       1. 场景更复杂：通道沿 X 轴延伸并带一处拐弯，便于验证建图与导航；
+       2. 布置多种颜色/形状的标记物，让视觉端到端网络有可区分的视觉线索；
+       3. 除前视相机外，再装一圈水平测距扇（模拟多波束声呐），
+          供占据栅格建图使用。
+
+       坐标系约定：+X 前、+Y 左、+Z 上；相机视线为相机系 -Z；
+       测距传感器沿 site 的 +Z 轴发射。
+       =================================================================== -->
+
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast"/>
+
+  <visual>
+    <headlight ambient="0.42 0.48 0.56" diffuse="0.78 0.86 0.96" specular="0.20 0.20 0.20"/>
+    <map znear="0.02" zfar="45"/>
+    <quality shadowsize="2048"/>
+  </visual>
+
+  <default>
+    <geom friction="0.6 0.1 0.1" density="1000"/>
+    <default class="wall">
+      <geom rgba="0.28 0.48 0.64 1" type="box"/>
+    </default>
+    <default class="marker">
+      <geom rgba="0.92 0.60 0.18 1" type="box"/>
+    </default>
+  </default>
+
+  <asset>
+    <!-- 注意：棋盘格写 builtin="checker"，type 只能 cube/skybox/2d -->
+    <texture name="tex_floor" builtin="checker"
+             rgb1="0.22 0.46 0.60" rgb2="0.13 0.32 0.46"
+             width="512" height="512"/>
+    <material name="mat_floor" texture="tex_floor" texrepeat="18 18" reflectance="0.06"/>
+    <material name="mat_rov"    rgba="0.90 0.40 0.10 1"/>
+    <material name="mat_lamp"   rgba="0.96 0.99 1.00 1" emission="1.6"/>
+    <material name="mat_red"    rgba="0.88 0.26 0.22 1"/>
+    <material name="mat_green"  rgba="0.24 0.78 0.36 1"/>
+    <material name="mat_blue"   rgba="0.24 0.46 0.90 1"/>
+  </asset>
+
+  <worldbody>
+    <light directional="true"  pos="0 0 9" dir="0 0 -1"
+           diffuse="0.86 0.92 1.00" specular="0.30 0.30 0.30"/>
+    <light directional="false" pos="4 2 5" diffuse="0.36 0.58 0.78"/>
+
+    <!-- 地面棋盘（提供视觉运动参照） -->
+    <geom name="floor" type="plane" size="18 18 0.05" pos="0 0 -1.5"
+          material="mat_floor" condim="3"/>
+
+    <!-- ======== 通道：先直行段，再向右拐弯 ======== -->
+    <!-- 直行段两侧墙（X 从 0 到 7） -->
+    <geom name="wall_l_straight" class="wall" size="7.0 0.15 1.5" pos="0.0  1.6 -1.5"/>
+    <geom name="wall_r_straight" class="wall" size="7.0 0.15 1.5" pos="0.0 -1.6 -1.5"/>
+    <!-- 拐弯段两侧墙（沿 Y 方向延伸，X≈7） -->
+    <geom name="wall_l_turn"     class="wall" size="0.15 5.0 1.5" pos="7.0  4.5 -1.5"/>
+    <geom name="wall_end"        class="wall" size="1.75 0.15 1.5" pos="7.0 9.4 -1.5"
+          quat="0.707 0 0 0.707"/>
+    <!-- 通道出口封板：让直行段有个视觉终点 -->
+    <geom name="wall_far"        class="wall" size="0.15 1.75 1.5" pos="9.0 0 -1.5"
+          quat="0.707 0 0 0.707"/>
+
+    <!-- ======== 视觉标记物（三种颜色，供端到端网络区分）======== -->
+    <geom name="marker_red_1"   class="marker" size="0.22 0.22 0.45" pos="3.0  0.55 -1.05" material="mat_red"/>
+    <geom name="marker_green_1" class="marker" size="0.20 0.20 0.40" pos="5.0 -0.60 -1.10" material="mat_green"/>
+    <geom name="marker_blue_1"  class="marker" size="0.18 0.18 0.35" pos="6.5  0.30 -1.15" material="mat_blue"/>
+    <geom name="marker_red_2"   type="cylinder" size="0.16 0.50"  pos="4.2 -0.20 -1.00" material="mat_red"/>
+    <geom name="marker_green_2" type="cylinder" size="0.14 0.55"  pos="6.0  0.75 -0.95" material="mat_green"/>
+
+    <!-- ==================== ROV 本体 ==================== -->
+    <body name="rov" pos="0 0 -1.0">
+      <freejoint name="rov_freejoint"/>
+
+      <geom name="rov_body" type="box" size="0.30 0.18 0.15" mass="12.0"
+            material="mat_rov" fluidshape="ellipsoid"
+            fluidcoef="0.35 6.50 2.60 3.50 0.25"/>
+
+      <!-- 推进器视觉标识 -->
+      <geom name="thr_fl" type="cylinder" size="0.035 0.030" pos=" 0.22  0.14 -0.03"
+            quat="0.707 0.707 0 0" material="mat_lamp"/>
+      <geom name="thr_fr" type="cylinder" size="0.035 0.030" pos=" 0.22 -0.14 -0.03"
+            quat="0.707 0.707 0 0" material="mat_lamp"/>
+      <geom name="thr_rl" type="cylinder" size="0.035 0.030" pos="-0.22  0.14 -0.03"
+            quat="0.707 0.707 0 0" material="mat_lamp"/>
+      <geom name="thr_rr" type="cylinder" size="0.035 0.030" pos="-0.22 -0.14 -0.03"
+            quat="0.707 0.707 0 0" material="mat_lamp"/>
+
+      <!-- 前照灯 -->
+      <geom name="lamp_l" type="sphere" size="0.030" pos="0.31  0.09 0.05" material="mat_lamp"/>
+      <geom name="lamp_r" type="sphere" size="0.030" pos="0.31 -0.09 0.05" material="mat_lamp"/>
+
+      <!-- 前视相机：视线 = -Z = (0.966, 0, -0.259)，朝 +X 前下方 -->
+      <camera name="forward_cam" pos="0.32 0 0.06"
+              xyaxes="0 -1 0  0.259 0 0.966" fovy="75"/>
+
+      <!-- ======== 声呐测距扇：前 + 左前 + 左 + 左后 + 右前 + 右 + 右后 ========
+           模拟多波束声呐的水平扫描，供占据栅格建图使用。
+           rangefinder 沿 site 的 +Z 轴发射，故用 zaxis 指定朝向。 -->
+      <site name="sonar_f"   pos="0.32 0 0"      size="0.008" zaxis="1 0 0"      rgba="1 0 0 1"/>
+      <site name="sonar_fl"  pos="0.28 0.16 0"   size="0.008" zaxis="0.878 0.479 0" rgba="1 0.6 0 1"/>
+      <site name="sonar_l"   pos="0 0.22 0"      size="0.008" zaxis="0 1 0"      rgba="0 1 0 1"/>
+      <site name="sonar_bl"  pos="-0.28 0.16 0"  size="0.008" zaxis="-0.878 0.479 0" rgba="0 1 0.6 1"/>
+      <site name="sonar_fr"  pos="0.28 -0.16 0"  size="0.008" zaxis="0.878 -0.479 0" rgba="1 0 0.6 1"/>
+      <site name="sonar_r"   pos="0 -0.22 0"     size="0.008" zaxis="0 -1 0"     rgba="0 0 1 1"/>
+      <site name="sonar_br"  pos="-0.28 -0.16 0" size="0.008" zaxis="-0.878 -0.479 0" rgba="0 0.6 1 1"/>
+      <!-- 向下的测距，用于定高/定深 -->
+      <site name="sonar_down" pos="0 0 -0.16"    size="0.008" zaxis="0 0 -1"     rgba="1 1 0 1"/>
+    </body>
+  </worldbody>
+
+  <!-- 传感器必须是 worldbody 的兄弟节点 -->
+  <sensor>
+    <framepos      name="rov_pos"   objtype="body" objname="rov"/>
+    <framelinvel   name="rov_vel"   objtype="body" objname="rov"/>
+    <gyro          name="rov_gyro"  site="sonar_f"/>
+    <!-- 加速度计的合法元素名是 <accelerometer> -->
+    <accelerometer name="rov_accel" site="sonar_f"/>
+    <!-- 声呐测距扇（7 向水平 + 1 向下） -->
+    <rangefinder name="sonar_range_f"   site="sonar_f"/>
+    <rangefinder name="sonar_range_fl"  site="sonar_fl"/>
+    <rangefinder name="sonar_range_l"   site="sonar_l"/>
+    <rangefinder name="sonar_range_bl"  site="sonar_bl"/>
+    <rangefinder name="sonar_range_fr"  site="sonar_fr"/>
+    <rangefinder name="sonar_range_r"   site="sonar_r"/>
+    <rangefinder name="sonar_range_br"  site="sonar_br"/>
+    <rangefinder name="sonar_range_down" site="sonar_down"/>
+  </sensor>
+
+  <!-- 推进器推力由仿真节点每步写入 data.xfrc_applied（自由关节无法直接挂 motor） -->
+</mujoco>

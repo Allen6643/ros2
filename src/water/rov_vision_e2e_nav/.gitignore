@@ -1,0 +1,11 @@
+# 训练产物：体积较大，需由本机运行 train.py 复现，不入版本库
+model_e2e.pth
+model_seg.pth
+training_curve_e2e.png
+training_curve_seg.png
+test_infer_result.png
+e2e_closedloop_result.png
+
+# Python 缓存
+__pycache__/
+*.pyc

@@ -1,0 +1,43 @@
+# 水下 ROV 视觉端到端与声呐建图参数
+# ==================================
+
+# ---------------- 物理仿真 ----------------
+sim_rate: 500.0
+publish_rate: 50.0
+buoyancy_compensate: true
+force_scale: 10.0            # 已标定：10 N 约对应 2 秒前进 1.5 m
+torque_scale: 2.0
+
+# ---------------- 初始状态 ----------------
+target_depth: -1.0
+initial_position: [0.0, 0.0, -1.0]
+
+# ---------------- 前视相机 ----------------
+camera_name: forward_cam
+camera_width: 160
+camera_height: 120
+camera_every: 5              # 每 N 次发布出一帧（降低 CPU 软件渲染压力）
+
+# ---------------- 声呐 ----------------
+sonar_max_range: 20.0        # 量程（米）
+sonar_directions: [f, fl, l, bl, fr, r, br, down]   # 7 向水平扇 + 1 向下
+
+# ---------------- 数据集与训练 ----------------
+data_samples: 3000
+train_epochs: 40
+train_batch_size: 64
+train_lr: 0.001
+val_ratio: 0.2
+random_seed: 42
+
+# ---------------- 端到端控制 ----------------
+forward_gain: 1.0
+turn_gain: 1.0
+
+# ---------------- 占据栅格建图 ----------------
+map_width: 200               # 栅格数（X 方向）
+map_height: 200              # 栅格数（Y 方向）
+map_resolution: 0.1          # 每格 0.1 m
+map_origin_x: -5.0
+map_origin_y: -10.0
+nav_turn_gain: 0.8           # 避障转向修正增益
