@@ -1,0 +1,10 @@
+# 训练产物：体积较大，且必须由本机运行 train.py 复现，不入版本库
+model_sensor.pth
+model_traj.pth
+training_curve_sensor.png
+training_curve_traj.png
+test_infer_result.png
+
+# Python 缓存
+__pycache__/
+*.pyc

@@ -1,0 +1,134 @@
+<mujoco model="rov_underwater_channel">
+  <!-- ===================================================================
+       水下 ROV 通道场景（完全自包含）
+       ===================================================================
+       设计要点：
+       1. 只使用基础几何体（box/cylinder/plane），不引用任何 .obj/.stl/纹理文件，
+          因此不依赖外部资产，克隆下来即可加载。
+       2. 布局：通道沿 +X 轴延伸（两侧墙在 Y=±1.5，端墙在 X=8），
+          ROV 机头朝 +X，与通道方向一致 —— 这样前视相机看到的就是通道纵深。
+       3. 相机视线 = 相机坐标系 -Z；测距传感器沿 site 的 +Z 轴发射。
+       4. 地面使用棋盘纹理，给视觉感知提供清晰的运动参照。
+
+       坐标系约定：
+         ROV 机体系：+X 前、+Y 左、+Z 上
+         forward_cam：安装在机头，视线朝 +X 且下俯约 15°
+       =================================================================== -->
+
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast"/>
+
+  <visual>
+    <headlight ambient="0.40 0.47 0.56" diffuse="0.75 0.85 0.95" specular="0.20 0.20 0.20"/>
+    <map znear="0.02" zfar="40"/>
+    <quality shadowsize="2048"/>
+  </visual>
+
+  <default>
+    <geom friction="0.6 0.1 0.1" density="1000"/>
+    <default class="wall">
+      <geom rgba="0.30 0.50 0.66 1" type="box"/>
+    </default>
+    <default class="obstacle">
+      <geom rgba="0.90 0.58 0.16 1" type="box"/>
+    </default>
+  </default>
+
+  <asset>
+    <!-- 注意：texture 的 type 只能 cube/skybox/2d（省略=2d）；
+         棋盘格由 builtin="checker" 指定，不能写 type="checker" -->
+    <texture name="tex_floor" builtin="checker"
+             rgb1="0.20 0.44 0.58" rgb2="0.12 0.30 0.44"
+             width="512" height="512"/>
+    <material name="mat_floor" texture="tex_floor" texrepeat="16 16" reflectance="0.06"/>
+    <material name="mat_rov"   rgba="0.92 0.42 0.10 1"/>
+    <material name="mat_lamp"  rgba="0.96 0.99 1.00 1" emission="1.6"/>
+  </asset>
+
+  <worldbody>
+    <!-- 水下照明：方向光 + 一盏补光，保证软件渲染（OSMesa）下画面不过暗 -->
+    <light directional="true"  pos="0 0 8" dir="0 0 -1"
+           diffuse="0.85 0.92 1.00" specular="0.30 0.30 0.30"/>
+    <light directional="false" pos="3 2 4" diffuse="0.35 0.58 0.78"/>
+
+    <!-- 地面：棋盘纹理，给视觉提供清晰的运动参照 -->
+    <geom name="floor" type="plane" size="16 16 0.05" pos="0 0 -1.4"
+          material="mat_floor" condim="3"/>
+
+    <!-- 通道左右墙体：沿 X 方向延伸 -->
+    <geom name="wall_left"  class="wall" size="8.0 0.15 1.4" pos="0  1.5 -1.4"/>
+    <geom name="wall_right" class="wall" size="8.0 0.15 1.4" pos="0 -1.5 -1.4"/>
+    <!-- 通道尽头墙 -->
+    <geom name="wall_end"   class="wall" size="1.65 0.15 1.4" pos="8.0 0 -1.4"
+          quat="0.707 0 0 0.707"/>
+
+    <!-- 通道内的障碍物：供避障与测距感知使用 -->
+    <geom name="obs_1" class="obstacle" size="0.22 0.25 0.40" pos="2.5  0.45 -1.00"/>
+    <geom name="obs_2" class="obstacle" size="0.20 0.20 0.35" pos="4.0 -0.50 -1.05"/>
+    <geom name="obs_3" class="obstacle" size="0.25 0.25 0.45" pos="5.6  0.30 -0.95"/>
+    <geom name="obs_4" type="cylinder" rgba="0.85 0.30 0.30 1"
+          size="0.16 0.50" pos="6.8 -0.35 -0.90"/>
+    <geom name="obs_5" class="obstacle" size="0.18 0.30 0.30" pos="3.2 -0.90 -1.10"/>
+
+    <!-- ==================== ROV 本体 ==================== -->
+    <body name="rov" pos="0 0 -1.0">
+      <freejoint name="rov_freejoint"/>
+
+      <!-- 主舱体：长轴沿 X（与通道方向一致） -->
+      <geom name="rov_body" type="box" size="0.30 0.18 0.15" mass="12.0"
+            material="mat_rov" fluidshape="ellipsoid"
+            fluidcoef="0.35 6.50 2.60 3.50 0.25"/>
+
+      <!-- 四个推进器（视觉标识） -->
+      <geom name="thr_fl" type="cylinder" size="0.035 0.030" pos=" 0.22  0.14 -0.03"
+            quat="0.707 0.707 0 0" material="mat_lamp"/>
+      <geom name="thr_fr" type="cylinder" size="0.035 0.030" pos=" 0.22 -0.14 -0.03"
+            quat="0.707 0.707 0 0" material="mat_lamp"/>
+      <geom name="thr_rl" type="cylinder" size="0.035 0.030" pos="-0.22  0.14 -0.03"
+            quat="0.707 0.707 0 0" material="mat_lamp"/>
+      <geom name="thr_rr" type="cylinder" size="0.035 0.030" pos="-0.22 -0.14 -0.03"
+            quat="0.707 0.707 0 0" material="mat_lamp"/>
+
+      <!-- 前照灯 -->
+      <geom name="lamp_l" type="sphere" size="0.030" pos="0.31  0.09 0.05" material="mat_lamp"/>
+      <geom name="lamp_r" type="sphere" size="0.030" pos="0.31 -0.09 0.05" material="mat_lamp"/>
+
+      <!-- 前视相机
+           相机 X 轴 = 机体 -Y（图像右侧），相机 Y 轴向上且前倾 15°：
+           Y = (sin15, 0, cos15) = (0.259, 0, 0.966)
+           则视线 = -Z = -(X × Y) = (0.966, 0, -0.259)，即朝 +X 前下方 -->
+      <camera name="forward_cam" pos="0.32 0 0.06"
+              xyaxes="0 -1 0  0.259 0 0.966" fovy="72"/>
+
+      <!-- 测距传感器站位：rangefinder 沿 site 的 +Z 轴发射 -->
+      <site name="site_front" pos="0.32 0 0"   size="0.010"
+            zaxis="1 0 0"  rgba="1 0 0 1"/>
+      <site name="site_left"  pos="0 0.20 0"   size="0.010"
+            zaxis="0 1 0"  rgba="0 1 0 1"/>
+      <site name="site_right" pos="0 -0.20 0"  size="0.010"
+            zaxis="0 -1 0" rgba="0 0 1 1"/>
+      <site name="site_down"  pos="0 0 -0.16"  size="0.010"
+            zaxis="0 0 -1" rgba="1 1 0 1"/>
+    </body>
+  </worldbody>
+
+  <!-- 传感器必须作为 worldbody 的兄弟节点直接挂在 <mujoco> 下，
+       不能写在 <body> 内部（否则报 Schema violation） -->
+  <sensor>
+    <!-- 机体位姿与运动状态 -->
+    <framepos      name="rov_pos"   objtype="body" objname="rov"/>
+    <framelinvel   name="rov_vel"   objtype="body" objname="rov"/>
+    <gyro          name="rov_gyro"  site="site_front"/>
+    <!-- 注意：加速度计合法元素名是 <accelerometer>，不是 <accel> -->
+    <accelerometer name="rov_accel" site="site_front"/>
+    <!-- 四向测距：用于障碍物距离感知 -->
+    <rangefinder name="range_front" site="site_front"/>
+    <rangefinder name="range_left"  site="site_left"/>
+    <rangefinder name="range_right" site="site_right"/>
+    <rangefinder name="range_down"  site="site_down"/>
+  </sensor>
+
+  <!-- 说明：推进器推力不通过 actuator 施加（自由关节无法直接挂 motor），
+       而是由仿真节点每步把机体系推力旋转到世界系后写入 data.xfrc_applied，
+       这与已验证可用的实现方式一致。 -->
+</mujoco>

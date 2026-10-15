@@ -1,0 +1,4 @@
+# 保证 shell 脚本在检出后始终是 LF 行尾，
+# 避免 Windows 上 core.autocrlf=true 把 main.sh 检出成 CRLF，
+# 导致 Linux 下报 "$'\r': command not found"
+*.sh text eol=lf
