@@ -1,0 +1,13 @@
+=== build result ===
+Starting >>> mjc_rov_rl_compare
+Finished <<< mjc_rov_rl_compare [0.73s]
+
+Summary: 1 package finished [0.96s]
+=== executables ===
+Package 'mjc_rov_rl_compare' not found
+=== compare ===
+== PPO 训练中 ==
+== SAC 训练中 ==
+[对比] PPO  最后10轮平均奖励: -1440.94
+[对比] SAC  最后10轮平均奖励: -400.22
+=== DONE ===

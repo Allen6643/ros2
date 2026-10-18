@@ -1,0 +1,32 @@
+Starting >>> mjc_rov_ppo_tracking
+Finished <<< mjc_rov_ppo_tracking [0.74s]
+
+Summary: 1 package finished [0.84s]
+=== executables ===
+mjc_rov_ppo_tracking ppo_node
+mjc_rov_ppo_tracking sim_node
+=== offline: train+test ===
+/home/user/ros2_ws/src/water/mjc_rov_ppo_tracking/mjc_rov_ppo_tracking/ppo_agent.py:174: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  actor.load_state_dict(torch.load(wpath, map_location="cpu"))
+== [1/2] 训练 PPO ==
+[BC] 阶段 1: PID 模仿学习预热
+[BC] ep   0  loss=8.6395
+[BC] ep  10  loss=6.2172
+[BC] ep  20  loss=6.1781
+[PPO] 阶段 2: PPO 微调
+[PPO] ep   0/200  final_err=1.933  loss_a=0.1640
+[PPO] ep  20/200  final_err=1.933  loss_a=0.1478
+[PPO] ep  40/200  final_err=1.933  loss_a=0.1373
+[PPO] ep  60/200  final_err=1.931  loss_a=0.0145
+[PPO] ep  80/200  final_err=1.935  loss_a=0.0771
+[PPO] ep 100/200  final_err=1.947  loss_a=0.0460
+[PPO] ep 120/200  final_err=1.952  loss_a=0.0013
+[PPO] ep 140/200  final_err=1.958  loss_a=-0.0635
+[PPO] ep 160/200  final_err=1.962  loss_a=-0.0798
+[PPO] ep 180/200  final_err=1.964  loss_a=-0.1799
+[PPO] ep 199/200  final_err=1.963  loss_a=0.0433
+[PPO] 权重保存到 /home/user/ros2_ws/src/water/mjc_rov_ppo_tracking/weights/ppo_actor.pt
+== [2/2] PPO vs PID 对比 ==
+[对比] PID  MAE = 1.975 m
+[对比] PPO  MAE = 1.987 m
+=== ALL DONE ===

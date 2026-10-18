@@ -1,0 +1,20 @@
+Starting >>> mjc_rov_sonar_cnn
+Finished <<< mjc_rov_sonar_cnn [0.77s]
+
+Summary: 1 package finished [0.87s]
+=== executables ===
+mjc_rov_sonar_cnn classify_node
+mjc_rov_sonar_cnn sim_node
+=== offline: train+test ===
+[W1013 22:55:31.986928565 NNPACK.cpp:61] Could not initialize NNPACK! Reason: Unsupported hardware.
+/home/user/ros2_ws/src/water/mjc_rov_sonar_cnn/mjc_rov_sonar_cnn/cnn_model.py:110: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  net.load_state_dict(torch.load(wpath, map_location="cpu"))
+== [1/2] 训练 CNN ==
+[train] epoch   0/30  loss=0.9125
+[train] epoch  10/30  loss=0.0000
+[train] epoch  20/30  loss=0.0000
+[train] epoch  29/30  loss=0.0000
+[train] 权重保存到 /home/user/ros2_ws/src/water/mjc_rov_sonar_cnn/weights/sonar_cnn.pt
+== [2/2] 测试准确率 ==
+[test] 合成测试集准确率: 1.000 (200/200)
+=== ALL DONE ===
