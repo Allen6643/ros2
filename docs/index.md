@@ -167,7 +167,7 @@ ROS 2 话题发布订阅基础实验（talker/listener）：[chap2/ros2_pubsub_p
   
 * [新增水下三维地形测绘模块](./water/underwater_sonar_mapping.md)
 
-* [动态洋流ROV MuJoCo仿真与MLP巡航控制](./water/mjc_rov_current_teleop.md)
+* [动态洋流 ROV 键盘遥操与 MLP 巡航控制](./water/mjc_rov_current_teleop.md)
 
 ___
 
