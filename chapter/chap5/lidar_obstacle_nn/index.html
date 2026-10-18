@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>激光雷达 NN 障碍物分类 - 模拟器的 ROS 文档</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u6fc0\u5149\u96f7\u8fbe NN \u969c\u788d\u7269\u5206\u7c7b";
+        var mkdocs_page_input_path = "chapter\\chap5\\lidar_obstacle_nn.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ubuntu20.04/">安装 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chap2/ros2_pubsub_py/">ROS2 话题发布订阅基础实验（talker/listener）</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap4/">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current">5. 机器人感知</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../">章节首页</a>
+</li>
+<li class="toctree-l2 current"><a class="reference internal current" href="#">激光雷达 NN 障碍物分类</a>
+<ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="#1">1. 系统组成</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#2">2. 环境要求与安装</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#3">3. 计算原理</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#4">4. 算法流程</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#5">5. 源码解析</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#6">6. 运行步骤</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#7">7. 实测结果</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#8">8. 排错</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_2">参考资料</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../humanoid/humanoid_keyboard_control/">人形机器人键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../humanoid/panda_keyboard_control/">键盘操控仿真机械臂</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../humanoid/humanoid_push_recovery/">人形机器人平衡控制与外力抗扰恢复</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../humanoid/humanoid_ppo_locomotion/">人形机器人 PPO 神经网络平衡控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../humanoid/mujoco_hopper_demo/">MuJoCo单足弹跳机器人简单仿真</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/r2d2_cruise/">R2D2小车 自动巡航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/rostopic_cruise/">rostopic 手动驱动</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_tsr_ros/">交通标志识别 ROS 封装</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/mujoco_diff_drive_slip_compensation/">MuJoCo 差速小车轮滑感知与轨迹补偿</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/car_2d_target_tracker/">2D 小车目标追踪仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/carla_nn_car_following/">神经网络自适应跟车(ACC)</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ground/weather_perception_benchmark/">恶劣雨雾天气下多传感器感知性能对比实验</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/payload_mass_estimation/">无人机载荷质量估计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/rooftop_landing/">无人机屋顶降落</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_rl_benchmark/">强化学习对比实验（PPO/SAC/TD3）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/uav_mujoco_sim/">MuJoCo 四旋翼仿真与 ROS2 桥接底座</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/waypoint_tracking/">无人机航点轨迹跟踪（PID 控制）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../air/octree_uav_3d_pathfinding/astar_planning/">八叉树上的 A* 全局寻路</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">环境搭建</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../water/HoloOcean-Windows-Setup/">HoloOcean Windows 本机环境搭建</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../water/docker/">Docker 开发环境</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../water/docker_runtime/">HoloOcean ROS2 运行时容器</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/holoocean_examples/">水域载具示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/mjc_rov_sonar_cnn/">侧扫声呐图像仿真与 CNN 海底目标分类</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/mjc_rov_current_teleop/">动态洋流 ROV 键盘遥操与 MLP 巡航控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../water/underwater_sonar_mapping/">新增水下三维地形测绘模块</a>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ubuntu2004-local-llm-deploy/">自装ubuntu20.04本地大模型部署教程</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a></li>
+<li class="breadcrumb-item">ROS 教程</li>
+<li class="breadcrumb-item">5. 机器人感知</li>
+<li class="breadcrumb-item active">激光雷达 NN 障碍物分类</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/chapter/chap5/lidar_obstacle_nn.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="_1">基于激光雷达扫描的神经网络障碍物分类</h1>
+<p>本文介绍一个基于 ROS 2 Humble、Gazebo Fortress 与 PyTorch 的激光雷达感知模块。模块订阅仿真环境中 2D 激光雷达发布的 <code>/scan</code>（<code>sensor_msgs/LaserScan</code>，360 束），由一个三层 MLP 将每条扫描分为 <code>near</code>（近障）、<code>far</code>（远障）、<code>free</code>（无障）三类，并通过 <code>/obstacle_class</code>、<code>/obstacle_confidence</code> 话题发布分类结果以及置信度。</p>
+<h2 id="1">1. 系统组成</h2>
+<div class="mermaid">flowchart LR
+    A[Gazebo GPU LiDAR] --&gt;|Gazebo Transport| B[ros_gz_bridge]
+    B --&gt;|sensor_msgs/LaserScan| C["/scan"]
+    C --&gt; D[LidarMLP 推理节点]
+    D --&gt;|std_msgs/String| E["/obstacle_class"]
+    D --&gt;|std_msgs/Float32| F["/obstacle_confidence"]
+</div>
+<p>仿真激光雷达生成 360 束 2D 扫描，<code>ros_gz_bridge</code> 把 Gazebo 消息转换为 ROS 2 <code>sensor_msgs/LaserScan</code>，<code>inference_node</code> 加载训练好的 MLP 权重做推理，发布类别字符串和置信度。</p>
+<h2 id="2">2. 环境要求与安装</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>操作系统</td>
+<td>Ubuntu 22.04 LTS</td>
+</tr>
+<tr>
+<td>ROS</td>
+<td>ROS 2 Humble (<code>/opt/ros/humble</code>)</td>
+</tr>
+<tr>
+<td>仿真器</td>
+<td>Gazebo Fortress 6.x（Ignition Gazebo）</td>
+</tr>
+<tr>
+<td>Python</td>
+<td>3.10（ROS 2 Humble 自带）</td>
+</tr>
+<tr>
+<td>GPU（可选）</td>
+<td>NVIDIA GPU + CUDA 12.x（纯 CPU 环境完全可用，5070 Ti 等 Blackwell 架构建议直接用 CPU 推理，详见 8.1 节）</td>
+</tr>
+</tbody>
+</table>
+<p>加载 ROS 2 环境并安装 Python 依赖：</p>
+<pre class="highlight"><code class="language-bash">source /opt/ros/humble/setup.bash
+python3 -m pip install --user -r src/chap5/lidar_obstacle_nn/requirements.txt</code></pre>
+<p><strong>纯 CPU 环境（无 NVIDIA 显卡）</strong>：PyPI 默认的 torch 即为 CPU 版，上面的命令已经足够，推理节点会自动跳过 CUDA 探测直接使用 CPU。</p>
+<p><strong>有 NVIDIA 显卡的环境</strong>：按 <a href="https://pytorch.org/get-started/locally/">PyTorch 官网</a> 选与驱动匹配的 CUDA wheel，例如：</p>
+<pre class="highlight"><code class="language-bash">python3 -m pip install --user torch --index-url https://download.pytorch.org/whl/cu121</code></pre>
+<p><strong>无显示器的机器（服务器/虚拟机/CI）</strong>：GPU 激光雷达传感器需要渲染上下文才能产生回波，需安装 <code>xvfb</code> 并用虚拟显示启动（见 6.3 节）：</p>
+<pre class="highlight"><code class="language-bash">sudo apt install xvfb</code></pre>
+<p>验证安装：</p>
+<pre class="highlight"><code class="language-bash">python3 -c "import torch; print(torch.__version__, torch.cuda.is_available())"
+# 纯 CPU 机器输出形如 2.3.1+cpu False，属预期且受支持
+ros2 pkg prefix ros_gz_sim_demos   # 应输出 /opt/ros/humble</code></pre>
+<h2 id="3">3. 计算原理</h2>
+<h3 id="31">3.1 激光雷达扫描数据结构</h3>
+<p><code>sensor_msgs/LaserScan</code> 是 ROS 2 标准激光雷达消息，关键字段：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>angle_min</code> / <code>angle_max</code></td>
+<td>扫描起止角（弧度）</td>
+</tr>
+<tr>
+<td><code>angle_increment</code></td>
+<td>相邻束角间距</td>
+</tr>
+<tr>
+<td><code>range_min</code> / <code>range_max</code></td>
+<td>有效距离范围（米）</td>
+</tr>
+<tr>
+<td><code>ranges[]</code></td>
+<td>每束的距离值，<code>inf</code> 表示无回波</td>
+</tr>
+</tbody>
+</table>
+<p>本模块在 Gazebo SDF 里配置 360 束、<code>2π</code> 弧度、<code>5 Hz</code>、<code>0.05–30 m</code> 量程的水平 2D 激光雷达。</p>
+<h3 id="32">3.2 分类规则与标签</h3>
+<p>基于<strong>扫描中最小有效距离</strong> $r_{\min} = \min_i r_i$（$r_i$ 为第 $i$ 束距离），三分类规则：</p>
+<p>
+<script type="math/tex; mode=display">
+\text{label} =
+\begin{cases}
+0\ (\text{near}), & r_{\min} < d_{\text{danger}} \\
+1\ (\text{far}),  & d_{\text{danger}} \le r_{\min} < d_{\text{far}} \\
+2\ (\text{free}), & r_{\min} \ge d_{\text{far}}
+\end{cases}
+</script>
+</p>
+<p>阈值默认 $d_{\text{danger}}=1.0\,\text{m}$、$d_{\text{far}}=3.0\,\text{m}$，可在 <code>config/params.yaml</code> 修改。</p>
+<h3 id="33">3.3 神经网络结构</h3>
+<p>采用三层全连接网络（MLP），输入 360 维（重采样后的扫描向量），输出 3 类 logits：</p>
+<p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\mathbf{x}_0 &= \text{clamp}(r, 0, 30)/30 \in \mathbb{R}^{360} \\
+\mathbf{h}_1 &= \text{ReLU}(W_1 \mathbf{x}_0 + b_1), \quad W_1 \in \mathbb{R}^{128 \times 360} \\
+\mathbf{h}_2 &= \text{ReLU}(W_2 \mathbf{h}_1 + b_2), \quad W_2 \in \mathbb{R}^{128 \times 128} \\
+\mathbf{z}  &= W_3 \mathbf{h}_2 + b_3, \quad W_3 \in \mathbb{R}^{3 \times 128} \\
+\hat{\mathbf{p}} &= \text{softmax}(\mathbf{z})
+\end{aligned}
+</script>
+</p>
+<p>总参数量 $\approx 360 \times 128 + 128 \times 128 + 128 \times 3 \approx 62{,}272$，权重文件约 249 KB，远低于仓库 3 MB 二进制上限。</p>
+<h3 id="34">3.4 训练目标</h3>
+<p>交叉熵损失 + Adam 优化器，类均衡加权采样防止小类被忽略：</p>
+<p>
+<script type="math/tex; mode=display">
+\mathcal{L}(\theta) = -\frac{1}{N}\sum_{i=1}^{N} w_{y_i}\sum_{c=0}^{2} \mathbb{1}[y_i=c]\log \hat{p}_{i,c}, \quad
+w_c = \frac{N}{3 \cdot N_c}
+</script>
+</p>
+<h2 id="4">4. 算法流程</h2>
+<h3 id="41">4.1 数据采集（合成）</h3>
+<div class="mermaid">flowchart TD
+    A[开始] --&gt; B[按类别均匀采样距离 r]
+    B --&gt; C[在前方扇形随机宽度放置障碍 wedge]
+    C --&gt; D[其他束填 30 m 无回波]
+    D --&gt; E[加高斯噪声并 clip]
+    E --&gt; F[按 r 的最小值打标签]
+    F --&gt; G{样本数够了?}
+    G --&gt;|否| B
+    G --&gt;|是| H[保存 .npz]
+</div>
+<h3 id="42">4.2 数据采集（动态仿真场景）</h3>
+<p>静态世界（<code>obstacle_world.sdf</code>）里三个障碍物与机器人都是 <code>static</code>，对 360° 雷达而言最近距离恒为 0.4 m，<code>collect_data</code> 静止采集只能得到 <code>near</code> 一类；"旋转机器人"也无济于事——360° 扫描转不转都能同时看到全部障碍。要采到三类均衡的<strong>真实仿真数据</strong>，需要让障碍物的径向距离本身发生变化。</p>
+<p>动态世界 <code>obstacle_world_dynamic.sdf</code> 把唯一的红色障碍块挂在一条水平棱柱关节（prismatic joint）上，由 Gazebo 自带的 <code>JointPositionController</code> 驱动。采集节点在 <code>/obstacle_slider/cmd_pos</code> 上发布关节位置，依次经过 6 个站位（每类两个距离），形成天然均衡且带类内距离变化的数据集：</p>
+<table>
+<thead>
+<tr>
+<th>站位</th>
+<th>关节位置</th>
+<th>障碍表面距离</th>
+<th>类别</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 / 2</td>
+<td>0.0 / 0.5</td>
+<td>0.40 / 0.90 m</td>
+<td><code>near</code></td>
+</tr>
+<tr>
+<td>3 / 4</td>
+<td>0.8 / 2.1</td>
+<td>1.20 / 2.50 m</td>
+<td><code>far</code></td>
+</tr>
+<tr>
+<td>5 / 6</td>
+<td>3.1 / 3.6</td>
+<td>3.50 / 4.00 m</td>
+<td><code>free</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>障碍块半深 0.2 m、关节零位时中心在 0.6 m，因此表面距离 = 关节位置 + 0.4 m。</p>
+</blockquote>
+<div class="mermaid">flowchart TD
+    A[发布关节位置指令] --&gt; B[等待 settle_sec 滑台到位]
+    B --&gt; C{标签匹配且距离在容差带内?}
+    C --&gt;|否| B
+    C --&gt;|是| D[采集该站位扫描]
+    D --&gt; E{本站位数够了?}
+    E --&gt;|否| C
+    E --&gt;|是| F{还有下一站位?}
+    F --&gt;|是| G[切换到下一关节位置]
+    G --&gt; B
+    F --&gt;|否| H[保存均衡 .npz 并退出]
+</div>
+<p>除了等待运动时间，节点还对每条扫描做<strong>距离带校验</strong>：标签与当前站位一致、且实测最近距离与该站位期望距离之差不超过 <code>station_tolerance</code>（默认 0.15 m）才入库。这样滑台穿过中间距离时产生的扫描（标签碰巧相同但距离不对）不会污染数据。</p>
+<h3 id="43">4.3 训练</h3>
+<div class="mermaid">flowchart TD
+    A[加载 .npz] --&gt; B[8:2 训练验证划分]
+    B --&gt; C[WeightedRandomSampler 类均衡]
+    C --&gt; D[前向: 360 -&gt; 128 -&gt; 128 -&gt; 3]
+    D --&gt; E[CrossEntropy + Adam]
+    E --&gt; F[验证集计算 val_loss]
+    F --&gt; G{val_loss 改善?}
+    G --&gt;|是| H[保存 best_state, 重置 patience]
+    G --&gt;|否| I[patience += 1]
+    H --&gt; J{patience &gt;= 10?}
+    I --&gt; J
+    J --&gt;|否| D
+    J --&gt;|是| K[加载 best_state 保存 .pt]
+</div>
+<h3 id="44">4.4 在线推理</h3>
+<div class="mermaid">flowchart TD
+    A[收到 /scan] --&gt; B[重采样到 360 维]
+    B --&gt; C{请求了 CUDA 且可用?}
+    C --&gt;|是| D[探测性 GPU 前向]
+    C --&gt;|否| E[CPU 前向]
+    D --&gt;|成功| F[GPU 前向]
+    D --&gt;|失败| E
+    F --&gt; G[softmax -&gt; 类别 + 置信度]
+    E --&gt; G
+    G --&gt; H{置信度 &gt;= 0.45?}
+    H --&gt;|是| I[发布 NN 预测]
+    H --&gt;|否| J[规则 fallback: 用 r_min 阈值]
+    J --&gt; I
+</div>
+<h2 id="5">5. 源码解析</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/OpenHUTB/ros2/tree/master/src/chap5/lidar_obstacle_nn/lidar_obstacle_nn/model.py"><code>lidar_obstacle_nn/model.py</code></a></td>
+<td><code>LidarMLP</code> PyTorch 模块定义。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/OpenHUTB/ros2/tree/master/src/chap5/lidar_obstacle_nn/lidar_obstacle_nn/inference_node.py"><code>lidar_obstacle_nn/inference_node.py</code></a></td>
+<td>ROS 2 节点，订阅 <code>/scan</code>、加载权重、发布 <code>/obstacle_class</code>。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/OpenHUTB/ros2/tree/master/src/chap5/lidar_obstacle_nn/lidar_obstacle_nn/collect_data.py"><code>lidar_obstacle_nn/collect_data.py</code></a></td>
+<td>订阅 <code>/scan</code> 自动标注采集 <code>.npz</code>；<code>motion_enabled:=true</code> 时驱动动态世界滑台按站位均衡采集。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/OpenHUTB/ros2/tree/master/src/chap5/lidar_obstacle_nn/lidar_obstacle_nn/generate_synthetic_dataset.py"><code>lidar_obstacle_nn/generate_synthetic_dataset.py</code></a></td>
+<td>不依赖 Gazebo 直接合成均衡 <code>.npz</code>，本教程默认使用。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/OpenHUTB/ros2/tree/master/src/chap5/lidar_obstacle_nn/lidar_obstacle_nn/train_model.py"><code>lidar_obstacle_nn/train_model.py</code></a></td>
+<td>训练脚本，含类均衡采样、早停、metrics sidecar。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/OpenHUTB/ros2/tree/master/src/chap5/lidar_obstacle_nn/lidar_obstacle_nn/evaluate_model.py"><code>lidar_obstacle_nn/evaluate_model.py</code></a></td>
+<td>在带标签 <code>.npz</code> 上评估权重：总体准确率、逐类精确率/召回率、3×3 混淆矩阵。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/OpenHUTB/ros2/tree/master/src/chap5/lidar_obstacle_nn/worlds/obstacle_world.sdf"><code>worlds/obstacle_world.sdf</code></a></td>
+<td>静态 Gazebo 场景：1 个 <code>static</code> 机器人 + 3 个不同距离障碍物 + 360 束 GPU LiDAR。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/OpenHUTB/ros2/tree/master/src/chap5/lidar_obstacle_nn/worlds/obstacle_world_dynamic.sdf"><code>worlds/obstacle_world_dynamic.sdf</code></a></td>
+<td>动态 Gazebo 场景：1 个障碍块由棱柱关节位置控制器沿导轨驱动，供真实数据采集。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/OpenHUTB/ros2/tree/master/src/chap5/lidar_obstacle_nn/launch/main.launch.py"><code>launch/main.launch.py</code></a></td>
+<td>顶层入口：仿真 + bridge + 推理节点一键启动，支持 <code>world:=static/dynamic</code>。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/OpenHUTB/ros2/tree/master/src/chap5/lidar_obstacle_nn/launch/sim.launch.py"><code>launch/sim.launch.py</code></a></td>
+<td>仅启动 Gazebo + bridge；<code>world:=dynamic</code> 时额外桥接滑台位置指令。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6">6. 运行步骤</h2>
+<h3 id="61">6.1 构建</h3>
+<pre class="highlight"><code class="language-bash">source /opt/ros/humble/setup.bash
+cd /path/to/ros2_ws          # 含本包的 src 的工作空间
+colcon build --packages-select lidar_obstacle_nn --symlink-install
+source install/setup.bash</code></pre>
+<h3 id="62">6.2 首次运行前必须先生成模型权重</h3>
+<p><code>models/lidar_mlp.pt</code> 权重文件<strong>不随仓库分发</strong>（仓库 <code>.gitignore</code> 约定忽略 <code>*.pt</code> 二进制训练产物，保持仓库以文本为主），克隆后第一次运行前需要自己训练生成一次（CPU 上约 1 分钟，详见 6.5 节；不训练的话推理节点会打印 <code>Model file not found</code> 警告并使用随机权重，输出无意义）。</p>
+<h3 id="63">6.3 一键启动（推荐）</h3>
+<p>有显示器的环境：</p>
+<pre class="highlight"><code class="language-bash">ros2 launch lidar_obstacle_nn main.launch.py</code></pre>
+<p>无显示器的环境（服务器、虚拟机、CI）用虚拟显示启动——<code>gpu_lidar</code> 传感器需要渲染上下文才能产生回波：</p>
+<pre class="highlight"><code class="language-bash">xvfb-run -a ros2 launch lidar_obstacle_nn main.launch.py</code></pre>
+<p><code>main.launch.py</code> 同时启动：
+1. Gazebo Fortress 加载 <code>obstacle_world.sdf</code>（加 <code>world:=dynamic</code> 改为加载 <code>obstacle_world_dynamic.sdf</code>）
+2. <code>ros_gz_bridge</code> 把 Gazebo <code>/scan</code> 转发到 ROS 2 <code>/scan</code>
+3. <code>inference_node</code> 加载 <code>models/lidar_mlp.pt</code> 推理</p>
+<blockquote>
+<p><strong>不要用 <code>ign gazebo -s --headless-rendering</code></strong>：该模式下 <code>gpu_lidar</code> 没有渲染上下文，360 束全部返回最大量程 30 m（实测见第 7 节对照表），采集与推理都失去意义。</p>
+</blockquote>
+<h3 id="64">6.4 检查输出</h3>
+<p>另开终端：</p>
+<pre class="highlight"><code class="language-bash">source /opt/ros/humble/setup.bash
+source install/setup.bash
+ros2 topic list
+ros2 topic echo /obstacle_class
+ros2 topic echo /obstacle_confidence
+ros2 topic hz /scan</code></pre>
+<h3 id="65">6.5 训练自己的模型</h3>
+<pre class="highlight"><code class="language-bash"># 1. 生成合成数据集（不依赖 Gazebo，三类均衡，本教程默认路径）
+python3 -m lidar_obstacle_nn.generate_synthetic_dataset \
+    --output /tmp/lidar_dataset.npz --num-samples 1500
+
+# 2. 训练
+python3 -m lidar_obstacle_nn.train_model \
+    --dataset /tmp/lidar_dataset.npz \
+    --output src/chap5/lidar_obstacle_nn/models/lidar_mlp.pt \
+    --epochs 50
+
+# 3. 重新构建以让新权重进 install
+colcon build --packages-select lidar_obstacle_nn --symlink-install
+source install/setup.bash
+ros2 launch lidar_obstacle_nn main.launch.py</code></pre>
+<p>静态世界直接采集只有单一类别：世界里的 <code>lidar_box</code> 是 <code>static</code>、且没有速度/差速控制插件，静止不动时每帧扫描看到同一个最近障碍（实测：默认场景静止时 20/20 帧全为 <code>near</code>）。要采三类均衡的真实数据请使用 6.6 节的动态世界流程；采集同样需要可用的渲染上下文（真实显示器或 <code>xvfb-run -a</code>），否则 <code>/scan</code> 全为最大量程。</p>
+<h3 id="66">6.6 动态场景真实数据采集与评估（进阶）</h3>
+<p>终端 1，启动动态世界（只起仿真 + 桥接，不起推理节点；无显示器加 <code>xvfb-run -a</code>）：</p>
+<pre class="highlight"><code class="language-bash">ros2 launch lidar_obstacle_nn sim.launch.py world:=dynamic</code></pre>
+<p>终端 2，自动完成 6 站位采集（默认每站位 150 条，共 900 条，约 4 分钟）：</p>
+<pre class="highlight"><code class="language-bash">ros2 run lidar_obstacle_nn collect_data --ros-args \
+    -p motion_enabled:=true \
+    -p per_station:=150 \
+    -p output_path:=/tmp/lidar_real.npz</code></pre>
+<p>节点会依次打印各站位的到位与采集进度，结束时输出三类计数（应各为 300）。随后用真实数据训练并用评估脚本对比：</p>
+<pre class="highlight"><code class="language-bash"># train_model 内部做 8:2 随机划分并报告验证准确率
+python3 -m lidar_obstacle_nn.train_model \
+    --dataset /tmp/lidar_real.npz \
+    --output /tmp/lidar_real.pt --epochs 50 --device cpu
+
+# 在任意带标签 .npz 上输出准确率、逐类指标与混淆矩阵
+python3 -m lidar_obstacle_nn.evaluate_model \
+    --model /tmp/lidar_real.pt --dataset /tmp/lidar_real.npz</code></pre>
+<p>站位关节位置可通过 <code>joint_positions</code>（double 数组）与 <code>station_labels</code>（int 数组，0/1/2）两个 ROS 参数自定义；两个数组必须等长。</p>
+<h2 id="7">7. 实测结果</h2>
+<p>数据在 Ubuntu 22.04.5 LTS 与 ROS 2 Humble 环境下实测得到：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>实测结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OS / ROS 版本</td>
+<td>Ubuntu 22.04.5 LTS / ROS 2 Humble</td>
+</tr>
+<tr>
+<td>Gazebo 版本</td>
+<td>Gazebo Fortress 6.18.0</td>
+</tr>
+<tr>
+<td>PyTorch 版本</td>
+<td>2.5.1+cu121（推理使用 CPU）</td>
+</tr>
+<tr>
+<td>激光雷达</td>
+<td>360 束 GPU LiDAR，5 Hz，0.05–30 m</td>
+</tr>
+<tr>
+<td>模型参数量</td>
+<td>约 62,272（360→128→128→3）</td>
+</tr>
+<tr>
+<td>权重文件大小</td>
+<td>249 KB</td>
+</tr>
+<tr>
+<td>数据集规模</td>
+<td>1500 样本，3 类各 500 条（合成）</td>
+</tr>
+<tr>
+<td>训练时长</td>
+<td>1.63 秒（CPU，50 epoch，早停在 46）</td>
+</tr>
+<tr>
+<td>最佳验证损失</td>
+<td>0.0596</td>
+</tr>
+<tr>
+<td>最终验证准确率</td>
+<td>99.67 %</td>
+</tr>
+<tr>
+<td><code>/scan</code> 发布频率</td>
+<td>约 4.75 Hz</td>
+</tr>
+<tr>
+<td><code>/obstacle_class</code> 实测输出</td>
+<td><code>near</code>（场景含 0.6 m 红方块）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>无头渲染 vs 虚拟显示实测对照</strong>（同一世界、同一版本代码）：</p>
+<table>
+<thead>
+<tr>
+<th>启动方式</th>
+<th>360 束中命中障碍数</th>
+<th>最近距离</th>
+<th>判定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ign gazebo -r -s --headless-rendering</code></td>
+<td>0/360（全部 30.00 m）</td>
+<td>30.00 m</td>
+<td><code>free</code>（无回波，数据无效）</td>
+</tr>
+<tr>
+<td><code>xvfb-run -a</code> + 正常 GUI 构建</td>
+<td>76/360</td>
+<td>0.40 m</td>
+<td><code>near</code>（与场景一致）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Gazebo 仿真启动后效果</strong>：</p>
+<p><img alt="Gazebo 仿真场景：黄色 lidar_box 机器人 + 红/绿/蓝三色障碍物 + 激光射线" src="../../../img/chap5/lidar_obstacle_nn/gazebo_scene.png"/></p>
+<p><strong>终端 <code>/obstacle_class</code> 实时输出</strong>：</p>
+<p><img alt="终端 ros2 topic echo /obstacle_class 持续输出 near" src="../../../img/chap5/lidar_obstacle_nn/topic_obstacle_class.png"/></p>
+<h3 id="71">7.1 动态世界真实数据采集与合成数据对比</h3>
+<p>动态世界实测（同一 5 Hz、360 束 GPU LiDAR，6 站位各采 150 帧）：</p>
+<table>
+<thead>
+<tr>
+<th>站位</th>
+<th>指令关节位置</th>
+<th>实测表面距离</th>
+<th>命中束数（均值）</th>
+<th>自动标签</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 / 2</td>
+<td>0.0 / 0.5</td>
+<td>0.397 / 0.903 m</td>
+<td>52 / 24</td>
+<td>near</td>
+</tr>
+<tr>
+<td>3 / 4</td>
+<td>0.8 / 2.1</td>
+<td>1.203 / 2.503 m</td>
+<td>20 / 8</td>
+<td>far</td>
+</tr>
+<tr>
+<td>5 / 6</td>
+<td>3.1 / 3.6</td>
+<td>3.503 / 4.003 m</td>
+<td>8 / 6</td>
+<td>free</td>
+</tr>
+</tbody>
+</table>
+<p>导轨是纯 visual（无 collision）且位于扫描平面下方（z=0.02 m，波束在 0.11 m），实测不产生回波。</p>
+<p><strong>对比实验设置</strong>：900 条真实数据按站位分层留出 180 条（每类 60）作为测试集，其余 720 条训练"真实模型"；另用 1500 条合成数据训练"合成模型"。两个模型结构、超参数完全一致，在<strong>同一批 180 条真实留出样本</strong>上评估：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>总体准确率</th>
+<th>near 召回</th>
+<th>far 召回</th>
+<th>free 召回</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>真实数据训练</td>
+<td><strong>100.0 %（180/180）</strong></td>
+<td>60/60</td>
+<td>60/60</td>
+<td>60/60</td>
+</tr>
+<tr>
+<td>合成数据训练</td>
+<td>83.9 %（151/180）</td>
+<td>60/60</td>
+<td><strong>31/60</strong></td>
+<td>60/60</td>
+</tr>
+</tbody>
+</table>
+<p>合成模型把 29 个 <code>far</code> 样本误判为 <code>free</code>（far 召回仅 51.7 %）：合成数据的障碍是带随机宽度/噪声的理想 wedge，而真实仿真中障碍块几何固定、边缘束返回值与合成分布存在差异。这一差距说明静态合成数据可以验证管线，但在真实传感器分布上的分类能力需要动态采集闭环补齐。</p>
+<p><strong>动态世界 Gazebo 场景（红色障碍块 + 灰色导轨 + 黄色 lidar_box）</strong>：</p>
+<p><img alt="动态世界：棱柱关节驱动的红色障碍块与导轨" src="../../../img/chap5/lidar_obstacle_nn/dynamic_world.png"/></p>
+<p><strong>两个模型在真实留出集上的评估输出（准确率与混淆矩阵）</strong>：</p>
+<p><img alt="evaluate_model 输出：真实模型 100% vs 合成模型 83.9%" src="../../../img/chap5/lidar_obstacle_nn/real_vs_synthetic_eval.png"/></p>
+<h2 id="8">8. 排错</h2>
+<h3 id="81-cuda">8.1 CUDA 相关报错与回退机制</h3>
+<p>推理节点默认 <code>use_gpu:=false</code>，直接使用 CPU（MLP 仅 ~50K 参数，CPU 推理亚毫秒级）。显式开启 <code>use_gpu:=true</code> 时的行为与 torch 构建版本有关：</p>
+<ul>
+<li><strong>CUDA 版 torch</strong>：节点在第一条 <code>/scan</code> 上做一次探测性前向；若失败（<code>RuntimeError</code>，例如显卡计算能力不被当前 wheel 支持——Blackwell sm_120 与 PyTorch 2.5 稳定版 cu121 wheel 即属此列，报错 <code>no kernel image is available for execution on the device</code>），自动回退 CPU 并继续运行。</li>
+<li><strong>CPU 版 torch</strong>：任何 CUDA 调用会抛 <code>AssertionError: Torch not compiled with CUDA enabled</code>（而非 <code>RuntimeError</code>）。节点已在探测前短路（<code>use_gpu</code> 为 false 或 <code>torch.cuda.is_available()</code> 为 False 时完全不触碰 CUDA），并将 <code>AssertionError</code> 一并纳入捕获，因此 CPU 版 torch 上节点不会崩溃。</li>
+</ul>
+<h3 id="82">8.2 激光雷达扫描不到障碍物</h3>
+<p>如果 <code>/scan</code> 的 <code>ranges</code> 全是 30.0（最大值，无回波），检查：</p>
+<ol>
+<li><strong>启动方式</strong>：<code>ign gazebo -s --headless-rendering</code> 下 <code>gpu_lidar</code> 没有渲染上下文，360 束必然全为最大量程（实测见第 7 节对照表）。无显示器环境必须用 <code>xvfb-run -a ros2 launch lidar_obstacle_nn main.launch.py</code>。</li>
+<li><strong>机器人 z 高度</strong>：<code>lidar_box</code> 的 <code>pose z</code> 必须让激光雷达在障碍物高度范围内。SDF 已设 <code>z=0.05</code>，激光在 <code>z=0.11 m</code>，落在所有障碍物（z=0–0.5 m）之内。</li>
+<li><strong>机器人是否 static</strong>：非 static 物体会受重力影响掉到地面下。SDF 已设 <code>&lt;static&gt;true&lt;/static&gt;</code>。</li>
+<li><strong>激光雷达类型</strong>：Gazebo Fortress 用 <code>gpu_lidar</code>（不是 <code>ray</code>），需要 <code>sensors-system</code> 插件，已在 SDF 顶部加载。</li>
+</ol>
+<h3 id="83">8.3 模型权重找不到</h3>
+<p><code>inference_node</code> 默认从 <code>get_package_share_directory('lidar_obstacle_nn')/models/lidar_mlp.pt</code> 加载。如果该文件不存在，节点会打印警告 <code>Model file not found</code> 并用随机权重运行（输出几乎无意义）。</p>
+<p><strong>解决</strong>：训练后重新 <code>colcon build --packages-select lidar_obstacle_nn --symlink-install</code>，确保 <code>install/lidar_obstacle_nn/share/lidar_obstacle_nn/models/lidar_mlp.pt</code> 存在（symlink 指向 src 下的真实文件）。</p>
+<h3 id="84-skip">8.4 动态采集：节点一直 skip，滑台不动</h3>
+<p>按顺序排查：</p>
+<ol>
+<li><strong>是否启动了动态世界</strong>：动态采集必须用 <code>ros2 launch lidar_obstacle_nn sim.launch.py world:=dynamic</code>。若误用默认静态世界，世界里没有 <code>obstacle_slider</code>，指令无人接收，节点会持续打印 <code>scans skipped ... wrong world?</code>。用 <code>ign model -m obstacle_slider --pose</code> 可确认模型是否存在。</li>
+<li><strong>ROS→Gazebo 桥接是否存活</strong>：<code>ros2 topic info /obstacle_slider/cmd_pos</code> 应显示 1 个订阅者。注意 SDF 插件默认话题是 <code>/model/obstacle_slider/joint/slide_joint/0/cmd_pos</code>，其中 <code>/0/</code> 是 ROS 2 非法话题名（路径段不允许数字开头），<code>parameter_bridge</code> 会直接崩溃；本世界的 SDF 已用 <code>&lt;topic&gt;/obstacle_slider/cmd_pos&lt;/topic&gt;</code> 覆盖，自定义关节名时需保持话题不含数字开头的路径段。</li>
+<li><strong>残留的 Gazebo 进程</strong>：若之前的仿真没关干净，两个服务器会同时向 <code>/scan</code> 发布，扫描值在两个场景间交替（表现为最小距离在两个数值间跳变），距离带校验会一直不通过。采集前用 <code>ps -eo pid,args | grep "ign gazebo"</code> 确认只有一个实例。</li>
+</ol>
+<h3 id="85">8.5 动态采集：站位数据被运动过程污染</h3>
+<p>长距离移动（如从 4 m 回到 0.4 m）可能在 <code>settle_sec</code> 内没走完，此时标签虽对、距离却不对。节点已用 <code>station_tolerance</code>（默认 0.15 m）距离带拦截这类帧；若仍偶发未走到位，增大 <code>settle_sec</code>（如 6.0 秒）即可。导轨运动较慢时也可同步调大 SDF 关节 <code>velocity</code> 限制。</p>
+<h2 id="_2">参考资料</h2>
+<ul>
+<li><a href="https://index.ros.org/p/ros_gz_sim_demos/">ROS Index：ros_gz_sim_demos</a></li>
+<li><a href="https://gazebosim.org/api/sim/6.0/sensors.html">Gazebo Fortress lidar sensor 文档</a></li>
+<li><a href="https://pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html">PyTorch MLP 教程</a></li>
+<li><a href="https://docs.ros.org/en/humble/p/sensor_msgs/generated/msg/LaserScan.html">sensor_msgs/LaserScan 消息定义</a></li>
+</ul>
+<hr/>
+<p><strong>大模型使用声明</strong>：本模块的源代码、文档与训练脚本由大语言模型（GLM-5.2）协助生成，作者已逐文件审查并通过实测验证（构建、仿真、采集、训练、推理全流程跑通；其中采集与推理需要可用的图形渲染上下文，无显示器环境使用 <code>xvfb-run -a</code>），对提交内容负全部责任。</p></div>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../" title="章节首页"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../../chap6/" title="6. 机器人 SLAM 与自主导航">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../../chap6/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../../..";</script>
+<script src="../../../js/theme_extra.js"></script>
+<script src="../../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../../js/umlconvert.js"></script>
+<script src="../../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script>mermaid.initialize({});</script></body>
+</html>

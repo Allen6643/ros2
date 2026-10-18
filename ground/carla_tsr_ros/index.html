@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>交通标志识别 ROS 封装 - 模拟器的 ROS 文档</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u4ea4\u901a\u6807\u5fd7\u8bc6\u522b ROS \u5c01\u88c5";
+        var mkdocs_page_input_path = "ground\\carla_tsr_ros.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ubuntu20.04/">安装 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap2/ros2_pubsub_py/">ROS2 话题发布订阅基础实验（talker/listener）</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap4/">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">5. 机器人感知</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../chapter/chap5/">章节首页</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../chapter/chap5/lidar_obstacle_nn/">激光雷达 NN 障碍物分类</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_keyboard_control/">人形机器人键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/panda_keyboard_control/">键盘操控仿真机械臂</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_push_recovery/">人形机器人平衡控制与外力抗扰恢复</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_ppo_locomotion/">人形机器人 PPO 神经网络平衡控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/mujoco_hopper_demo/">MuJoCo单足弹跳机器人简单仿真</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../r2d2_cruise/">R2D2小车 自动巡航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rostopic_cruise/">rostopic 手动驱动</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="#">交通标志识别 ROS 封装</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#_1">功能</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_2">话题</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_3">运行环境</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_4">依赖安装</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_5">模型权重</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_6">编译与运行</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#1-catkin">1. 编译 catkin 工作空间</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#2">2. 启动</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#3">3. 查看检测结果</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_7">神经网络原理</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_8">算法流程</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_9">演示</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_10">注意事项</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_11">相关模块</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../mujoco_diff_drive_slip_compensation/">MuJoCo 差速小车轮滑感知与轨迹补偿</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../car_2d_target_tracker/">2D 小车目标追踪仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../carla_nn_car_following/">神经网络自适应跟车(ACC)</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../weather_perception_benchmark/">恶劣雨雾天气下多传感器感知性能对比实验</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../air/payload_mass_estimation/">无人机载荷质量估计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/rooftop_landing/">无人机屋顶降落</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_rl_benchmark/">强化学习对比实验（PPO/SAC/TD3）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_mujoco_sim/">MuJoCo 四旋翼仿真与 ROS2 桥接底座</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/waypoint_tracking/">无人机航点轨迹跟踪（PID 控制）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/astar_planning/">八叉树上的 A* 全局寻路</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../water/HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">环境搭建</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../water/HoloOcean-Windows-Setup/">HoloOcean Windows 本机环境搭建</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../water/docker/">Docker 开发环境</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../water/docker_runtime/">HoloOcean ROS2 运行时容器</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/holoocean_examples/">水域载具示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/mjc_rov_sonar_cnn/">侧扫声呐图像仿真与 CNN 海底目标分类</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/mjc_rov_current_teleop/">动态洋流 ROV 键盘遥操与 MLP 巡航控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/underwater_sonar_mapping/">新增水下三维地形测绘模块</a>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ubuntu2004-local-llm-deploy/">自装ubuntu20.04本地大模型部署教程</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a></li>
+<li class="breadcrumb-item">地面载具</li>
+<li class="breadcrumb-item active">交通标志识别 ROS 封装</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/ground/carla_tsr_ros.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="carla-ros">Carla 交通标志识别 ROS 封装</h1>
+<p><code>carla_tsr_ros</code> 是 <code>carla_traffic_sign_recognition</code> 的 ROS 封装，将 YOLOv8 神经网络感知和车辆控制逻辑接入 ROS Noetic，实现从图像输入到控制指令输出的完整话题链路。</p>
+<h2 id="_1">功能</h2>
+<ul>
+<li><strong>image_publisher</strong>：从本地图片目录循环发布图像到 <code>/camera/image_raw</code></li>
+<li><strong>perception_node</strong>：订阅图像，用 YOLOv8n 神经网络推理，发布检测结果和标注图像</li>
+<li><strong>control_node</strong>：订阅检测结果，当 stop sign 检测框面积超过阈值时发布刹车指令</li>
+<li><strong>roslaunch 启动</strong>：一条命令启动所有节点</li>
+</ul>
+<h2 id="_2">话题</h2>
+<table>
+<thead>
+<tr>
+<th>话题</th>
+<th>类型</th>
+<th>方向</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/camera/image_raw</code></td>
+<td><code>sensor_msgs/Image</code></td>
+<td>发布</td>
+<td>图像源</td>
+</tr>
+<tr>
+<td><code>/perception/traffic_signs</code></td>
+<td><code>std_msgs/String</code></td>
+<td>发布</td>
+<td>JSON 格式检测结果</td>
+</tr>
+<tr>
+<td><code>/perception/annotated_image</code></td>
+<td><code>sensor_msgs/Image</code></td>
+<td>发布</td>
+<td>带检测框的标注图像</td>
+</tr>
+<tr>
+<td><code>/vehicle/control_cmd</code></td>
+<td><code>geometry_msgs/Twist</code></td>
+<td>发布</td>
+<td>控制指令（linear.x=0 刹车，=1 前进）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_3">运行环境</h2>
+<ul>
+<li>Ubuntu 20.04 + ROS Noetic</li>
+<li>Python 3.8（conda 环境 <code>carla38</code>）</li>
+<li>PyTorch 2.0.1+cpu</li>
+<li>Ultralytics 8.0.196</li>
+<li>OpenCV 5.0.0</li>
+<li>NumPy 1.24.3</li>
+</ul>
+<h2 id="_4">依赖安装</h2>
+<pre><code>conda activate carla38
+pip install rospkg catkin_pkg empy pyyaml -i https://mirrors.aliyun.com/pypi/simple/
+pip install torch==2.0.1 torchvision==0.15.2 --index-url https://download.pytorch.org/whl/cpu --no-deps
+pip install ultralytics==8.0.196 --no-deps -i https://mirrors.aliyun.com/pypi/simple/
+</code></pre>
+<h2 id="_5">模型权重</h2>
+<p>本模块已包含 <code>yolov8n.pt</code>（约 6.3MB），无需额外下载。如需重新获取，可从官方发布页下载：</p>
+<pre><code>wget https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8n.pt -P ~/ros2/src/ground/carla_tsr_ros/
+</code></pre>
+<p>或手动下载后放到 <code>~/ros2/src/ground/carla_tsr_ros/yolov8n.pt</code>。</p>
+<h2 id="_6">编译与运行</h2>
+<h3 id="1-catkin">1. 编译 catkin 工作空间</h3>
+<pre><code>mkdir -p ~/carla_tsr_ws/src
+cd ~/carla_tsr_ws/src
+ln -sfn ~/ros2/src/ground/carla_tsr_ros carla_tsr_ros
+cd ~/carla_tsr_ws
+source /opt/ros/noetic/setup.bash
+catkin_make
+</code></pre>
+<h3 id="2">2. 启动</h3>
+<pre><code>conda activate carla38
+source /opt/ros/noetic/setup.bash
+source ~/carla_tsr_ws/devel/setup.bash
+roslaunch carla_tsr_ros main.launch
+</code></pre>
+<p>或使用入口脚本：</p>
+<pre><code>bash main.sh
+</code></pre>
+<h3 id="3">3. 查看检测结果</h3>
+<p>另开一个终端（不激活 conda）：</p>
+<pre><code>source /opt/ros/noetic/setup.bash
+source ~/carla_tsr_ws/devel/setup.bash
+rostopic echo /perception/traffic_signs
+</code></pre>
+<p>查看标注图像：</p>
+<pre><code>rosrun image_view image_view image:=/perception/annotated_image
+</code></pre>
+<h2 id="_7">神经网络原理</h2>
+<p>YOLOv8 是单阶段目标检测网络，将检测问题转化为回归问题。损失函数：</p>
+<p>
+<script type="math/tex; mode=display">
+L = \lambda_{box} \cdot L_{CIoU} + \lambda_{cls} \cdot L_{BCE} + \lambda_{dfl} \cdot L_{DFL}
+</script>
+</p>
+<ul>
+<li>
+<script type="math/tex">L_{CIoU}</script>：边界框回归损失（Complete IoU）</li>
+<li>
+<script type="math/tex">L_{BCE}</script>：分类损失（二元交叉熵）</li>
+<li>
+<script type="math/tex">L_{DFL}</script>：分布焦点损失</li>
+</ul>
+<p>推理输出：对输入图像 I，网络输出 N 个检测结果，每个包含 (cx, cy, w, h, confidence, class_prob)。</p>
+<h2 id="_8">算法流程</h2>
+<ol>
+<li><code>image_publisher</code> 从 <code>assets/</code> 目录循环读取图片，按指定频率发布到 <code>/camera/image_raw</code></li>
+<li><code>perception_node</code> 订阅图像，每 2 帧执行一次 YOLOv8 推理，只检测 COCO 类别 11（stop sign）</li>
+<li>检测结果序列化为 JSON，发布到 <code>/perception/traffic_signs</code>；同时把可视化图发布到 <code>/perception/annotated_image</code></li>
+<li><code>control_node</code> 订阅检测结果，当 stop sign 检测框面积占图像面积比例超过 0.3 时，发布 linear.x=0（刹车），否则 linear.x=1（前进）</li>
+</ol>
+<h2 id="_9">演示</h2>
+<p><img alt="运行效果" src="../../img/carla_tsr_ros_demo.gif"/></p>
+<h2 id="_10">注意事项</h2>
+<ul>
+<li><code>cv_bridge</code> 与 conda 环境的 OpenCV 5.0.0 不兼容（CvType 编码冲突），本模块使用手动构造/解析 <code>sensor_msgs/Image</code> 消息，绕过 <code>cv_bridge</code></li>
+<li>图像源为本地图片，若需接入真实 Carla 相机流，将 <code>image_publisher</code> 替换为 Carla ROS bridge 的相机节点即可</li>
+</ul>
+<h2 id="_11">相关模块</h2>
+<ul>
+<li><code>carla_traffic_sign_recognition</code>：Windows 端 Carla 实时感知与控制（无 ROS）</li>
+</ul></div>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../rviz_plugin/" title="RVIZ Carla 插件"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../vehicle_pygame_teleop/" title="车辆键盘遥操作与二维模拟">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../rviz_plugin/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../vehicle_pygame_teleop/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../..";</script>
+<script src="../../js/theme_extra.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../js/umlconvert.js"></script>
+<script src="../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+</body>
+</html>

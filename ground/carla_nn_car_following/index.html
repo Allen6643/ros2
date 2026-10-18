@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>神经网络自适应跟车(ACC) - 模拟器的 ROS 文档</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u795e\u7ecf\u7f51\u7edc\u81ea\u9002\u5e94\u8ddf\u8f66(ACC)";
+        var mkdocs_page_input_path = "ground\\carla_nn_car_following.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ubuntu20.04/">安装 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap2/ros2_pubsub_py/">ROS2 话题发布订阅基础实验（talker/listener）</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap4/">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">5. 机器人感知</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../chapter/chap5/">章节首页</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../chapter/chap5/lidar_obstacle_nn/">激光雷达 NN 障碍物分类</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_keyboard_control/">人形机器人键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/panda_keyboard_control/">键盘操控仿真机械臂</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_push_recovery/">人形机器人平衡控制与外力抗扰恢复</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_ppo_locomotion/">人形机器人 PPO 神经网络平衡控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/mujoco_hopper_demo/">MuJoCo单足弹跳机器人简单仿真</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../r2d2_cruise/">R2D2小车 自动巡航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rostopic_cruise/">rostopic 手动驱动</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../carla_tsr_ros/">交通标志识别 ROS 封装</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../mujoco_diff_drive_slip_compensation/">MuJoCo 差速小车轮滑感知与轨迹补偿</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../car_2d_target_tracker/">2D 小车目标追踪仿真</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="#">神经网络自适应跟车(ACC)</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#1">1. 运行环境</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#2">2. 目录结构</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#3">3. 计算原理</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#31">3.1 跟车模型与评价指标</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#32-acc">3.2 经典 ACC 控制器（神经网络的标签来源）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#33-mlp">3.3 感知网络（MLP，回归）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#34-mlp">3.4 控制网络（MLP，回归）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#35">3.5 横向控制（方向盘）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#36">3.6 算法流程</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#4">4. 仿真环境搭建（逐步操作 + 截图）</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#41-windows-carla">4.1 在 Windows 宿主机启动 CARLA 服务端</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#42-ip">4.2 获取宿主机 IP 并确认虚拟机与宿主机连通</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#43-carla-python">4.3 安装 CARLA Python 客户端</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#44-ros-2-humble">4.4 校验 ROS 2 Humble 环境</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#45">4.5 编译功能包</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#46">4.6 环境自检</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#5">5. 运行步骤</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#51-carla">5.1 离线测试（不需要 CARLA，建议先跑）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#52-acc">5.2 经典 ACC 跟车（基线，终端打印逐帧数据）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#53">5.3 采集训练数据</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#54-carla">5.4 训练感知网络与控制网络（不需要 CARLA）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#55">5.5 神经网络在线跟车</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#56-ros-2-launch">5.6 用 ROS 2 launch 启动</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#57">5.7 多场景性能评测</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#6">6. 结果与性能评价</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#61-acctown03-clearnoon-30-s">6.1 四种前车工况（经典 ACC，Town03 / ClearNoon / 30 s）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#62-vs-acc">6.2 神经网络控制器 vs 经典 ACC（缓慢减速工况）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#63">6.3 神经网络离线精度与数据质量（验证集）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#64">6.4 曲线与动图</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#65">6.5 测试类型与可核验证据</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#7">7. 源代码解析</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#8-faq">8. 常见问题（FAQ）</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#9">9. 修复记录（自查）</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#91">9.1 场景与车辆控制</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#92">9.2 毫米波雷达排障链路（核心）</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#93">9.3 工程与集成</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#94">9.4 修复后的最终实测结果</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#10">10. 参考</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../weather_perception_benchmark/">恶劣雨雾天气下多传感器感知性能对比实验</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../air/payload_mass_estimation/">无人机载荷质量估计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/rooftop_landing/">无人机屋顶降落</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_rl_benchmark/">强化学习对比实验（PPO/SAC/TD3）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/uav_mujoco_sim/">MuJoCo 四旋翼仿真与 ROS2 桥接底座</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/waypoint_tracking/">无人机航点轨迹跟踪（PID 控制）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../air/octree_uav_3d_pathfinding/astar_planning/">八叉树上的 A* 全局寻路</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../water/HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">环境搭建</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../water/HoloOcean-Windows-Setup/">HoloOcean Windows 本机环境搭建</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../water/docker/">Docker 开发环境</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../water/docker_runtime/">HoloOcean ROS2 运行时容器</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/holoocean_examples/">水域载具示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/mjc_rov_sonar_cnn/">侧扫声呐图像仿真与 CNN 海底目标分类</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/mjc_rov_current_teleop/">动态洋流 ROV 键盘遥操与 MLP 巡航控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/underwater_sonar_mapping/">新增水下三维地形测绘模块</a>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ubuntu2004-local-llm-deploy/">自装ubuntu20.04本地大模型部署教程</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a></li>
+<li class="breadcrumb-item">地面载具</li>
+<li class="breadcrumb-item active">神经网络自适应跟车(ACC)</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/ground/carla_nn_car_following.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="acc">基于神经网络的无人小车自适应跟车（ACC）仿真</h1>
+<p>本模块在 CARLA 仿真环境中实现无人小车的<strong>自适应巡航跟车（ACC）</strong>：感知与控制两个环节<strong>均由神经网络实现</strong>，
+感知网络从毫米波雷达的原始回波统计量中估计前车距离与相对速度，控制网络据此输出油门与刹车；作为对照，
+模块同时保留了<strong>经典 ACC 控制器</strong>（它既是神经网络的训练标签来源，也是性能基线）。
+横向（方向盘）由纯追踪法与"前车轨迹面包屑跟踪"完成。</p>
+<p><img alt="跟车效果总览" src="../../img/ground/carla_nn_car_following/00_overview.gif"/></p>
+<hr/>
+<h2 id="1">1. 运行环境</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>版本 / 说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>宿主机操作系统</td>
+<td>Windows 11（CARLA 服务端运行于此）</td>
+</tr>
+<tr>
+<td>CARLA 服务端</td>
+<td>0.9.16，Windows 发行版，解压即用</td>
+</tr>
+<tr>
+<td>虚拟机</td>
+<td>VMware Workstation + Ubuntu 22.04.5 LTS</td>
+</tr>
+<tr>
+<td>ROS 2</td>
+<td>Humble（装于 <code>/opt/ros/humble</code>）</td>
+</tr>
+<tr>
+<td>Python</td>
+<td>3.10.12（wheel 只提供 cp310/311/312）</td>
+</tr>
+<tr>
+<td>Python 依赖</td>
+<td><code>carla==0.9.16</code>、<code>numpy</code>、<code>matplotlib</code>（可选）</td>
+</tr>
+<tr>
+<td>神经网络实现</td>
+<td>纯 NumPy 手写 MLP，不依赖 PyTorch / TensorFlow</td>
+</tr>
+<tr>
+<td>虚拟机网络</td>
+<td>VMware NAT，宿主机 IP 取 VMnet8 的地址</td>
+</tr>
+<tr>
+<td>宿主机 IP（本机实测）</td>
+<td><code>192.168.148.1</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ <strong>关于 <code>192.168.148.1</code></strong>：这是本文档实测时宿主机的 VMware NAT 地址，<strong>你的机器上几乎肯定不是这个</strong>
+（通常是 <code>192.168.x.1</code> 里的另一个数）。文中所有命令请把它<strong>替换成你自己查到的地址</strong>，
+查询方法见 4.2 节。代码里的该地址只是默认值，用 <code>--host</code> 或 launch 参数即可覆盖，无需改动源码。</p>
+</blockquote>
+<p><strong>环境验证</strong>（在虚拟机终端逐条执行，预期输出如下）：</p>
+<pre class="highlight"><code class="language-bash">python3 --version
+ls /opt/ros/
+python3 -c "import carla; print(carla.__version__)"</code></pre>
+<p>预期输出：</p>
+<pre class="highlight"><code class="language-text">Python 3.10.12
+humble
+0.9.16</code></pre>
+<hr/>
+<h2 id="2">2. 目录结构</h2>
+<pre class="highlight"><code>src/ground/carla_nn_car_following/          # ROS 2 ament_python 功能包
+├── main.py                                 # 统一入口：check / scene / collect / train / run / eval
+├── check_env.py                            # 环境自检（6 项检查，汇总为 4 行结论）
+├── diagnose_drive.py                       # 诊断工具：逐个出生点试验"车能不能开动"
+├── main.sh / main.bat                      # 一键入口（仓库约定：入口为 main.*）
+├── package.xml / setup.py / setup.cfg
+├── carla_nn_car_following/
+│   ├── __init__.py
+│   ├── carla_client.py                     # 连接 CARLA、生成自车与前车、挂载雷达、出生点预检
+│   ├── scenario.py                         # 四种前车工况 + 纯追踪/面包屑横向控制
+│   ├── reference_acc.py                    # 经典 ACC 控制器（神经网络的标签来源与基线）
+│   ├── nn_numpy.py                         # 纯 NumPy 的 MLP（前向、反向、Adam、存取）
+│   ├── train.py                            # 训练感知网络与控制网络
+│   ├── nn_controller.py                    # 神经网络控制器（感知 → 控制 级联）
+│   └── acc_scene_node.py                   # ROS 2 节点：运行场景并发布 /acc/state
+├── launch/main.launch.py                   # ROS 2 Humble 启动入口
+├── config/params.yaml                      # 运行参数
+├── models/                                 # 训练好的权重（perception.npz、control.npz）
+├── data/                                   # 采集的数据与评测结果
+├── test/test_reference_acc.py              # 24 项离线测试（经典 ACC 公式与四种工况）
+├── test/test_nn_numpy.py                   # 17 项离线测试（MLP 与端到端训练流程）
+└── README.md                               # 运行环境与运行步骤（简版）
+docs/ground/carla_nn_car_following.md       # 本文件（模块介绍页）
+docs/img/ground/carla_nn_car_following/     # 本模块所有图片与动图</code></pre>
+<hr/>
+<h2 id="3">3. 计算原理</h2>
+<h3 id="31">3.1 跟车模型与评价指标</h3>
+<p>定义自车速度 <script type="math/tex">v_e</script>、前车速度 <script type="math/tex">v_l</script>、实际车距 <script type="math/tex">d</script>（自车到前车的直线距离），采用固定车头时距
+（CTH）模型：</p>
+<p>
+<script type="math/tex; mode=display">
+d_{des} = d_0 + t_h \, v_e
+</script>
+</p>
+<p>其中 <script type="math/tex">d_0</script> 为静止安全距离（本模块取 5 m），<script type="math/tex">t_h</script> 为车头时距（本模块取 1.2 s）。车距误差为</p>
+<p>
+<script type="math/tex; mode=display">
+e = d - d_{des}
+</script>
+</p>
+<p>碰撞时间（仅在自车更快时有意义）：</p>
+<p>
+<script type="math/tex; mode=display">
+\mathrm{TTC} = \frac{d}{v_e - v_l}, \qquad v_e > v_l
+</script>
+</p>
+<p><strong>评价指标</strong>：车距误差均值 <script type="math/tex">|e|</script>、最小车距 <script type="math/tex">\min d</script>、最小 TTC、平均车速。
+多场景评测在 4 种前车工况下各跑 1 次。</p>
+<h3 id="32-acc">3.2 经典 ACC 控制器（神经网络的标签来源）</h3>
+<p>期望加速度由车距误差与相对速度（<script type="math/tex">v_{rel} = v_l - v_e</script>，逼近时为负值）线性组合得到：</p>
+<p>
+<script type="math/tex; mode=display">
+a_{cmd} = k_p e + k_v v_{rel}
+</script>
+</p>
+<p>并将 <script type="math/tex">a_{cmd}</script> 映射为 CARLA 的油门 <script type="math/tex">\theta</script> 与刹车 <script type="math/tex">b</script>（两者互斥）：</p>
+<p>
+<script type="math/tex; mode=display">
+\theta = \mathrm{clip}(k_{\theta} a_{cmd},\ 0,\ 1), \qquad
+b = \mathrm{clip}(-k_b a_{cmd},\ 0,\ 1)
+</script>
+</p>
+<p><strong>设定车速限制</strong>：前车很远或跟丢时，若没有限速项，自车会为了缩小车距而无限加速（实测飙到
+143 km/h）。因此加入设定车速 <script type="math/tex">v_{set}</script>：</p>
+<p>
+<script type="math/tex; mode=display">
+a_{cmd} = \min\Big(k_p e + k_v v_{rel},\ \ k_{v\!s}\,(v_{set} - v_e)\Big)
+</script>
+</p>
+<p>本模块参数：<script type="math/tex">k_p = 0.35</script>、<script type="math/tex">k_v = 1.5</script>、<script type="math/tex">k_\theta = 0.25</script>、<script type="math/tex">k_b = 0.35</script>、<script type="math/tex">k_{v\!s} = 1.0</script>。</p>
+<h3 id="33-mlp">3.3 感知网络（MLP，回归）</h3>
+<p>输入为雷达特征向量 <script type="math/tex">x_p \in \mathbb{R}^{6}</script>：</p>
+<table>
+<thead>
+<tr>
+<th>分量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<script type="math/tex">d_{radar}</script>
+</td>
+<td>正前方 ±8° 内最短回波距离（m）</td>
+</tr>
+<tr>
+<td>
+<script type="math/tex">\varphi</script>
+</td>
+<td>该回波对应的方位角（rad）</td>
+</tr>
+<tr>
+<td>
+<script type="math/tex">\dot d</script>
+</td>
+<td>接近速度（最短回波距离的差分，m/s，正值表示正在靠近）</td>
+</tr>
+<tr>
+<td>
+<script type="math/tex">\bar d</script>
+</td>
+<td>全部回波的平均距离（m）</td>
+</tr>
+<tr>
+<td>
+<script type="math/tex">n</script>
+</td>
+<td>回波点数量</td>
+</tr>
+<tr>
+<td>
+<script type="math/tex">v_e</script>
+</td>
+<td>自车速度（m/s）</td>
+</tr>
+</tbody>
+</table>
+<p>输出为 <script type="math/tex">\hat y = [\hat d, \hat v_{rel}]</script>，即车距与相对速度的估计：</p>
+<p>
+<script type="math/tex; mode=display">
+h_1 = \tanh(W_1 x_p + b_1), \quad
+h_2 = \tanh(W_2 h_1 + b_2), \quad
+\hat y = W_3 h_2 + b_3
+</script>
+</p>
+<p>网络结构 <script type="math/tex">6-24-16-2</script>（参数量 602），损失函数为均方误差：</p>
+<p>
+<script type="math/tex; mode=display">
+L_p = \frac{1}{N}\sum_{i=1}^{N}\left\|\hat y_i - y_i\right\|^2
+</script>
+</p>
+<blockquote>
+<p>为什么需要用网络而不是"直接减一个常数"：雷达测到的是<strong>前车车身表面的最近回波</strong>，与"车距"
+（两车参考点之间的距离）相差约半个车身长度，且随车型、遮挡与多径而变化。网络同时完成了
+<strong>标定、去噪与差分测速</strong>三件事。</p>
+</blockquote>
+<h3 id="34-mlp">3.4 控制网络（MLP，回归）</h3>
+<p>输入 <script type="math/tex">x_c = [\hat d, \hat v_{rel}, v_e]</script>，输出 <script type="math/tex">y_c = [\theta, b]</script>，损失函数：</p>
+<p>
+<script type="math/tex; mode=display">
+L_c = \frac{1}{N}\sum_{i=1}^{N}\left[(\theta_i - \theta_i^{*})^2 + (b_i - b_i^{*})^2\right]
+</script>
+</p>
+<p>其中 <script type="math/tex">\theta^{*}, b^{*}</script> 为 3.2 节经典控制器给出的标签（即<strong>模仿学习 / 行为克隆</strong>）。
+部署时控制网络的输入来自感知网络的输出，构成级联结构。</p>
+<h3 id="35">3.5 横向控制（方向盘）</h3>
+<p>纵向（油门/刹车）由上面的控制器负责，横向由两部分组成：</p>
+<ol>
+<li><strong>纯追踪（Pure Pursuit）</strong>：取车道中心线上车辆前方 <script type="math/tex">L</script> 米处的路点作为追踪目标，
+   按目标点与车头方向的夹角 <script type="math/tex">\alpha</script> 计算转向量：</li>
+</ol>
+<p>
+<script type="math/tex; mode=display">
+\delta = \mathrm{clip}\!\left(k_\delta \alpha,\ -1,\ 1\right), \qquad
+L = \max\left(6,\ 8 + 0.35 v_e\right)
+</script>
+</p>
+<ol>
+<li><strong>前车轨迹面包屑跟踪</strong>：记录前车最近 1.2 s 的轨迹，自车朝"前车 1.2 s 前所在的位置"行驶。
+   这样前车在路口拐弯时自车会跟着拐，<strong>从物理上避免跟丢</strong>（实测初版在路口跟丢后车距被拉到 365 m）。</li>
+</ol>
+<h3 id="36">3.6 算法流程</h3>
+<div class="mermaid">flowchart TD
+    A[Windows 启动 CARLA 服务端] --&gt; B[虚拟机连接 2000 端口]
+    B --&gt; C[出生点预检: 全油门试跑, 选出可行驶的出生点]
+    C --&gt; D[生成自车与前车, 挂载前向雷达]
+    D --&gt; E[经典 ACC 驾驶自车并逐帧记录数据]
+    E --&gt; F[训练感知网络 MLP]
+    E --&gt; G[训练控制网络 MLP]
+    F --&gt; H[ROS 2 节点: 雷达特征 → 感知网络 → 控制网络]
+    G --&gt; H
+    H --&gt; I[输出油门/刹车; 横向由纯追踪与面包屑跟踪负责]
+    I --&gt; J[多场景评测: 4 种前车工况]
+    J --&gt; K[输出指标 CSV 与曲线图]
+</div>
+<hr/>
+<h2 id="4">4. 仿真环境搭建（逐步操作 + 截图）</h2>
+<h3 id="41-windows-carla">4.1 在 Windows 宿主机启动 CARLA 服务端</h3>
+<p><strong>执行位置</strong>：Windows 宿主机。</p>
+<ol>
+<li>双击 CARLA 安装目录下的 <code>CarlaUE4.exe</code>（首次启动约 1~3 分钟）；</li>
+<li>等待出现城市第三人称视角窗口，窗口标题含 <code>CARLA 0.9.16</code>。</li>
+</ol>
+<p><strong>预期现象</strong>：窗口持续渲染（不是黑屏、不是白屏）。
+<strong>截图</strong>：<code>01_windows_carla_window.png</code>、<code>02_windows_ipconfig.png</code>。</p>
+<p><img alt="CARLA 服务端窗口" src="../../img/ground/carla_nn_car_following/01_windows_carla_window.png"/>
+<img alt="宿主机 IP 查询" src="../../img/ground/carla_nn_car_following/02_windows_ipconfig.png"/></p>
+<h3 id="42-ip">4.2 获取宿主机 IP 并确认虚拟机与宿主机连通</h3>
+<h4 id="421-windows-ipv4">4.2.1 在 Windows 上查出 IPv4 地址</h4>
+<p><strong>执行位置</strong>：Windows 宿主机 <code>cmd</code>。</p>
+<pre class="highlight"><code class="language-cmd">ipconfig | findstr /i "IPv4"</code></pre>
+<p><strong>预期输出</strong>（本机实测）：</p>
+<pre class="highlight"><code>   IPv4 地址 . . . . . . . . . . . . : 192.168.148.1     ← VMware Network Adapter VMnet8（NAT）
+   IPv4 地址 . . . . . . . . . . . . : 192.168.104.1     ← VMware Network Adapter VMnet1
+   IPv4 地址 . . . . . . . . . . . . : 10.3.219.137      ← 无线网卡（仅桥接模式使用）</code></pre>
+<h4 id="422-vmware">4.2.2 该抄哪一行？取决于 VMware 的网络模式</h4>
+<table>
+<thead>
+<tr>
+<th>VMware 网络模式</th>
+<th>抄哪一行</th>
+<th>典型特征</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>NAT</strong>（默认，推荐）</td>
+<td>VMware Network Adapter VMnet8</td>
+<td>通常是 <code>192.168.x.1</code></td>
+</tr>
+<tr>
+<td><strong>桥接（Bridged）</strong></td>
+<td>物理网卡（WLAN / 以太网）</td>
+<td>与路由器同网段</td>
+</tr>
+<tr>
+<td>仅主机（Host-only）</td>
+<td>VMware Network Adapter VMnet1</td>
+<td>通常是 <code>192.168.x.1</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="423">4.2.3 不确定就挨个试</h4>
+<p><strong>执行位置</strong>：Ubuntu 虚拟机终端。</p>
+<pre class="highlight"><code class="language-bash">sudo apt install -y netcat-openbsd        # 首次执行
+for ip in 192.168.148.1 192.168.104.1 10.3.219.137; do
+  echo -n "$ip -&gt; "; nc -vz -w 2 "$ip" 2000 2&gt;&amp;1 | tail -n 1
+done</code></pre>
+<p><strong>预期输出</strong>：只有一行返回 <code>succeeded!</code>，那一行的 IP 就是宿主机 IP。</p>
+<pre class="highlight"><code>192.168.148.1 -&gt; Connection to 192.168.148.1 2000 port [tcp/*] succeeded!
+192.168.104.1 -&gt; nc: connect to 192.168.104.1 port 2000 (tcp) failed: Connection refused
+10.3.219.137 -&gt; nc: connect to 10.3.219.137 port 2000 (tcp) timed out</code></pre>
+<p><strong>如果不通</strong>：Windows 防火墙放行 <code>CarlaUE4.exe</code>（「专用网络」与「公用网络」都要勾选）。
+<strong>截图</strong>：<code>03_vm_nc_success.png</code>。</p>
+<p><img alt="连通性测试" src="../../img/ground/carla_nn_car_following/03_vm_nc_success.png"/></p>
+<h3 id="43-carla-python">4.3 安装 CARLA Python 客户端</h3>
+<p><strong>执行位置</strong>：Ubuntu 虚拟机终端。</p>
+<pre class="highlight"><code class="language-bash">python3 --version                                  # 应为 3.10 / 3.11 / 3.12
+python3 -m pip install --user carla==0.9.16 -i https://pypi.tuna.tsinghua.edu.cn/simple
+python3 -c "import carla; print(carla.__version__)"</code></pre>
+<p><strong>预期输出</strong>：<code>0.9.16</code>。</p>
+<blockquote>
+<p><strong>为什么必须是 3.10+</strong>：CARLA 0.9.16 在 PyPI 上只发布了 <code>cp310 / cp311 / cp312</code> 三种 ABI 的
+manylinux wheel（可在 PyPI 的 <code>carla/0.9.16/json</code> 中直接查到文件名）。Ubuntu 20.04 自带的
+Python 3.8 装不上，这也是本模块选用 Ubuntu 22.04 + Humble 的原因之一。
+<strong>常见错误</strong>：<code>ModuleNotFoundError: No module named 'carla'</code> —— 说明安装与运行用了不同解释器。</p>
+</blockquote>
+<p><strong>截图</strong>：<code>04_pip_install_carla.png</code>。</p>
+<p><img alt="安装 CARLA Python 客户端" src="../../img/ground/carla_nn_car_following/04_pip_install_carla.png"/></p>
+<h3 id="44-ros-2-humble">4.4 校验 ROS 2 Humble 环境</h3>
+<pre class="highlight"><code class="language-bash">source /opt/ros/humble/setup.bash
+ros2 pkg list | head -3
+python3 -c "import rclpy; print(rclpy.__file__)"</code></pre>
+<p><strong>预期输出</strong>：</p>
+<pre class="highlight"><code>action_msgs
+action_tutorials_cpp
+action_tutorials_interfaces
+/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py</code></pre>
+<blockquote>
+<p>提示：<code>ros2 --version</code> 在 Humble 中不是合法参数，会返回非零状态；
+判断 ROS 2 是否可用请使用 <code>ros2 pkg list</code>。
+另外 <code>ros2 pkg list | head -3</code> 会因为管道提前关闭而打印 <code>BrokenPipeError</code> 并弹出崩溃上报窗口，
+这是正常现象，点「Don't send」关闭即可。</p>
+</blockquote>
+<p><strong>截图</strong>：<code>05_ros2_pkg_list.png</code>。</p>
+<p><img alt="ROS 2 Humble 环境检查" src="../../img/ground/carla_nn_car_following/05_ros2_pkg_list.png"/></p>
+<h3 id="45">4.5 编译功能包</h3>
+<pre class="highlight"><code class="language-bash">mkdir -p ~/ros2_ws/src &amp;&amp; cd ~/ros2_ws/src
+git clone --depth 1 https://github.com/OpenHUTB/ros2.git
+cp -r ~/ros2_ws/src/ros2/src/ground/carla_nn_car_following ~/ros2_ws/src/
+cd ~/ros2_ws
+source /opt/ros/humble/setup.bash
+colcon build --packages-select carla_nn_car_following --symlink-install
+source install/setup.bash
+ros2 pkg executables carla_nn_car_following</code></pre>
+<p><strong>预期输出</strong>：<code>Summary: 1 package finished</code>，并列出 <code>carla_nn_car_following acc_scene_node</code>。
+<strong>截图</strong>：<code>06_colcon_build.png</code>。</p>
+<blockquote>
+<p><strong>评审本 PR 时</strong>：模块尚未合并进 <code>OpenHUTB/ros2</code> 的 master，请改为克隆 PR 所在分支
+（例如 <code>git clone -b master https://github.com/Aogusilakui/ros2.git</code>），或在 PR 页面
+用「Code → Download ZIP」下载对应提交的源码。</p>
+</blockquote>
+<p><img alt="colcon 编译成功" src="../../img/ground/carla_nn_car_following/06_colcon_build.png"/></p>
+<h3 id="46">4.6 环境自检</h3>
+<pre class="highlight"><code class="language-bash">cd ~/ros2_ws/src/carla_nn_car_following
+python3 check_env.py --host 192.168.148.1 --town Town03</code></pre>
+<p><strong>预期输出</strong>：</p>
+<pre class="highlight"><code>  Python / carla 包 ：PASS
+  连接与生成自车    ：PASS
+  雷达+相机数据     ：PASS
+  ROS 2 Humble      ：PASS</code></pre>
+<p><strong>截图</strong>：<code>07_env_check_pass.png</code>。</p>
+<p><img alt="环境自检 4 行结论全部 PASS" src="../../img/ground/carla_nn_car_following/07_env_check_pass.png"/></p>
+<hr/>
+<h2 id="5">5. 运行步骤</h2>
+<blockquote>
+<p>下面所有命令里的 <code>192.168.148.1</code> 都要换成<strong>你自己的宿主机 IP</strong>（见 4.2 节）。</p>
+</blockquote>
+<h3 id="51-carla">5.1 离线测试（不需要 CARLA，建议先跑）</h3>
+<pre class="highlight"><code class="language-bash">cd ~/ros2_ws/src/carla_nn_car_following
+python3 test/test_reference_acc.py      # 预期：[结果] 24 项全部通过
+python3 test/test_nn_numpy.py           # 预期：[结果] 17 项全部通过</code></pre>
+<h3 id="52-acc">5.2 经典 ACC 跟车（基线，终端打印逐帧数据）</h3>
+<pre class="highlight"><code class="language-bash">python3 main.py --mode scene --host 192.168.148.1 --scenario decelerate</code></pre>
+<p><strong>预期输出</strong>（完整逐帧日志见 <a href="../../evidence/carla_nn_car_following/run_classic.log">run_classic.log</a>）：</p>
+<pre class="highlight"><code>[预检] 出生点 #0 可用（30 帧位移 5.3 m，末速 8.52 m/s），已重新就位
+[自车] 已生成 @ (-6.4, -79.1, 0.3)
+[前车] 已生成 @ (-6.1, -54.0, -0.0)，初始车距 25.0 m
+[工况] decelerate —— 前车缓慢减速（-1.5 m/s^2）（经典 ACC，设定车速 18.7 m/s）
+[起始] 自车与前车初始速度设为 16.7 m/s（60 km/h），进入稳态跟车
+  t=  0.0s  雷达= 21.18m  真值= 24.98m  v_rel=+0.00 m/s  自车=16.30 m/s  前车=15.99 m/s  油门=0.53  刹车=0.00
+  ...
+[结果] 平均车距误差 2.97 m | 最小车距 11.66 m | 最小 TTC 5.50 s | 平均车速 7.30 m/s</code></pre>
+<h3 id="53">5.3 采集训练数据</h3>
+<pre class="highlight"><code class="language-bash">python3 main.py --mode collect --host 192.168.148.1 --scenario all
+ls -lh data/</code></pre>
+<p><strong>预期输出</strong>：四种工况各生成一个 <code>data/dataset_&lt;工况&gt;.npz</code>（每份约 600 帧）。</p>
+<h3 id="54-carla">5.4 训练感知网络与控制网络（不需要 CARLA）</h3>
+<pre class="highlight"><code class="language-bash">python3 main.py --mode train</code></pre>
+<p><strong>预期输出</strong>（完整逐 epoch 日志见
+<a href="../../evidence/carla_nn_car_following/training_log.csv">training_log.csv</a>）：</p>
+<pre class="highlight"><code>[数据] 载入 4 个文件：dataset_constant.npz, dataset_cutin.npz, dataset_decelerate.npz, dataset_emergency.npz
+[数据质量] 按帧剔除异常样本：250 / 2400（10.4%），保留 4 个工况
+[数据] 样本总数 2150（训练 1720 / 验证 430）
+[感知网络] 6-24-16-2，参数量 602
+  验证集：车距 RMSE = 0.415 m，相对速度 RMSE = 0.359 m/s
+[控制网络] 3-24-16-2
+  验证集：油门 RMSE = 0.0155，刹车 RMSE = 0.0014，总 MSE = 0.000121
+[日志] 训练曲线数据已写入 data/training_log.csv
+[完成] 模型已保存到 models/（perception.npz、control.npz）</code></pre>
+<blockquote>
+<p>本仓库<strong>已随附训练好的</strong> <code>models/perception.npz</code>、<code>models/control.npz</code>（体积很小，可直接入库），
+因此可以<strong>直接</strong>跳到 5.5 节运行神经网络控制器；如需自行复现训练，按 5.3 / 5.4 节重跑即可
+（采集用的四个 <code>data/dataset_*.npz</code> 未入库，其中 <code>dataset_decelerate.npz</code> 作为样例随附）。</p>
+</blockquote>
+<h3 id="55">5.5 神经网络在线跟车</h3>
+<pre class="highlight"><code class="language-bash">python3 main.py --mode run --host 192.168.148.1 --scenario decelerate --controller nn</code></pre>
+<p><strong>预期输出</strong>（多出一列"估计"，是感知网络对车距的估计值；完整日志见
+<a href="../../evidence/carla_nn_car_following/run_nn.log">run_nn.log</a>）：</p>
+<pre class="highlight"><code>[控制器] 神经网络（感知网络估计车距 → 控制网络输出油门/刹车）
+  t=  0.0s  雷达= 21.16m  真值= 24.98m  ...  油门=0.00  刹车=0.14  估计= 24.85m(误差-0.13)
+  ...
+[结果] 平均车距误差 4.06 m | 最小车距 13.31 m | 最小 TTC 3.34 s | 平均车速 7.23 m/s</code></pre>
+<h3 id="56-ros-2-launch">5.6 用 ROS 2 launch 启动</h3>
+<pre class="highlight"><code class="language-bash">source /opt/ros/humble/setup.bash
+source ~/ros2_ws/install/setup.bash
+
+# 经典 ACC
+ros2 launch carla_nn_car_following main.launch.py \
+    host:=192.168.148.1 town:=Town03 scenario:=decelerate controller:=classic
+
+# 神经网络控制器（需先完成 5.4 的训练）
+ros2 launch carla_nn_car_following main.launch.py \
+    host:=192.168.148.1 town:=Town03 scenario:=decelerate controller:=nn models_dir:=models</code></pre>
+<p>另开一个终端观察节点发布的状态：</p>
+<pre class="highlight"><code class="language-bash">source /opt/ros/humble/setup.bash
+ros2 topic echo /acc/state</code></pre>
+<p><code>/acc/state</code> 的字段顺序（消息类型 <code>std_msgs/Float32MultiArray</code>）：</p>
+<pre class="highlight"><code>[仿真时间, 真实车距, 相对速度, 自车速度, 油门, 刹车, 跟车状态]           # 经典 ACC：7 个字段
+[仿真时间, 真实车距, 相对速度, 自车速度, 油门, 刹车, 跟车状态, 估计车距, 估计相对速度]   # 神经网络：9 个字段</code></pre>
+<p><strong>截图</strong>：<code>08_ros2_launch.png</code>、<code>09_topic_echo.png</code>。</p>
+<p><img alt="ros2 launch 启动节点" src="../../img/ground/carla_nn_car_following/08_ros2_launch.png"/>
+<img alt="ros2 topic echo 查看跟车状态" src="../../img/ground/carla_nn_car_following/09_topic_echo.png"/></p>
+<h3 id="57">5.7 多场景性能评测</h3>
+<pre class="highlight"><code class="language-bash">python3 main.py --mode eval --host 192.168.148.1 --scenario all
+cat data/eval_classic.csv</code></pre>
+<p><strong>预期输出</strong>：4 种前车工况的指标写入 <code>data/eval_&lt;控制器&gt;.csv</code>，可直接用于第 6 章表格。</p>
+<hr/>
+<h2 id="6">6. 结果与性能评价</h2>
+<h3 id="61-acctown03-clearnoon-30-s">6.1 四种前车工况（经典 ACC，Town03 / ClearNoon / 30 s）</h3>
+<table>
+<thead>
+<tr>
+<th>前车工况</th>
+<th>误差均值 (m)</th>
+<th>最小车距 (m)</th>
+<th>最小 TTC (s)</th>
+<th>均速 (m/s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>匀速 60 km/h</td>
+<td>1.87</td>
+<td>21.82</td>
+<td>5.50</td>
+<td>15.42</td>
+</tr>
+<tr>
+<td>缓慢减速</td>
+<td>2.97</td>
+<td>11.66</td>
+<td>5.50</td>
+<td>7.30</td>
+</tr>
+<tr>
+<td>急刹（-6 m/s²）</td>
+<td>2.52</td>
+<td>5.82</td>
+<td>3.15</td>
+<td>2.49</td>
+</tr>
+<tr>
+<td>加塞</td>
+<td>1.95</td>
+<td>3.64</td>
+<td>0.38</td>
+<td>8.00</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>加塞工况说明</strong>：加塞车辆出现后，"最近前车"由原始前车切换为加塞车，车距真值本身发生跳变
+（雷达跟踪目标也随之切换）。因此该工况的<strong>最小 TTC 0.38 s 不能直接与其他工况比较</strong>，
+且其数据不纳入神经网络训练集（详见 6.3 与 9.2 节）。</p>
+</blockquote>
+<h3 id="62-vs-acc">6.2 神经网络控制器 vs 经典 ACC（缓慢减速工况）</h3>
+<table>
+<thead>
+<tr>
+<th>控制器</th>
+<th>误差均值 (m)</th>
+<th>最小车距 (m)</th>
+<th>最小 TTC (s)</th>
+<th>均速 (m/s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>经典 ACC（基线）</td>
+<td>2.97</td>
+<td>11.66</td>
+<td>5.50</td>
+<td>7.30</td>
+</tr>
+<tr>
+<td>感知 + 控制神经网络</td>
+<td>4.06</td>
+<td>13.31</td>
+<td>3.34</td>
+<td>7.23</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>两个安全性指标必须分开看，不能由单一指标推断整体安全性</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>安全性指标</th>
+<th>经典 ACC</th>
+<th>神经网络</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>最小车距</td>
+<td>11.66 m</td>
+<td><strong>13.31 m</strong></td>
+<td>网络在"最近靠到多近"上更宽裕</td>
+</tr>
+<tr>
+<td>最小 TTC</td>
+<td><strong>5.50 s</strong></td>
+<td>3.34 s</td>
+<td>网络在"接近的相对速度"上更激进</td>
+</tr>
+</tbody>
+</table>
+<p>最小车距只反映"靠得多近"；TTC $= d/(-v_{rel})$ 还包含<strong>接近速度</strong>，是更接近碰撞风险的度量。
+本模块的结论是：神经网络控制器的<strong>车距误差略大</strong>（4.06 m vs 2.97 m，源自级联结构中感知误差的传递），
+且<strong>跟车风格与基线不同</strong>（更早留出距离余量，但接近时的相对速度更大）。
+因此<strong>不能</strong>用"最小车距更大"断言网络整体更安全；若要提升安全性，应把 TTC 约束显式加入控制目标
+（例如加入安全监督层）。</p>
+<p>另：神经网络控制器的<strong>感知估计误差</strong>为车距平均误差约 0.9 m、最大 3.1 m（采样统计）。</p>
+<p><strong>长时闭环的局限</strong>（上表为 30 s 实验；<code>ros2 launch</code> 节点默认 60 s）：
+运行到 25 s 之后感知误差会明显增大——雷达长时间丢锁时航迹可能跳到远处杂波
+（实测读数一度到 69 m，而真值仍为 25 m），估计误差达 −10 m 量级。
+同一工况下 60 s 节点运行的实测为：平均车距误差 6.70 m、最小车距 11.46 m、最小 TTC 5.00 s（无碰撞）。
+<strong>长时闭环稳定性与丢锁后的重捕获</strong>是后续改进方向；本节表格的指标只代表 30 s 短时闭环。</p>
+</blockquote>
+<h3 id="63">6.3 神经网络离线精度与数据质量（验证集）</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>指标</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>感知网络（602 参数）</td>
+<td>车距 RMSE</td>
+<td><strong>0.415 m</strong></td>
+</tr>
+<tr>
+<td>感知网络</td>
+<td>相对速度 RMSE</td>
+<td><strong>0.359 m/s</strong></td>
+</tr>
+<tr>
+<td>控制网络</td>
+<td>油门 / 刹车 RMSE</td>
+<td>0.0155 / 0.0014</td>
+</tr>
+<tr>
+<td>控制网络</td>
+<td>总 MSE</td>
+<td><strong>0.000121</strong></td>
+</tr>
+<tr>
+<td>训练样本</td>
+<td>训练 / 验证</td>
+<td>1720 / 430</td>
+</tr>
+<tr>
+<td>数据清洗</td>
+<td>按帧剔除异常样本</td>
+<td>250 / 2400（10.4%）</td>
+</tr>
+</tbody>
+</table>
+<p>感知网络结构 6-24-16-2、控制网络结构 3-24-16-2（详见 3.3 / 3.4 节）。</p>
+<p><strong>各工况的雷达—真值一致性</strong>（判据：偏差 = 真值 − 雷达，应约等于半个车身长度 2~4 m）：</p>
+<table>
+<thead>
+<tr>
+<th>工况</th>
+<th>均值 (m)</th>
+<th>标准差 (m)</th>
+<th>超 5 m</th>
+<th>相关系数</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>缓慢减速</td>
+<td>+3.51</td>
+<td><strong>0.42</strong></td>
+<td>1.8%</td>
+<td><strong>0.996</strong></td>
+<td>合格</td>
+</tr>
+<tr>
+<td>急刹</td>
+<td>+2.62</td>
+<td><strong>0.95</strong></td>
+<td>2.2%</td>
+<td>0.989</td>
+<td>合格</td>
+</tr>
+<tr>
+<td>匀速</td>
+<td>+3.14</td>
+<td>2.47</td>
+<td>11.2%</td>
+<td>0.554</td>
+<td>一般</td>
+</tr>
+<tr>
+<td>加塞</td>
+<td>−12.10</td>
+<td>17.51</td>
+<td>55.5%</td>
+<td>−0.282</td>
+<td>不合格，排除</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>为什么"加塞"不合格</strong>：加塞车辆出现后真值目标切换，而雷达的航迹跟踪仍在原目标上，
+两者不是同一个对象，偏差统计失去意义。这不是雷达故障，而是<strong>场景定义与真值口径不一致</strong>。
+处理方式：该工况仍可通过 <code>--scenario cutin</code> 单独运行演示，但<strong>不纳入训练集</strong>。</p>
+</blockquote>
+<h3 id="64">6.4 曲线与动图</h3>
+<p><img alt="训练曲线" src="../../img/ground/carla_nn_car_following/10_training_curve.png"/>
+<img alt="经典 ACC 跟车" src="../../img/ground/carla_nn_car_following/11_following_decelerate.gif"/>
+<img alt="神经网络跟车" src="../../img/ground/carla_nn_car_following/00_overview.gif"/></p>
+<h3 id="65">6.5 测试类型与可核验证据</h3>
+<p>本模块的测试分四类，<strong>结论的可信度不同，请勿混为一谈</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>测试类型</th>
+<th>命令</th>
+<th>需要 CARLA</th>
+<th>验证什么</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>①</td>
+<td>经典 ACC 逻辑（纯数学）</td>
+<td><code>python3 test/test_reference_acc.py</code></td>
+<td>否</td>
+<td>期望车距、加速度命令、油门/刹车标签、TTC 公式</td>
+<td>24 项通过</td>
+</tr>
+<tr>
+<td>②</td>
+<td>NumPy 神经网络实现（<strong>合成数据</strong>）</td>
+<td><code>python3 test/test_nn_numpy.py</code></td>
+<td>否</td>
+<td>前向/反向传播与 Adam 的数值正确性</td>
+<td>17 项通过</td>
+</tr>
+<tr>
+<td>③</td>
+<td>数据质量体检</td>
+<td><code>python3 analyze_dataset.py</code></td>
+<td>否（读已采集的 npz）</td>
+<td>雷达回波与真值的一致性</td>
+<td>见下方证据文件</td>
+</tr>
+<tr>
+<td>④</td>
+<td><strong>真实 CARLA 闭环实验</strong></td>
+<td><code>--mode collect</code> / <code>train</code> / <code>run</code></td>
+<td><strong>是</strong></td>
+<td>6.1~6.3 节的<strong>全部性能指标</strong></td>
+<td>见下方证据文件</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ <strong>第 ② 类用的是合成数据</strong>（<code>make_synthetic_dataset()</code> 生成"车距 − 2.3 m + 噪声"），
+它只用来证明<strong>实现正确</strong>（梯度、优化器没写错），<strong>不代表真实精度</strong>。
+<strong>6.1~6.3 节的所有指标都来自第 ④ 类真实 CARLA 闭环实验</strong>，与 ② 无关。</p>
+</blockquote>
+<p>第 ④ 类实验的原始日志/结果文件放在 <code>docs/evidence/carla_nn_car_following/</code>，可直接下载核验：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../evidence/carla_nn_car_following/analyze_dataset.txt">analyze_dataset.txt</a></td>
+<td><code>analyze_dataset.py</code> 完整输出（各工况雷达—真值偏差均值/标准差/相关系数）</td>
+</tr>
+<tr>
+<td><a href="../../evidence/carla_nn_car_following/training_log.csv">training_log.csv</a></td>
+<td>训练过程逐 epoch 损失（<code>main.py --mode train</code> 生成）</td>
+</tr>
+<tr>
+<td><a href="../../evidence/carla_nn_car_following/run_classic.log">run_classic.log</a></td>
+<td>经典 ACC 在缓慢减速工况的逐帧输出与结尾 <code>[结果]</code> 行</td>
+</tr>
+<tr>
+<td><a href="../../evidence/carla_nn_car_following/run_nn.log">run_nn.log</a></td>
+<td>神经网络控制器在同一工况的逐帧输出（含 <code>估计=</code> 与 <code>误差</code>）与 <code>[结果]</code> 行</td>
+</tr>
+</tbody>
+</table>
+<p>复现第 ④ 类实验的命令见 5.2~5.5 节，每一步的预期输出与截图见第 4、5 章。</p>
+<p><strong>独立核验示例（不需要 CARLA、不需要训练）</strong>：仓库已随附训练好的 <code>models/</code> 与一份真实采集样例
+<code>data/dataset_decelerate.npz</code>，可直接复算感知网络在真实数据上的精度：</p>
+<pre class="highlight"><code class="language-bash">cd src/ground/carla_nn_car_following
+python3 -c "
+import numpy as np, sys; sys.path.insert(0, '.')
+from carla_nn_car_following.nn_controller import NNController
+nn = NNController.load('models')
+d = np.load('data/dataset_decelerate.npz')
+errs = []
+for i in range(0, len(d['gap_true']), 20):
+    f = {'d_radar': float(d['radar_d'][i]), 'azimuth': float(d['radar_azimuth'][i]),
+         'closing_rate': float(d['radar_closing'][i]), 'mean_depth': float(d['radar_mean_depth'][i]),
+         'n_points': float(d['radar_n_points'][i])}
+    errs.append(nn.estimate(f, float(d['v_ego'][i]))[0] - float(d['gap_true'][i]))
+errs = np.array(errs)
+print('车距 RMSE = %.3f m, 最大 %.3f m' % (np.sqrt((errs**2).mean()), abs(errs).max()))
+"</code></pre>
+<p>预期输出：<code>车距 RMSE = 0.428 m, 最大 0.930 m</code>（与训练报告的验证集 0.415 m 一致）。</p>
+<hr/>
+<h2 id="7">7. 源代码解析</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>关键函数 / 类</th>
+<th>作用</th>
+<th>对应公式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>carla_client.py</code></td>
+<td><code>settle()</code></td>
+<td>生成 actor 后推进一步，等位置数据到达客户端</td>
+<td>—</td>
+</tr>
+<tr>
+<td></td>
+<td><code>spawn_ego()</code></td>
+<td><strong>出生点预检</strong>：全油门试跑，达标后重新就位</td>
+<td>—</td>
+</tr>
+<tr>
+<td></td>
+<td><code>features()</code></td>
+<td>从雷达回波统计出 6 维特征向量</td>
+<td>3.3 节 <script type="math/tex">x_p</script>
+</td>
+</tr>
+<tr>
+<td><code>scenario.py</code></td>
+<td><code>lane_steer()</code></td>
+<td>纯追踪横向控制</td>
+<td>3.5 节式(1)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>steer_to_point()</code></td>
+<td>面包屑跟踪的几何计算</td>
+<td>3.5 节</td>
+</tr>
+<tr>
+<td></td>
+<td><code>drive_to_speed()</code></td>
+<td>前车速度控制（P + 前馈）</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>reference_acc.py</code></td>
+<td><code>acceleration()</code></td>
+<td>计算 <script type="math/tex">a_{cmd}</script> 并施加设定车速限制</td>
+<td>3.2 节式(3)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>labels()</code></td>
+<td>输出油门与刹车标签</td>
+<td>3.2 节式(4)</td>
+</tr>
+<tr>
+<td><code>nn_numpy.py</code></td>
+<td><code>forward()</code></td>
+<td>前向传播</td>
+<td>3.3 / 3.4 节</td>
+</tr>
+<tr>
+<td></td>
+<td><code>_backward()</code></td>
+<td>反向传播（tanh 导数、L2 正则）</td>
+<td>3.3 节损失函数</td>
+</tr>
+<tr>
+<td></td>
+<td><code>_adam_update()</code></td>
+<td>Adam 优化器</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>train.py</code></td>
+<td><code>train_models()</code></td>
+<td>归一化、切分训练/验证集、训练两个网络</td>
+<td>3.3 / 3.4 节</td>
+</tr>
+<tr>
+<td><code>nn_controller.py</code></td>
+<td><code>labels()</code></td>
+<td>感知 → 控制级联推理</td>
+<td>3.3 / 3.4 节</td>
+</tr>
+<tr>
+<td><code>acc_scene_node.py</code></td>
+<td><code>on_timer()</code></td>
+<td>ROS 2 主循环：场景推进、控制器切换、发布状态</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>analyze_dataset.py</code></td>
+<td>逐工况体检</td>
+<td>按"偏差 = 真值 − 雷达"的均值/标准差判断数据质量</td>
+<td>6.3 节判据</td>
+</tr>
+<tr>
+<td><code>diagnose_drive.py</code></td>
+<td>逐出生点试车</td>
+<td>每个出生点全油门试跑 5 秒，挑出能行驶的点</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>check_env.py</code></td>
+<td>环境自检（6 项）</td>
+<td>Python、carla 包、连接、自车、传感器、rclpy</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="8-faq">8. 常见问题（FAQ）</h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>连接超时 <code>time-out of 60000ms</code></td>
+<td>宿主机 IP 填错 / 防火墙 / CARLA 未启动</td>
+<td><code>ipconfig</code> 重新确认；宿主机浏览器访问 <code>http://&lt;IP&gt;:2000</code> 应返回 JSON</td>
+</tr>
+<tr>
+<td>雷达回调一次都不触发</td>
+<td>传感器句柄被 Python 垃圾回收</td>
+<td><code>sensor</code> 必须保存为对象属性或列表元素</td>
+</tr>
+<tr>
+<td>生成的前车在几十米甚至几百米外</td>
+<td>刚 <code>try_spawn_actor</code> 的 actor 在下一帧前 <code>get_location()</code> 返回 <code>(0,0,0)</code>，用它查车道点会算到地图原点</td>
+<td>生成后调用 <code>settle()</code> 推进一步再计算（本模块已修复）</td>
+</tr>
+<tr>
+<td>车"全油门却越来越慢"，两车最后都停住</td>
+<td>只控制纵向、方向盘恒为 0，车辆沿直线冲出弯道撞上障碍物</td>
+<td>加入横向控制（纯追踪 + 面包屑跟踪）</td>
+</tr>
+<tr>
+<td>自车冲到前车跟前才急刹 / 追尾</td>
+<td>相对速度符号写反：车距的导数本身就是 <script type="math/tex">v_{rel}</script>，再取负号会让阻尼项变成"催油门"</td>
+<td>
+<script type="math/tex">v_{rel} = (d_t - d_{t-1})/\Delta t</script>
+</td>
+</tr>
+<tr>
+<td>前车速度在 10~16 m/s 之间来回摆</td>
+<td>纯 P 控制器没有前馈项，到达目标速度后完全松油门</td>
+<td>增加前馈项 <code>throttle_bias = 0.25</code></td>
+</tr>
+<tr>
+<td>自车在路口跟丢前车，车距一路涨到 365 m</td>
+<td>两车在路口走了不同分支；且没有设定车速，自车为"追车距"无限加速（实测飙到 143 km/h）</td>
+<td>面包屑跟踪 + 设定车速限制</td>
+</tr>
+<tr>
+<td>车辆一出生就往反方向开</td>
+<td>出生点朝向与车道相反</td>
+<td>用 <code>get_spawn_points()</code>，或按 <code>rotation.yaw</code> 设置朝向</td>
+</tr>
+<tr>
+<td>退出后 CARLA 窗口"卡住不动"</td>
+<td>世界仍停留在同步模式</td>
+<td>在 <code>finally</code> 中恢复 <code>apply_settings()</code></td>
+</tr>
+<tr>
+<td>AttributeError: module 'numpy' has no attribute 'bool'</td>
+<td>numpy 版本过高（1.24+）</td>
+<td>安装 <code>numpy&lt;1.24</code></td>
+</tr>
+<tr>
+<td>No module named 'carla'</td>
+<td>安装与运行用了不同解释器</td>
+<td>统一使用 <code>python3</code>（3.10）</td>
+</tr>
+<tr>
+<td><code>BrokenPipeError</code> 且弹出 "ros2 has stopped unexpectedly"</td>
+<td>命令里的 <code>\| head -N</code> 提前关闭了管道</td>
+<td>正常现象，可忽略</td>
+</tr>
+<tr>
+<td><code>ros2 launch</code> 启动即退出，报参数类型不匹配（INTEGER / STRING）</td>
+<td>launch_ros 按默认值字符串"猜"参数类型</td>
+<td>launch 中用 <code>value_type=str</code> 强制按字符串传递</td>
+</tr>
+<tr>
+<td>场景跑满时长后 CARLA 窗口冻结不动、前车继续行驶撞墙</td>
+<td>节点停止 tick 但世界仍在同步模式；且只给自车刹车</td>
+<td>结束时统一刹停所有车辆并恢复异步模式；新版启动时会自动清除上次残留的同步模式</td>
+</tr>
+<tr>
+<td>画面像 3 倍速快进</td>
+<td>主循环未做实时节奏控制</td>
+<td>默认按真实时间 <script type="math/tex">\Delta t</script> 推进；采集数据时可用 <code>--fast</code> 关闭</td>
+</tr>
+<tr>
+<td>雷达读数比真实车距小 9~10 m 且几乎不变</td>
+<td>垂直视场角过大，波束打到路面</td>
+<td>见 3.3 节与世界坐标系下的高度过滤，及第 9 章第 8 条</td>
+</tr>
+<tr>
+<td>动图超过 10 MB 被拒</td>
+<td>录屏分辨率/帧率过高</td>
+<td>ScreenToGif 录制后降到 10 fps、宽 800 px（仓库约定：gif &lt; 10 MB）</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="9">9. 修复记录（自查）</h2>
+<p>本模块在 Ubuntu 虚拟机 + Windows CARLA 服务端联调过程中，共发现并修复 <strong>16 个缺陷</strong>。
+每一项都记录"现象（修复前实测数据）→ 根因 → 修复方法"。<strong>其中第 8~13 条是毫米波雷达的完整排障链路</strong>，
+也是本模块最有工程价值的部分。</p>
+<h3 id="91">9.1 场景与车辆控制</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>现象（修复前实测）</th>
+<th>根因</th>
+<th>修复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>[前车] 初始车距 0.0 m</code>，而真实车距 60.95 m</td>
+<td>新生成的 actor 在下一帧数据到达前 <code>get_location()</code> 返回 <code>(0,0,0)</code>，用它查车道点会算到地图原点</td>
+<td>新增 <code>CarlaSession.settle()</code>，生成后先推进一步</td>
+</tr>
+<tr>
+<td>2</td>
+<td>自车平均车速 2.29 m/s、最小车距 23.91 m，两车最终都停住</td>
+<td>出生点被墙挡住，给油门车也不动</td>
+<td>出生点预检（全油门试跑）+ 自动换点 + <code>diagnose_drive.py</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>预检后自车以 9.00 m/s 冲进场景，2 秒内追尾</td>
+<td>预检结束时自车带着残余速度</td>
+<td>预检通过后销毁试驾车、在原出生点重新生成</td>
+</tr>
+<tr>
+<td>4</td>
+<td>前车"油门 0.8 却从 16 m/s 掉到 10.4 m/s"</td>
+<td>没有横向控制，直行撞路沿</td>
+<td><code>lane_steer()</code> 纯追踪横向控制</td>
+</tr>
+<tr>
+<td>5</td>
+<td>自车全程 <code>油门=1.00</code> 顶上前车（最小 TTC 0.97 s）</td>
+<td>
+<script type="math/tex">v_{rel}</script> 符号写反，阻尼项变成加速项</td>
+<td>修正为 <script type="math/tex">v_{rel} = (d_t - d_{t-1})/\Delta t</script>
+</td>
+</tr>
+<tr>
+<td>6</td>
+<td>前车速度在 10.4~15.9 m/s 之间持续振荡</td>
+<td>P 控制器无前馈项</td>
+<td><code>throttle_bias = 0.25</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>路口跟丢前车，车距 25 → 365 m，自车飙到 39.83 m/s</td>
+<td>两车在路口走不同分支 + 无设定车速</td>
+<td>面包屑跟踪 + <code>v_set</code> 限速项</td>
+</tr>
+<tr>
+<td>16</td>
+<td>画面像 3 倍速快进</td>
+<td>主循环"能跑多快就跑多快"，30 s 仿真 10 s 就放完</td>
+<td>实时节奏控制（每步睡够 <script type="math/tex">\Delta t</script>），可用 <code>--fast</code> 关闭</td>
+</tr>
+</tbody>
+</table>
+<h3 id="92">9.2 毫米波雷达排障链路（核心）</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>现象（修复前实测）</th>
+<th>根因</th>
+<th>修复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8</td>
+<td>雷达读数恒定 15 m（真值 25 m，差 9.7 m），雷达—真值相关系数 <strong>−0.079</strong></td>
+<td>垂直视场角 10°（下沿 5°），波束打到路面：<script type="math/tex">1.2/\tan 5° \approx 13.7</script> m，比前车还近</td>
+<td>垂直视场角改为 4°；并按回波高度过滤 <script type="math/tex">h = h_{mount} + d\sin\theta</script>，只保留 0.25~3 m 的回波</td>
+</tr>
+<tr>
+<td>9</td>
+<td>雷达在弯道跳到 <strong>49.8 m</strong>（先锁到护栏，再沿护栏一帧帧"走"出去）</td>
+<td>只做高度过滤仍会锁到静止杂波</td>
+<td><strong>多普勒速度过滤</strong>：径向速度 &gt; 8 m/s 的回波判为静止目标（护栏/墙面/路面）</td>
+</tr>
+<tr>
+<td>10</td>
+<td>雷达读数从 21 m 突跳到 90 m</td>
+<td>车辆过弯时前车偏出 ±8° 方位角窗口，"最近回波"变成几十米外的建筑</td>
+<td><strong>门限跟踪</strong>：用上一帧距离外推预测，只接受 ±3 m 内的回波</td>
+</tr>
+<tr>
+<td>11</td>
+<td>雷达长期冻结在 4.0 m（偏差均值 <strong>+19.05 m</strong>，87% 的帧偏差 &gt; 5 m）</td>
+<td>丢锁时"保持上一次测量值"，航迹滑到近处杂波后，±3 m 门限永远接不到 20 多米外的真前车 → <strong>永久失锁</strong></td>
+<td>外推距离限幅 ±5 m；超过 1.25 s 直接<strong>重新捕获最近的有效回波</strong></td>
+</tr>
+<tr>
+<td>12</td>
+<td>每个工况前 2~3 帧雷达输出 100 m（量程上限），并触发一次急刹</td>
+<td>进入控制循环时雷达第一帧数据还没到</td>
+<td>进循环前等待第一帧有效数据</td>
+</tr>
+<tr>
+<td>13</td>
+<td>在线闭环在弯道丢锁后直冲前车（最小 TTC <strong>0.39 s</strong>，估计误差 <strong>−21 m</strong>）</td>
+<td>感知网络在训练分布之外"外推"，MLP 输出完全失真</td>
+<td>训练时记录各输入/输出的 min/max，部署时<strong>裁剪回训练范围</strong></td>
+</tr>
+<tr>
+<td>14</td>
+<td>雷达丢锁外推时出现 −780 m/s 的接近速度，航迹锁死到 1 m</td>
+<td>外推出的距离又被下一帧用来算接近速度，形成"外推 → 差分 → 再外推"正反馈</td>
+<td>丢锁帧不更新接近速度；接近速度限幅 ±30 m/s</td>
+</tr>
+</tbody>
+</table>
+<h3 id="93">9.3 工程与集成</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>现象</th>
+<th>根因</th>
+<th>修复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>15a</td>
+<td><code>ros2 launch</code> 启动即退出，报参数类型不匹配（INTEGER / STRING）</td>
+<td><code>launch_ros</code> 按默认值字符串"猜"类型（<code>'2000'</code> → INTEGER），与节点声明的 STRING 冲突</td>
+<td>launch 中用 <code>value_type=str</code> 强制按字符串传递</td>
+</tr>
+<tr>
+<td>15b</td>
+<td>场景跑满 60 s 后 CARLA 窗口冻结不动，前车继续行驶撞墙</td>
+<td>①节点停止 tick 但世界仍在同步模式；②只给自车刹车，前车保留最后一条控制指令</td>
+<td>结束时统一刹停所有车辆并<strong>恢复异步模式</strong>；启动时检测并自愈上一次残留的同步模式</td>
+</tr>
+<tr>
+<td>—</td>
+<td>数据质量不可见，脏数据会静默污染训练</td>
+<td>缺少数据体检环节</td>
+<td>新增 <code>analyze_dataset.py</code>（逐工况体检）与训练时的<strong>按帧剔除</strong>（本次剔除 10.4%）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="94">9.4 修复后的最终实测结果</h3>
+<p><strong>经典 ACC</strong>（Town03 / ClearNoon / decelerate / 30 s）：</p>
+<pre class="highlight"><code>  t=  0.0s  雷达= 21.19m  真值= 24.98m  自车=16.30 m/s  前车=15.99 m/s
+  t= 10.0s  雷达= 15.90m  真值= 19.43m  自车= 7.22 m/s  前车= 6.01 m/s
+  t= 29.5s  雷达=  8.03m  真值= 11.68m  自车= 4.48 m/s  前车= 4.44 m/s
+[结果] 平均车距误差 2.97 m | 最小车距 11.66 m | 最小 TTC 5.50 s | 平均车速 7.30 m/s</code></pre>
+<p><strong>神经网络控制器</strong>（同一场景）：</p>
+<pre class="highlight"><code>  t=  0.0s  雷达= 21.16m  真值= 24.98m  估计= 24.85m(误差-0.13)
+  t= 15.0s  雷达= 12.40m  真值= 15.98m  估计= 16.08m(误差+0.09)
+  t= 29.5s  雷达= 11.75m  真值= 15.37m  估计= 13.97m(误差-1.40)
+[结果] 平均车距误差 4.06 m | 最小车距 13.31 m | 最小 TTC 3.34 s | 平均车速 7.23 m/s</code></pre>
+<hr/>
+<h2 id="10">10. 参考</h2>
+<ol>
+<li>CARLA 官方文档：<a href="https://carla.readthedocs.io/">https://carla.readthedocs.io/</a></li>
+<li>仓库内已有示例：<a href="https://openhutb.github.io/ros2/set_up_and_connect_to_carla/">设置并连接到 Carla 模拟器</a></li>
+<li>CARLA Python API 发行版（Python 3.10/3.11/3.12 wheel）：<a href="https://pypi.org/project/carla/0.9.16/">https://pypi.org/project/carla/0.9.16/</a></li>
+<li>固定车头时距（CTH）ACC 模型：<a href="https://carla.readthedocs.io/en/latest/adv_vehicle_physics/">CARLA 官方文档</a>（车头时距与期望车距的定义）</li>
+</ol></div>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../car_2d_target_tracker/" title="2D 小车目标追踪仿真"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../weather_perception_benchmark/" title="恶劣雨雾天气下多传感器感知性能对比实验">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../car_2d_target_tracker/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../weather_perception_benchmark/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../..";</script>
+<script src="../../js/theme_extra.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../js/umlconvert.js"></script>
+<script src="../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script>mermaid.initialize({});</script></body>
+</html>

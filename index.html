@@ -58,6 +58,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ubuntu20.04/">安装 ROS</a>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="chap2/ros2_pubsub_py/">ROS2 话题发布订阅基础实验（talker/listener）</a>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">ROS 教程</span></p>
 <ul>
@@ -69,7 +71,13 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="chapter/chap4/">4. 机器人仿真</a>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="chapter/chap5/">5. 机器人感知</a>
+<li class="toctree-l1"><a class="reference internal">5. 机器人感知</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="chapter/chap5/">章节首页</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="chapter/chap5/lidar_obstacle_nn/">激光雷达 NN 障碍物分类</a>
+</li>
+</ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="chapter/chap6/">6. 机器人 SLAM 与自主导航</a>
 </li>
@@ -83,6 +91,16 @@
 <p class="caption"><span class="caption-text">人形机器人</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="humanoid/humanoid_keyboard_control/">人形机器人键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="humanoid/panda_keyboard_control/">键盘操控仿真机械臂</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="humanoid/humanoid_push_recovery/">人形机器人平衡控制与外力抗扰恢复</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="humanoid/humanoid_ppo_locomotion/">人形机器人 PPO 神经网络平衡控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="humanoid/mujoco_hopper_demo/">MuJoCo单足弹跳机器人简单仿真</a>
 </li>
 </ul>
 <p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
@@ -102,21 +120,37 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ground/r2d2_cruise/">R2D2小车 自动巡航</a>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="ground/waypoint/">路径点发布器</a>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ground/ad_agent/">自动驾驶代理</a>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ground/ad_demo/">自动驾驶示例</a>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ground/rostopic_cruise/">rostopic 手动驱动</a>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="ground/ros_scenario_runner/">ROS Scenario Runner</a>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ground/rviz_plugin/">RVIZ Carla 插件</a>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ground/carla_tsr_ros/">交通标志识别 ROS 封装</a>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ground/mujoco_diff_drive_slip_compensation/">MuJoCo 差速小车轮滑感知与轨迹补偿</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ground/car_2d_target_tracker/">2D 小车目标追踪仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ground/carla_nn_car_following/">神经网络自适应跟车(ACC)</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ground/weather_perception_benchmark/">恶劣雨雾天气下多传感器感知性能对比实验</a>
 </li>
 </ul>
 <p class="caption"><span class="caption-text">空域载具</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="air/payload_mass_estimation/">无人机载荷质量估计</a>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="air/telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
@@ -127,9 +161,13 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="air/rooftop_landing/">无人机屋顶降落</a>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="air/uav_keyboard_control/">无人机键盘控制</a>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="air/uav_rl_benchmark/">强化学习对比实验（PPO/SAC/TD3）</a>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="air/drone_teleop/">无人机终端键盘遥控器</a>
 </li>
@@ -137,9 +175,13 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="air/uav_mujoco_sim/">MuJoCo 四旋翼仿真与 ROS2 桥接底座</a>
+</li>
 <li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="air/waypoint_tracking/">无人机航点轨迹跟踪（PID 控制）</a>
 </li>
 <li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
 <ul>
@@ -149,7 +191,11 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="air/octree_uav_3d_pathfinding/astar_planning/">八叉树上的 A* 全局寻路</a>
+</li>
 </ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="air/no_fly_zone_check/">禁飞区检测</a>
 </li>
@@ -160,7 +206,19 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="water/HoloOcean/">水域载具 ROS2 接口</a>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+<li class="toctree-l1"><a class="reference internal">环境搭建</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="water/HoloOcean-Windows-Setup/">HoloOcean Windows 本机环境搭建</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="water/docker/">Docker 开发环境</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="water/docker_runtime/">HoloOcean ROS2 运行时容器</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="water/holoocean_examples/">水域载具示例</a>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
 </li>
@@ -168,15 +226,15 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="water/mjc_rov_current_teleop/">动态洋流ROV MuJoCo仿真与MLP巡航控制</a>
+<li class="toctree-l1"><a class="reference internal" href="water/mjc_rov_sonar_cnn/">侧扫声呐图像仿真与 CNN 海底目标分类</a>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="water/mjc_rov_sonar_cnn/">侧扫声呐图像仿真与CNN海底目标分类</a>
+<li class="toctree-l1"><a class="reference internal" href="water/mjc_rov_current_teleop/">动态洋流 ROV 键盘遥操与 MLP 巡航控制</a>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="water/mjc_rov_ppo_tracking/">手写PPO强化学习ROV轨迹跟踪与PID对比</a>
+<li class="toctree-l1"><a class="reference internal" href="water/underwater_sonar_mapping/">新增水下三维地形测绘模块</a>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="water/mjc_rov_docking_nav/">水下ROV对接任务声呐扫描与CNN标记检测</a>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="water/mjc_rov_rl_compare/">同一ROV任务PPO与SAC强化学习算法对比</a>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ubuntu2004-local-llm-deploy/">自装ubuntu20.04本地大模型部署教程</a>
 </li>
 </ul>
 </div>
@@ -203,6 +261,20 @@
 <div class="section" itemprop="articleBody">
 <div><h1 id="ros"><a href="https://github.com/OpenHUTB/ros2">模拟器的 ROS 文档</a></h1>
 <p>欢迎使用 OpenHUTB 的  ROS 文档 <sup id="fnref:macenski2022robot"><a class="footnote-ref" href="#fn:macenski2022robot">1</a></sup>。</p>
+<p><span id="submission-guide"></span>
+<strong>提交项目之前</strong>，请按以下指引自查，并阅读<a href="https://github.com/OpenHUTB/ros2#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">仓库提交约定</a>。PR 模板只列常见检查项；具体任务、模拟器和验收要求以老师及维护者说明为准。</p>
+<details>
+<summary>展开项目提交与复现指引</summary>
+<ol>
+<li><strong>确认提交范围。</strong> 在 Files changed 中逐个检查新增、修改和删除。不要提交 build、install、log 等无关生成目录、备份或重复文件，不用个人项目内容覆盖仓库首页及公共配置。需要修改公共内容时说明原因与影响。</li>
+<li><strong>整理模块与启动入口。</strong> 源码放在 src 对应模块，教程放在 docs 对应模块，文件使用英文下划线命名。提供 main.* 和 launch，核对包名、可执行名、依赖、模型路径及安装规则，完善实际包描述、维护信息和许可证。</li>
+<li><strong>按文档完整运行。</strong> README 写清实际验证的系统、ROS、Python、模拟器和关键依赖版本，以及获取源码、安装、构建、加载环境、启动和停止步骤，注明执行目录。建议从新终端操作，检查键盘输入、运动方向、状态切换、退出停车和异常清理。</li>
+<li><strong>准确说明验证范围。</strong> 区分节点启动、话题通信、可视化演示与完整仿真效果。固定速度发布不等于轨迹跟踪，离线测试不等于在线闭环验证。指标注明定义、单位、场景与测量方法，保留必要日志；未验证的内容和简化假设如实说明。</li>
+<li><strong>检查网页与配图。</strong> 新模块在本首页和 mkdocs.yml 增加入口，运行 <code>mkdocs serve --livereload</code> 检查相关页面、链接、公式和流程图。使用真实运行截图而非拍照，示意图明确标注；PNG 小于 3 MB、GIF 小于 10 MB，大量数据提供持久下载链接。</li>
+<li><strong>完成说明与复核。</strong> PR 标题和提交信息说明修改目的，使用大模型时声明具体工具并对内容负责。合并前至少一名其他人在另一台机器测试并同意，不能用作者自测替代。纯文档或局部修复按实际影响检查，不要求新增无关模块。</li>
+</ol>
+<p>以上结合仓库要求和复现建议整理，不作为新增评分标准。也可参阅<a href="https://github.com/OpenHUTB/doc#%E6%92%B0%E5%86%99%E8%A7%84%E8%8C%83">文档撰写约定</a>和<a href="https://github.com/OpenHUTB/.github/blob/master/CONTRIBUTING.md">贡献指南</a>。</p>
+</details>
 <ul>
 <li><a href="#list">简介</a></li>
 <li><a href="#list">入门</a></li>
@@ -238,9 +310,14 @@
 <li><a href="chapter/chap8/">第 8 章</a> - ROS 机器人综合应用</li>
 <li><a href="chapter/chap9/">第 9 章</a> - ROS 2</li>
 </ul>
+<p>ROS 2 话题发布订阅基础实验（talker/listener）：<a href="chap2/ros2_pubsub_py/">chap2/ros2_pubsub_py</a></p>
 <h2 id="2">2. 人形机器人 <span id="humanoid"></span></h2>
 <ul>
 <li><a href="humanoid/humanoid_basics/">人形机器人基础</a></li>
+<li><a href="humanoid/humanoid_keyboard_control/">人形机器人键盘运动控制</a></li>
+<li><a href="humanoid/humanoid_push_recovery/">人形机器人平衡控制与外力抗扰恢复</a></li>
+<li><a href="humanoid/humanoid_ppo_locomotion/">人形机器人 PPO 神经网络平衡控制</a></li>
+<li><a href="humanoid/mujoco_hopper_demo/">MuJoCo单足弹跳机器人简单仿真</a></li>
 </ul>
 <h2 id="3">3. 肌肉骨骼人 <span id="musculoskeletal"></span></h2>
 <ul>
@@ -253,18 +330,27 @@
 <li><a href="ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a></li>
 <li><a href="ground/ackermann_control/">阿克曼控制</a></li>
 <li><a href="ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a></li>
+<li><a href="ground/r2d2_cruise/">R2D2小车自动巡航仿真</a></li>
 <li><a href="ground/waypoint/">路径点发布器</a></li>
 <li><a href="ground/ad_agent/">自动驾驶代理</a></li>
 <li><a href="ground/ad_demo/">自动驾驶示例</a></li>
+<li><a href="ground/rostopic_cruise/">rostopic 手动驱动</a></li>
 <li><a href="ground/ros_scenario_runner/">ROS Scenario Runner</a></li>
 <li><a href="ground/rviz_plugin/">RVIZ Carla 插件</a></li>
 <li><a href="ground/twist_to_control/">扭转控制</a></li>
 <li><a href="ground/rqt_plugin/">RQT 插件</a></li>
 <li><a href="ground/pcl_recorder/">点云地图创建</a></li>
 <li><a href="ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a></li>
+<li><a href="ground/mujoco_diff_drive_slip_compensation/">MuJoCo 差速小车轮滑感知与轨迹补偿</a></li>
+<li><a href="ground/car_2d_target_tracker/">2D 小车目标追踪仿真</a></li>
+<li><a href="ground/carla_nn_car_following/">基于神经网络的无人小车自适应跟车（ACC）</a></li>
+<li><a href="ground/weather_perception_benchmark/">恶劣雨雾天气下多传感器感知性能对比实验</a></li>
 </ul>
 <h2 id="5">5. 空域载具 <span id="air_vehicle"></span></h2>
 <ul>
+<li>
+<p><a href="air/payload_mass_estimation/">无人机载荷质量估计</a></p>
+</li>
 <li>
 <p><a href="air/flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a></p>
 </li>
@@ -281,14 +367,21 @@
 <p><a href="air/octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a></p>
 </li>
 <li>
+<p><a href="air/octree_uav_3d_pathfinding/astar_planning/">八叉树上的 A* 全局寻路</a></p>
+</li>
+<li>
 <p><a href="air/ros_pkgs/">空域模拟器的 ROS 封装器</a></p>
 </li>
 <li><a href="air/carlair_ros_bridge/">无人机与 ROS 的桥接模块</a></li>
+<li><a href="air/rooftop_landing/">无人机屋顶降落</a> —— 用机载 LiDAR 检测屋顶平面，取轮廓的最大内切圆圆心作为降落点，自主飞抵其上方后垂直降落</li>
 <li>
 <p><a href="air/uav_keyboard_control/">无人机键盘控制</a></p>
 </li>
 <li>
 <p><a href="air/uav_ppo_nav/">基于 PPO 的无人机导航避障</a></p>
+</li>
+<li>
+<p><a href="air/uav_rl_benchmark/">无人机导航强化学习对比实验（PPO/SAC/TD3）</a></p>
 </li>
 <li>
 <p><a href="air/drone_teleop/">无人机终端键盘遥控器</a></p>
@@ -297,7 +390,13 @@
 <p><a href="air/drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a></p>
 </li>
 <li>
+<p><a href="air/waypoint_tracking/">无人机航点轨迹跟踪（PID 控制）</a></p>
+</li>
+<li>
 <p><a href="air/state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a></p>
+</li>
+<li>
+<p><a href="air/uav_mujoco_sim/">MuJoCo 四旋翼仿真与 ROS2 桥接底座</a></p>
 </li>
 <li>
 <p><a href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a></p>
@@ -306,13 +405,29 @@
 <p><a href="ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a> —— 基于 AirSim 的无人机主动感知覆盖路径规划，在 OverFOMO 自适应覆盖规划的基础上进一步决定「该去哪里看」</p>
 </li>
 <li>
-<p><a href="air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a> —— 在学习型时间分配的避障轨迹规划基础上，补齐键盘航点下发、地图常驻转发与轨迹记录的人机交互层</p>
+<p><a href="air/openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a></p>
 </li>
+<li><a href="air/allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a> —— 在学习型时间分配的避障轨迹规划基础上，补齐键盘航点下发、地图常驻转发与轨迹记录的人机交互层</li>
 </ul>
 <h2 id="6">6. 水域载具  <span id="water_vehicle"></span></h2>
 <ul>
 <li>
 <p><a href="water/HoloOcean/">水域载具 ROS2 接口</a></p>
+</li>
+<li>
+<p><a href="water/HoloOcean-Windows-Setup/">HoloOcean Windows 本机环境搭建</a> —— 在 Windows 上用 Conda 安装 Python 客户端、下载场景包并跑通第一个仿真</p>
+</li>
+<li>
+<p><a href="water/WSL_HoloOcean2_ROS2/">WSL 跑通 HoloOcean2 的 ROS2 示例（无头模式）</a> —— 无 GPU 环境下用 <code>-nullrhi</code> 参数跑无头仿真</p>
+</li>
+<li>
+<p><a href="water/docker/">Docker 开发环境</a> —— 开发容器与工作空间挂载</p>
+</li>
+<li>
+<p><a href="water/docker_runtime/">HoloOcean ROS2 运行时容器</a> —— 用 <code>build_container.sh</code> 构建运行时镜像</p>
+</li>
+<li>
+<p><a href="water/holoocean_examples/">水域载具示例（手柄 / 航点 / 深度航向指令）</a> —— 多代理手柄控制、相机 HUD 与配置文件结构</p>
 </li>
 <li>
 <p><a href="water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a></p>
@@ -324,19 +439,13 @@
 <p><a href="water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a></p>
 </li>
 <li>
-<p><a href="water/mjc_rov_current_teleop/">动态洋流ROV MuJoCo仿真与MLP巡航控制</a></p>
+<p><a href="water/underwater_sonar_mapping/">新增水下三维地形测绘模块</a></p>
 </li>
 <li>
-<p><a href="water/mjc_rov_sonar_cnn/">侧扫声呐图像仿真与CNN海底目标分类</a></p>
+<p><a href="water/mjc_rov_current_teleop/">动态洋流 ROV 键盘遥操与 MLP 巡航控制</a></p>
 </li>
 <li>
-<p><a href="water/mjc_rov_ppo_tracking/">手写PPO强化学习ROV轨迹跟踪与PID对比</a></p>
-</li>
-<li>
-<p><a href="water/mjc_rov_docking_nav/">水下ROV对接任务声呐扫描与CNN标记检测</a></p>
-</li>
-<li>
-<p><a href="water/mjc_rov_rl_compare/">同一ROV任务PPO与SAC强化学习算法对比</a></p>
+<p><a href="water/mjc_rov_sonar_cnn/">侧扫声呐图像仿真与 CNN 海底目标分类</a></p>
 </li>
 </ul>
 <hr/>

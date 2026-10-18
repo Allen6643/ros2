@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>无人机载荷质量估计 - 模拟器的 ROS 文档</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../extra.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "\u65e0\u4eba\u673a\u8f7d\u8377\u8d28\u91cf\u4f30\u8ba1";
+        var mkdocs_page_input_path = "air\\payload_mass_estimation.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../.."> 模拟器的 ROS 文档
+        </a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ubuntu20.04/">安装 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chap2/ros2_pubsub_py/">ROS2 话题发布订阅基础实验（talker/listener）</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">ROS 教程</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap1/chap1/">1. 认识 ROS</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap2/">2. ROS 基础 - ROS 基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap3/">3. 机器人系统设计</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap4/">4. 机器人仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">5. 机器人感知</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../chapter/chap5/">章节首页</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../chapter/chap5/lidar_obstacle_nn/">激光雷达 NN 障碍物分类</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap6/">6. 机器人 SLAM 与自主导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap7/">7. 阿克曼四轮小车运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap8/">8. ROS 机器人综合应用</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../chapter/chap9/">9. ROS 2</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">人形机器人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_basics/">人形机器人基础</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_keyboard_control/">人形机器人键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/panda_keyboard_control/">键盘操控仿真机械臂</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_push_recovery/">人形机器人平衡控制与外力抗扰恢复</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/humanoid_ppo_locomotion/">人形机器人 PPO 神经网络平衡控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../humanoid/mujoco_hopper_demo/">MuJoCo单足弹跳机器人简单仿真</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../musculoskeletal/musculoskeletal_basics/">肌肉骨骼人基础</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">地面载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up_and_connect_to_carla/">手动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_spawn_objects/">生成对象</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_keyboard_control/">地面载具物理仿真与键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ackermann_control/">阿克曼控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_perception_control/">传感器感知与给定轨迹跟踪（神经网络版）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/r2d2_cruise/">R2D2小车 自动巡航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/waypoint/">路径点发布器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ad_agent/">自动驾驶代理</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ad_demo/">自动驾驶示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/rostopic_cruise/">rostopic 手动驱动</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/ros_scenario_runner/">ROS Scenario Runner</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/rviz_plugin/">RVIZ Carla 插件</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_tsr_ros/">交通标志识别 ROS 封装</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/mujoco_diff_drive_slip_compensation/">MuJoCo 差速小车轮滑感知与轨迹补偿</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/car_2d_target_tracker/">2D 小车目标追踪仿真</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/carla_nn_car_following/">神经网络自适应跟车(ACC)</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ground/weather_perception_benchmark/">恶劣雨雾天气下多传感器感知性能对比实验</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">空域载具</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal current" href="#">无人机载荷质量估计</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#_2">数据与方法</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_3">实验结果</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#_4">正常标定条件</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_5">推力标定偏差</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_6">运行</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ros2">ROS2 接口</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_7">复现实验</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../flight_pattern_recognition/">无人机飞行轨迹类型识别与 ROS2 自动任务日志</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../telemetry_diagnostics/">无人机遥测异常检测与 ROS2 在线诊断</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../setup_and_connect/">建立虚拟机和空域载具之间的连接</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ros_pkgs/">空域模拟器的 ROS 封装器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../carlair_ros_bridge/">无人机与 ROS 的桥接模块</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rooftop_landing/">无人机屋顶降落</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../uav_keyboard_control/">无人机键盘控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../uav_ppo_nav/">基于 PPO 的无人机导航避障</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../uav_rl_benchmark/">强化学习对比实验（PPO/SAC/TD3）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drone_teleop/">无人机终端键盘遥控器</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drone_ros_teleop/">基于 ROS 消息解耦的无人机键盘遥控</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../state_prediction/">基于 GRU 的无人机飞行状态预测与 ROS2 在线误差分析</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../uav_mujoco_sim/">MuJoCo 四旋翼仿真与 ROS2 桥接底座</a>
+</li>
+<li class="toctree-l1"><a class="" href="https://openhutb.github.io/air_doc/airsim_tutorial_pkgs/">低空载具的 ROS 示例教程</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ap_cpp_overfomo/">AP-CPP 主动感知覆盖路径规划</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../waypoint_tracking/">无人机航点轨迹跟踪（PID 控制）</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">空域载具八叉树三维寻路</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../octree_uav_3d_pathfinding/env_setup/">环境配置与前置准备</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../octree_uav_3d_pathfinding/flight_control/">AirSim 载具与位置控制</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../octree_uav_3d_pathfinding/occupancy_mapping/">点云转八叉树占用地图</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../octree_uav_3d_pathfinding/astar_planning/">八叉树上的 A* 全局寻路</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../openhutb_yolo_mlp_control/">YOLO目标检测与八字轨迹控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../no_fly_zone_check/">禁飞区检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../allocnet_teleop/">AllocNet 四旋翼避障规划与键盘遥操作</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">水域载具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../water/HoloOcean/">水域载具 ROS2 接口</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">环境搭建</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../water/HoloOcean-Windows-Setup/">HoloOcean Windows 本机环境搭建</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../water/WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../water/docker/">Docker 开发环境</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../water/docker_runtime/">HoloOcean ROS2 运行时容器</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/holoocean_examples/">水域载具示例</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_physical_simulation/">水下机器人物理仿真与 6-DOF 键盘运动控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/mjc_rov_sonar_cnn/">侧扫声呐图像仿真与 CNN 海底目标分类</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/mjc_rov_current_teleop/">动态洋流 ROV 键盘遥操与 MLP 巡航控制</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../water/underwater_sonar_mapping/">新增水下三维地形测绘模块</a>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ubuntu2004-local-llm-deploy/">自装ubuntu20.04本地大模型部署教程</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">模拟器的 ROS 文档</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a></li>
+<li class="breadcrumb-item">空域载具</li>
+<li class="breadcrumb-item active">无人机载荷质量估计</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/air/payload_mass_estimation.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<div><h1 id="_1">无人机载荷质量估计</h1>
+<p>这个项目用飞行中的推力和速度数据估计无人机搭载物的质量。比如同样的推力下，载荷变化会影响竖直运动响应，模型据此给出以 kg 为单位的估计值。</p>
+<p>项目复用 OpenHUTB 社区 <a href="https://github.com/OpenHUTB/ros2/pull/178">PR #178</a> 的四旋翼模型，增加质量变化实验、神经网络训练、物理公式对照和 ROS2 回放。模型文件、来源版本及许可说明见 <a href="models/source.json">来源记录</a> 和 <a href="THIRD_PARTY_NOTICES/">第三方说明</a>。采集数据和估计程序为本项目新增。</p>
+<p>目前实验限定为水平姿态下的竖直飞行，已知空机质量及推力标定。这里的“载荷”是附加质量，与着陆时的接地力不同。</p>
+<p><img alt="MuJoCo 仿真场景" src="docs/simulation.png"/></p>
+<p>载荷通过调整机身质量表示，没有单独绘制货物。上图由同一实验重新运行后渲染，脚本检查重跑的物理数据与保存记录一致。</p>
+<h2 id="_2">数据与方法</h2>
+<p>共采集 180 次 MuJoCo 飞行，每次 12 秒。90 次训练、30 次验证、30 次正常测试，另外 30 次用于推力标定偏差测试。整次飞行只属于一个集合；归一化只使用训练集。原始数据和校验清单保存在 <code>assets/flights.zip</code>。</p>
+<p>空机总质量为 0.95 kg，其中机身 0.85 kg，四个旋翼合计 0.10 kg。附加质量在 0～0.4 kg 间随机选取。控制器使用固定参数，不读取真实载荷；高度目标含小幅正弦变化。改变质量时沿用原有转动惯量，本实验不讨论载荷偏心和姿态控制。</p>
+<p>物理步长为 2.5 ms，记录频率为 20 Hz。在记录的竖直速度上加入标准差为 0.025 m/s 的高斯噪声。传感器延迟、推力噪声、风和姿态扰动没有包含在正常实验中。</p>
+<p>模型使用最近 20 个采样点中的 19 个推力值和 19 个速度差分加速度，共 38 个输入。推力按前一采样时刻对齐，因为该指令作用于随后一段时间。高度、真实质量、飞行编号和未来观测不进入网络。20 个点覆盖 0.95 秒。</p>
+<p>网络为 38→48→24→1 的 MLP，隐藏层使用 Tanh，输出载荷质量。训练 160 轮，按验证集均方误差保存模型。使用 42、43、44 三个随机种子；ROS2 演示固定使用 <code>mlp_42</code>。消融模型 <code>no_thrust_42</code> 只保留加速度输入。</p>
+<p>物理基线使用同一窗口的冲量关系：</p>
+<pre class="highlight"><code class="language-text">总质量 = sum(指令推力 × dt) / (窗口末速度 - 窗口初速度 + g × 窗口时长)
+载荷质量 = 总质量 - 0.95 kg</code></pre>
+<h2 id="_3">实验结果</h2>
+<h3 id="_4">正常标定条件</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th style="text-align: right;">窗口 MAE（g）</th>
+<th style="text-align: right;">窗口 RMSE（g）</th>
+<th style="text-align: right;">整次飞行平均值 MAE（g）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mlp_42</td>
+<td style="text-align: right;">3.538</td>
+<td style="text-align: right;">4.436</td>
+<td style="text-align: right;">1.463</td>
+</tr>
+<tr>
+<td>mlp_43</td>
+<td style="text-align: right;">2.919</td>
+<td style="text-align: right;">3.794</td>
+<td style="text-align: right;">0.973</td>
+</tr>
+<tr>
+<td>mlp_44</td>
+<td style="text-align: right;">2.843</td>
+<td style="text-align: right;">3.619</td>
+<td style="text-align: right;">0.849</td>
+</tr>
+<tr>
+<td>no_thrust_42</td>
+<td style="text-align: right;">79.825</td>
+<td style="text-align: right;">100.110</td>
+<td style="text-align: right;">72.744</td>
+</tr>
+<tr>
+<td>physics_impulse</td>
+<td style="text-align: right;">3.683</td>
+<td style="text-align: right;">4.636</td>
+<td style="text-align: right;">0.709</td>
+</tr>
+<tr>
+<td>train_mean</td>
+<td style="text-align: right;">81.641</td>
+<td style="text-align: right;">100.990</td>
+<td style="text-align: right;">81.641</td>
+</tr>
+</tbody>
+</table>
+<p>表中每种方法都评估 30 次未用于训练的飞行，共 690 个重叠窗口。窗口不是相互独立的飞行样本，因此同时列出“每次飞行先平均预测，再计算误差”的结果。</p>
+<p>主模型的窗口 MAE 为 3.54 g，物理基线为 3.68 g，两者接近；整次飞行平均后，物理基线的表现见表。这里不据此认定神经网络普遍优于物理方法。去掉推力输入后误差明显增大，说明仅靠运动响应不足以完成当前设置下的估计。</p>
+<h3 id="_5">推力标定偏差</h3>
+<p>这一组将实际推力改为指令的 95% 或 105%，但估计器仍只接收原指令，不提供偏差值，也不重新训练。</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th style="text-align: right;">窗口 MAE（g）</th>
+<th style="text-align: right;">窗口 RMSE（g）</th>
+<th style="text-align: right;">整次飞行平均值 MAE（g）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mlp_42</td>
+<td style="text-align: right;">57.360</td>
+<td style="text-align: right;">57.773</td>
+<td style="text-align: right;">57.360</td>
+</tr>
+<tr>
+<td>mlp_43</td>
+<td style="text-align: right;">55.768</td>
+<td style="text-align: right;">56.278</td>
+<td style="text-align: right;">55.768</td>
+</tr>
+<tr>
+<td>mlp_44</td>
+<td style="text-align: right;">56.886</td>
+<td style="text-align: right;">57.253</td>
+<td style="text-align: right;">56.886</td>
+</tr>
+<tr>
+<td>no_thrust_42</td>
+<td style="text-align: right;">80.685</td>
+<td style="text-align: right;">101.918</td>
+<td style="text-align: right;">72.834</td>
+</tr>
+<tr>
+<td>physics_impulse</td>
+<td style="text-align: right;">57.073</td>
+<td style="text-align: right;">57.560</td>
+<td style="text-align: right;">57.073</td>
+</tr>
+<tr>
+<td>train_mean</td>
+<td style="text-align: right;">78.999</td>
+<td style="text-align: right;">100.276</td>
+<td style="text-align: right;">78.999</td>
+</tr>
+</tbody>
+</table>
+<p>主模型误差增至约 57 g。神经网络与物理基线都会受推力标定影响；如果推力比例和质量都未知，仅凭这里的输入难以区分两者。</p>
+<p><img alt="训练和验证损失" src="results/loss.png"/>
+<img alt="正常测试集：每次飞行平均估计与真实质量" src="results/comparison.png"/></p>
+<p>运行评估后，详细指标生成到本地 <code>results/metrics.json</code>，逐窗口预测生成到同目录 CSV 中。运行记录不随源码提交，文档保留实验汇总表和展示图片。结果来自当前的简化竖直飞行实验，尚未进行跨控制器、复杂机动、OpenHUTB Unreal 或实机验证。</p>
+<h2 id="_6">运行</h2>
+<p>已验证环境为 VMware Ubuntu 20.04.6、现有 ROS2 Humble、Python 3.8.10、PyTorch 2.4.1+cpu、MuJoCo 3.1.6。使用系统 Python 创建虚拟环境，以便访问 ROS2 库。</p>
+<p>代码目录以下按 <code>~/ros2/src/air/payload_mass_estimation</code> 举例，独立解压时替换为实际路径。系统需已有 ROS2、rclpy、std_msgs 和 launch_ros；缺少 venv 时安装系统 <code>python3-venv</code>。</p>
+<pre class="highlight"><code class="language-bash">cd ~/ros2/src/air/payload_mass_estimation
+source /opt/ros/humble/setup.bash
+/usr/bin/python3 -m venv --system-site-packages ~/uav_prediction_env
+source ~/uav_prediction_env/bin/activate
+python -m pip install -r requirements.txt
+bash main.sh doctor
+bash main.sh prepare
+bash main.sh test
+bash main.sh build</code></pre>
+<p>已有相同虚拟环境时直接激活即可。<code>ROS_SETUP</code> 和 <code>UAV_ENV</code> 可以指定其他 ROS setup 文件和虚拟环境目录。仿真及模型可在 CPU 上运行，无需另下大型场景。</p>
+<p>先在上述终端启动订阅绘图程序：</p>
+<pre class="highlight"><code class="language-bash">MPLBACKEND=Agg python -m payload_mass_estimation.dashboard</code></pre>
+<p>再在第二个终端运行：</p>
+<pre class="highlight"><code class="language-bash">cd ~/ros2/src/air/payload_mass_estimation
+bash main.sh demo</code></pre>
+<p>默认回放 3 次测试飞行，约 36 秒。节点结束后，订阅程序等待 5 秒无新消息便保存图片和计数，最多等待 90 秒；它保存曲线文件，不打开实时窗口。若没有收到消息会报错。</p>
+<p>输出为 <code>results/ros_subscriber.png</code>、<code>results/ros_subscriber.json</code> 和 <code>results/ros_node.json</code>。本次运行发布 720 条观测、663 条预测，订阅端收到全部 663 条预测，两个节点正常退出。</p>
+<p><img alt="ROS2 订阅曲线" src="results/ros_subscriber.png"/></p>
+<p>图中的台阶对应三次独立飞行的切换，不表示飞行途中加载货物。</p>
+<h2 id="ros2">ROS2 接口</h2>
+<table>
+<thead>
+<tr>
+<th>话题</th>
+<th>消息类型</th>
+<th>字段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/payload/observation</code></td>
+<td><code>std_msgs/String</code> JSON</td>
+<td><code>stamp_s</code>、<code>height_m</code>、<code>velocity_z_mps</code>、<code>command_thrust_n</code></td>
+</tr>
+<tr>
+<td><code>/payload/estimate</code></td>
+<td><code>std_msgs/String</code> JSON</td>
+<td><code>stamp_s</code>、<code>mass_kg</code>、<code>physics_kg</code></td>
+</tr>
+</tbody>
+</table>
+<p>输入包将速度和推力放在同一时间戳下，采样间隔为 0.05 秒。估计器收到 20 个有效点后开始输出；时间倒退、间隔异常或非有限值会清空窗口。当前节点为有限回放设计，接收过数据后断流 3 秒会保存记录并退出。</p>
+<p>本项目没有直接接入 <code>carlair_ros_bridge</code>。若接入其他仿真器，需要同时取得同步后的竖直速度和以牛顿为单位的总推力；仅有 <code>/uav/odom</code> 不够。倾斜飞行还需要处理推力的竖直分量。</p>
+<div class="mermaid">flowchart LR
+  A[社区四旋翼模型] --&gt; B[MuJoCo 质量变化实验]
+  B --&gt; C[按整次飞行划分数据]
+  C --&gt; D[训练 MLP 与消融模型]
+  C --&gt; E[独立飞行测试和物理基线]
+  B --&gt; F[同步速度和推力回放]
+  F --&gt; G[ROS2 质量估计节点]
+  D --&gt; G
+  G --&gt; H[订阅曲线与运行记录]
+</div>
+<h2 id="_7">复现实验</h2>
+<p>恢复数据后评估随附模型：</p>
+<pre class="highlight"><code class="language-bash">bash main.sh evaluate</code></pre>
+<p>随附权重可直接评估，不需要训练过程日志。训练曲线图保留在本文中；重新训练后会生成本地 <code>models/*/loss.csv</code>，再次评估时可据此重绘损失曲线。</p>
+<p>如需重新采集、训练，请先复制项目目录，避免覆盖随附数据和模型。在副本中运行：</p>
+<pre class="highlight"><code class="language-bash">bash main.sh collect
+bash main.sh train
+bash main.sh evaluate</code></pre>
+<p>在有图形环境的 Ubuntu 桌面运行 <code>python render_validation.py</code> 可重新渲染仿真图，输出到本地 <code>results/simulation.png</code>。</p>
+<p>8 项测试涵盖模型总质量、已知质量物理公式、时间对齐、在线与离线一致性、输入字段、异常值、采样间隔和飞行划分。<code>doctor</code> 生成本地环境记录 <code>artifacts/environment.json</code>；测试、评估和回放结果由运行命令生成。<code>results/</code>、<code>artifacts/</code>、构建目录、日志和训练过程 CSV 均不提交到仓库。</p>
+<p>代码、实验脚本和文档使用 OpenAI Codex 辅助编写。指标与图片来自程序运行。</p></div>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../../ground/weather_perception_benchmark/" title="恶劣雨雾天气下多传感器感知性能对比实验"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../flight_pattern_recognition/" title="无人机飞行轨迹类型识别与 ROS2 自动任务日志">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>OpenHUTB 版权所有 © 2026</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../../ground/weather_perception_benchmark/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../flight_pattern_recognition/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../..";</script>
+<script src="../../js/theme_extra.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<script src="../../js/umlconvert.js"></script>
+<script src="../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script>mermaid.initialize({});</script></body>
+</html>
