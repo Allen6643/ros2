@@ -6,14 +6,14 @@
 <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <link href="../../img/favicon.ico" rel="shortcut icon"/>
-<title>动态洋流 ROV 键盘遥操与 MLP 巡航控制 - 模拟器的 ROS 文档</title>
+<title>动态洋流ROV MuJoCo仿真与MLP巡航控制 - 模拟器的 ROS 文档</title>
 <link href="../../css/theme.css" rel="stylesheet"/>
 <link href="../../css/theme_extra.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
 <link href="../../extra.css" rel="stylesheet"/>
 <script>
         // Current page data
-        var mkdocs_page_name = "\u52a8\u6001\u6d0b\u6d41 ROV \u952e\u76d8\u9065\u64cd\u4e0e MLP \u5de1\u822a\u63a7\u5236";
+        var mkdocs_page_name = "\u52a8\u6001\u6d0b\u6d41ROV MuJoCo\u4eff\u771f\u4e0eMLP\u5de1\u822a\u63a7\u5236";
         var mkdocs_page_input_path = "water\\mjc_rov_current_teleop.md";
         var mkdocs_page_url = null;
       </script>
@@ -141,7 +141,7 @@
 </li>
 </ul>
 <p class="caption"><span class="caption-text">水域载具</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../HoloOcean/">水域载具 ROS2 接口</a>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../WSL_HoloOcean2_ROS2/">WSL跑通HoloOcean2的ROS2示例方法</a>
@@ -151,6 +151,34 @@
 <li class="toctree-l1"><a class="reference internal" href="../rov_trajectory_tracking/">水下多传感器感知与 3D 轨迹跟踪控制</a>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../rov_sonar_slam_navigation/">水下声呐 SLAM 占据栅格建图与自主避障导航</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="#">动态洋流ROV MuJoCo仿真与MLP巡航控制</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#_1">概述</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_2">运行环境</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_3">动力学模型</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_4">话题</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_5">神经网络</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_6">运行步骤</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_7">性能评价</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#_8">文件清单</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../mjc_rov_sonar_cnn/">侧扫声呐图像仿真与CNN海底目标分类</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../mjc_rov_ppo_tracking/">手写PPO强化学习ROV轨迹跟踪与PID对比</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../mjc_rov_docking_nav/">水下ROV对接任务声呐扫描与CNN标记检测</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../mjc_rov_rl_compare/">同一ROV任务PPO与SAC强化学习算法对比</a>
 </li>
 </ul>
 </div>
@@ -165,7 +193,8 @@
 <div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
 <ul class="wy-breadcrumbs">
 <li><a aria-label="Docs" class="icon icon-home" href="../.."></a></li>
-<li class="breadcrumb-item active">动态洋流 ROV 键盘遥操与 MLP 巡航控制</li>
+<li class="breadcrumb-item">水域载具</li>
+<li class="breadcrumb-item active">动态洋流ROV MuJoCo仿真与MLP巡航控制</li>
 <li class="wy-breadcrumbs-aside">
 <a class="icon icon-github" href="https://github.com/OpenHUTB/ros2/edit/master/docs/water/mjc_rov_current_teleop.md"> Edit on GitHub</a>
 </li>
@@ -272,7 +301,7 @@ sudo apt install libosmesa6</code></pre>
 </table>
 <h2 id="_5">神经网络</h2>
 <p><strong>架构</strong>：MLP（6 → 64 → 32 → 2），Tanh 激活</p>
-<pre class="highlight"><code class="language-text">输入: [ex, ey, eyaw, vx, vy, wz]   # 位置/航向误差 + 当前速度
+<pre class="highlight"><code>输入: [ex, ey, eyaw, vx, vy, wz]   # 位置/航向误差 + 当前速度
 输出: [vx_world, vy_world]          # 世界系期望速度
 损失: MSE（行为克隆回归专家输出）</code></pre>
 <p><strong>训练流程</strong>：
@@ -324,7 +353,7 @@ ros2 run mjc_rov_current_teleop cruise_node</code></pre>
 </table>
 <p>MLP 在洋流扰动下接近专家性能，证明神经网络学会了基本的航点跟踪行为；与专家的差距反映了 BC 方法在动态扰动下的泛化局限。</p>
 <h2 id="_8">文件清单</h2>
-<pre class="highlight"><code class="language-text">mjc_rov_current_teleop/
+<pre class="highlight"><code>mjc_rov_current_teleop/
 ├── package.xml / setup.py / setup.cfg
 ├── requirements.txt / README.md
 ├── main.py / main.sh
@@ -341,6 +370,10 @@ ros2 run mjc_rov_current_teleop cruise_node</code></pre>
 └── resource/mjc_rov_current_teleop</code></pre></div>
 </div>
 </div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../rov_sonar_slam_navigation/" title="水下声呐 SLAM 占据栅格建图与自主避障导航"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../mjc_rov_sonar_cnn/" title="侧扫声呐图像仿真与CNN海底目标分类">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
 <hr/>
 <div role="contentinfo">
 <!-- Copyright etc -->
@@ -358,6 +391,8 @@ ros2 run mjc_rov_current_teleop cruise_node</code></pre>
 <span>
 <a class="fa fa-github" href="https://github.com/OpenHUTB/ros2" style="color: #fcfcfc"> GitHub</a>
 </span>
+<span><a href="../rov_sonar_slam_navigation/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../mjc_rov_sonar_cnn/" style="color: #fcfcfc">Next »</a></span>
 </span>
 </div>
 <script src="../../js/jquery-3.6.0.min.js"></script>
