@@ -60,5 +60,5 @@ ros2 topic hz /rov_teleop/odom                   # 验证话题
 ## 算法说明
 
 - 动力学：代码层 qfrc_applied 施加 浮力补偿 + 黏性阻尼 + 横滚/俯仰自稳 + 时变洋流扰动
-- 神经网络：MLP(6->64->32->2) 行为克隆，输入 [ex,ey,eyaw,vx,vy,wz]，输出 [vx_cmd, yaw_rate_cmd]
+- 神经网络：MLP(6->64->32->2) 行为克隆，输入 [ex,ey,eyaw,vx,vy,wz]，输出 [vx_world, vy_world]（世界系期望速度）
 - 权重不入库，`python3 main.py train` 本地复现
