@@ -28,7 +28,7 @@
 
 真实侧扫声呐回波强度随目标物材质、距离、掠射角变化。本模块用高斯亮斑近似：
 
-```
+```text
 I(x,y) = Σ_i intensity_i · exp(-((x-px_i)² + (y-py_i)²) / (2σ_i²))
 + 高斯噪声 σ=0.05
 ```
@@ -41,7 +41,7 @@ I(x,y) = Σ_i intensity_i · exp(-((x-px_i)² + (y-py_i)²) / (2σ_i²))
 
 ### 3.1 CNN 结构
 
-```
+```text
 Input (1×64×64)
 ├─ Conv2d(1→16, 3×3) + ReLU + MaxPool(2)   → 16×32×32
 ├─ Conv2d(16→32, 3×3) + ReLU + MaxPool(2)   → 32×16×16
@@ -58,7 +58,7 @@ Input (1×64×64)
 
 ### 3.3 训练与测试结果
 
-```
+```text
 [train] epoch  0/30  loss=0.9125
 [train] epoch 10/30  loss=0.0000
 [test] 合成测试集准确率: 1.000 (200/200)
@@ -99,7 +99,7 @@ ros2 run mjc_rov_sonar_cnn classify_node
 
 ## 6. 文件清单
 
-```
+```text
 mjc_rov_sonar_cnn/
 ├── package.xml / setup.py / setup.cfg
 ├── main.py / main.sh
