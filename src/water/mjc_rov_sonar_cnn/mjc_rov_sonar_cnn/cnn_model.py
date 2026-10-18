@@ -12,7 +12,7 @@ from . import common
 class SonarCNN(nn.Module):
     """
     3 层卷积 + 2 层全连接，输入 1x64x64，输出 3 类 logits。
-    为什么这么小：CPU 虚拟机训练，参数 <50k，几秒钟收敛。
+    为什么这么小：CPU 虚拟机训练，参数量约 548k（主要来自 Linear(4096→128)），几秒钟收敛。
     """
     def __init__(self, num_classes=3):
         super().__init__()
