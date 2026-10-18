@@ -113,7 +113,7 @@ ROS每章节运行代码:
 
 * [水下声呐 SLAM 占据栅格建图与自主避障导航](./water/rov_sonar_slam_navigation.md)
 
-* [手写PPO强化学习ROV轨迹跟踪与PID对比](./water/mjc_rov_ppo_tracking.md)
+* [手写 PPO 强化学习 ROV 轨迹跟踪与 PID 基线对比](./water/mjc_rov_ppo_tracking.md)
 
 ___
 
