@@ -113,7 +113,7 @@ ROS每章节运行代码:
 
 * [水下声呐 SLAM 占据栅格建图与自主避障导航](./water/rov_sonar_slam_navigation.md)
 
-* [水下ROV对接任务声呐扫描与CNN标记检测](./water/mjc_rov_docking_nav.md)
+* [水下 ROV 对接任务：声呐扫描 + CNN 标记检测 + 逼近导航](./water/mjc_rov_docking_nav.md)
 
 ___
 
