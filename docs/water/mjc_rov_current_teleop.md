@@ -53,11 +53,7 @@ sudo apt install libosmesa6
 
 **架构**：MLP（6 → 64 → 32 → 2），Tanh 激活
 
-<<<<<<< HEAD
-```
-=======
 ```text
->>>>>>> upstream/master
 输入: [ex, ey, eyaw, vx, vy, wz]   # 位置/航向误差 + 当前速度
 输出: [vx_world, vy_world]          # 世界系期望速度
 损失: MSE（行为克隆回归专家输出）
@@ -107,11 +103,7 @@ MLP 在洋流扰动下接近专家性能，证明神经网络学会了基本的�
 
 ## 文件清单
 
-<<<<<<< HEAD
-```
-=======
 ```text
->>>>>>> upstream/master
 mjc_rov_current_teleop/
 ├── package.xml / setup.py / setup.cfg
 ├── requirements.txt / README.md
