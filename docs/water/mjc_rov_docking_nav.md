@@ -48,9 +48,11 @@ Input (1×32)
 ## 3. 实测结果
 
 ```text
-[train] loss 0.6947 → 0.2769
-[test] 对接标记检测准确率: 0.860 (172/200)
+[train] loss 0.7045 → 0.2270
+[test] 对接标记检测准确率: 0.895 (179/200)
 ```
+
+![对接检测 CNN 训练曲线（实测）](images/pr4_docking.png)
 
 ![对接逼近动画](images/pr4_docking.gif)
 
