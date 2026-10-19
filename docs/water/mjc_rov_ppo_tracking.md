@@ -67,7 +67,9 @@ $$
 [对比] PPO  MAE = 1.987 m
 ```
 
-![PPO vs PID 轨迹对比](images/pr3_tracking.gif)
+![PPO vs PID 轨迹对比（实测）](images/pr3_tracking.png)
+
+![PPO vs PID 轨迹对比动图](images/pr3_tracking.gif)
 
 ## 4. ROS 接口
 
