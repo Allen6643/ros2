@@ -13,6 +13,27 @@
 2. 训练小型 CNN（3 层 Conv + 2 层 FC）做三分类；
 3. ROS 节点实时订阅声呐图，发布分类结果。
 
+## 1.1 运行环境
+
+| 项目 | 版本 |
+|---|---|
+| 操作系统 | Ubuntu 20.04.6 LTS（VMware 虚拟机，无 GPU） |
+| ROS 2 | Humble（`/opt/ros/humble`） |
+| Python | 3.8.10 |
+| MuJoCo | 3.1.x（OSMesa 离屏渲染） |
+| PyTorch | 2.4.1+cpu |
+| NumPy | 1.24.4 |
+
+依赖安装：
+
+```bash
+pip3 install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt
+pip3 install torch==2.4.1+cpu torchvision==0.19.1+cpu \
+  -i https://mirrors.aliyun.com/pypi/simple/ \
+  --extra-index-url https://download.pytorch.org/whl/cpu
+sudo apt install libosmesa6
+```
+
 ## 2. 物理仿真
 
 ### 2.1 场景模型（`models/rov_sonar_pool.xml`）
@@ -28,7 +49,7 @@
 
 真实侧扫声呐回波强度随目标物材质、距离、掠射角变化。本模块用高斯亮斑近似：
 
-```
+```text
 I(x,y) = Σ_i intensity_i · exp(-((x-px_i)² + (y-py_i)²) / (2σ_i²))
 + 高斯噪声 σ=0.05
 ```
@@ -41,7 +62,7 @@ I(x,y) = Σ_i intensity_i · exp(-((x-px_i)² + (y-py_i)²) / (2σ_i²))
 
 ### 3.1 CNN 结构
 
-```
+```text
 Input (1×64×64)
 ├─ Conv2d(1→16, 3×3) + ReLU + MaxPool(2)   → 16×32×32
 ├─ Conv2d(16→32, 3×3) + ReLU + MaxPool(2)   → 32×16×16
@@ -50,7 +71,7 @@ Input (1×64×64)
 └─ Linear(128→3)
 ```
 
-参数量 < 50k，CPU 上 30 个 epoch 约 5 秒收敛。
+参数量约 548k（主要来自 Linear(4096→128) 的 524,416 个参数），CPU 上 30 个 epoch 约 5 秒收敛。
 
 ### 3.2 数据集
 
@@ -58,7 +79,7 @@ Input (1×64×64)
 
 ### 3.3 训练与测试结果
 
-```
+```text
 [train] epoch  0/30  loss=0.9125
 [train] epoch 10/30  loss=0.0000
 [test] 合成测试集准确率: 1.000 (200/200)
@@ -99,7 +120,7 @@ ros2 run mjc_rov_sonar_cnn classify_node
 
 ## 6. 文件清单
 
-```
+```text
 mjc_rov_sonar_cnn/
 ├── package.xml / setup.py / setup.cfg
 ├── main.py / main.sh
