@@ -12,6 +12,27 @@
 
 这是作业要求的"同样模型不同 RL 算法对比"。
 
+## 1.1 运行环境
+
+| 项目 | 版本 |
+|---|---|
+| 操作系统 | Ubuntu 20.04.6 LTS（VMware 虚拟机，无 GPU） |
+| ROS 2 | Humble（`/opt/ros/humble`） |
+| Python | 3.8.10 |
+| MuJoCo | 3.1.x（OSMesa 离屏渲染） |
+| PyTorch | 2.4.1+cpu |
+| NumPy | 1.24.4 |
+
+依赖安装：
+
+```bash
+pip3 install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt
+pip3 install torch==2.4.1+cpu torchvision==0.19.1+cpu \
+  -i https://mirrors.aliyun.com/pypi/simple/ \
+  --extra-index-url https://download.pytorch.org/whl/cpu
+sudo apt install libosmesa6
+```
+
 ## 2. 算法对比
 
 | 特性 | PPO | SAC |
@@ -24,7 +45,7 @@
 
 ## 3. 实测结果
 
-```
+```text
 [对比] PPO  最后10轮平均奖励: -1440.94
 [对比] SAC  最后10轮平均奖励: -400.22
 ```
@@ -46,4 +67,19 @@ colcon build --symlink-install --packages-select mjc_rov_rl_compare
 source install/setup.bash
 bash main.sh
 ros2 launch mjc_rov_rl_compare main.launch.py
+```
+
+## 6. 文件清单
+
+```text
+mjc_rov_rl_compare/
+├── package.xml / setup.py / setup.cfg
+├── main.py / main.sh
+├── mjc_rov_rl_compare/
+│   ├── common.py        # ROV 平面运动仿真环境
+│   ├── rl_compare.py    # PPO 与 SAC 训练 + 对比
+│   └── sim_node.py      # MuJoCo + ROS 发布位姿
+├── launch/main.launch.py
+├── models/rov_rl_pool.xml
+└── config/rl_params.yaml
 ```
