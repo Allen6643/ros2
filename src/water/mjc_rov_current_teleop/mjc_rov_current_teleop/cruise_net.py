@@ -9,7 +9,7 @@ cruise_net.py —— MLP 巡航策略（神经网络成分）。
 输入特征（6 维）：
   [ex, ey, eyaw, vx, vy, wz]   —— 位置/航向误差 + 当前速度
 输出（2 维）：
-  [vx_cmd, yaw_rate_cmd]       —— 发给底层 P 推力控制的期望速度
+  [vx_world, vy_world]       —— 世界系期望速度，直接作为速度指令下发
 """
 import json
 import time
