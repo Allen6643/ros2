@@ -82,6 +82,8 @@
 </li>
 <li class="toctree-l1"><a class="" href="../../humanoid/mujoco_hopper_demo/index.md">MuJoCo单足弹跳机器人简单仿真</a>
 </li>
+<li class="toctree-l1"><a class="" href="../../waypoint_publisher.md">ROS2 Humble 路径点发布器</a>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">肌肉骨骼人</span></p>
 <ul>
@@ -123,6 +125,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../ground/vehicle_pygame_teleop/">车辆键盘遥操作与二维模拟</a>
 </li>
 <li class="toctree-l1"><a class="" href="../../ground/mujoco_diff_drive_slip_compensation.md">MuJoCo 差速小车轮滑感知与轨迹补偿</a>
+</li>
+<li class="toctree-l1"><a class="" href="../../ground/mujoco_car_avoidance.md">MuJoCo 地面小车射线感知与分级减速避障</a>
 </li>
 <li class="toctree-l1"><a class="" href="../../ground/car_2d_target_tracker.md">2D 小车目标追踪仿真</a>
 </li>
@@ -216,7 +220,7 @@
 </li>
 <li class="toctree-l1"><a class="" href="../mjc_rov_current_teleop.md">动态洋流 ROV 键盘遥操与 MLP 巡航控制</a>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../mjc_rov_sonar_cnn/">侧扫声呐图像仿真与 CNN 海底目标分类</a>
+<li class="toctree-l1"><a class="" href="../mjc_rov_sonar_cnn.md">侧扫声呐图像仿真与 CNN 海底目标分类</a>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../mjc_rov_ppo_tracking/">手写 PPO 强化学习 ROV 轨迹跟踪与 PID 基线对比</a>
 </li>
@@ -276,9 +280,9 @@
 神经网络：两种强化学习算法（PPO vs SAC），相同 ROV 任务</p>
 </blockquote>
 <h2 id="1">1. 概述与目标</h2>
-<p>本模块在相同的 ROV 平面运动任务上，对比两种主流强化学习算法：
-- <strong>PPO</strong>（Proximal Policy Optimization）：on-policy，策略梯度，训练稳定但样本效率低
-- <strong>SAC</strong>（Soft Actor-Critic）：off-policy，最大熵 RL，样本效率高</p>
+<p>本模块在相同的 ROV 平面运动任务上，对比两种强化学习算法（<strong>教学简化实现</strong>）：
+- <strong>PPO 风格</strong>（on-policy 策略梯度；简化版省略 importance ratio / clip / advantage）：训练稳定但样本效率低
+- <strong>SAC 风格</strong>（off-policy；简化版为策略梯度 + 熵正则，省略 Q 网络与回放缓冲区）：样本效率高</p>
 <p>这是作业要求的"同样模型不同 RL 算法对比"。</p>
 <h2 id="11">1.1 运行环境</h2>
 <table>
@@ -326,8 +330,8 @@ sudo apt install libosmesa6</code></pre>
 <thead>
 <tr>
 <th>特性</th>
-<th>PPO</th>
-<th>SAC</th>
+<th>PPO 风格</th>
+<th>SAC 风格</th>
 </tr>
 </thead>
 <tbody>
@@ -338,8 +342,8 @@ sudo apt install libosmesa6</code></pre>
 </tr>
 <tr>
 <td>更新方式</td>
-<td>批量梯度</td>
-<td>最大熵 + Q 函数</td>
+<td>策略梯度（简化，无 clip）</td>
+<td>策略梯度 + 熵正则（简化，无 Q 网络）</td>
 </tr>
 <tr>
 <td>样本效率</td>
@@ -358,6 +362,9 @@ sudo apt install libosmesa6</code></pre>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p>说明：本模块为教学简化实现，用于演示 on-policy 与 off-policy 的思路差异；PPO 未实现完整 clip 目标，SAC 未实现 Q 网络与回放缓冲区，完整算法请参考 PR3 的手写 PPO（含 clip）。</p>
+</blockquote>
 <h2 id="3">3. 实测结果</h2>
 <pre class="highlight"><code class="language-text">[对比] PPO  最后10轮平均奖励: -1440.94
 [对比] SAC  最后10轮平均奖励: -399.33</code></pre>
@@ -382,6 +389,9 @@ sudo apt install libosmesa6</code></pre>
 </tbody>
 </table>
 <h2 id="5">5. 运行步骤</h2>
+<blockquote>
+<p>说明：PPO/SAC 训练与对比在 <code>main.py</code> 中离线运行（无需 ROS）；<code>ros2 launch</code> 仅启动仿真节点，演示 ROV 位姿发布。</p>
+</blockquote>
 <pre class="highlight"><code class="language-bash">colcon build --symlink-install --packages-select mjc_rov_rl_compare
 source install/setup.bash
 bash main.sh
