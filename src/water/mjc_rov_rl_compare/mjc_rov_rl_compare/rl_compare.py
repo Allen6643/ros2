@@ -1,9 +1,9 @@
 """
-rl_compare.py — 同一 ROV 任务上对比 PPO 与 SAC 两种强化学习算法。
+rl_compare.py — 同一 ROV 任务上对比 PPO 风格与 SAC 风格两种强化学习算法（教学简化实现）。
 为什么对比：作业要求"同样模型不同RL算法对比"。
-PPO：on-policy，确定性策略梯度，训练稳定但样本效率低。
-SAC：off-policy，最大熵RL，样本效率高但实现复杂。
-这里都简化为小型 MLP，CPU 上快速跑通，打印对比指标。
+PPO 风格：on-policy 策略梯度，训练稳定但样本效率低；为简化省略 importance ratio / clip / advantage。
+SAC 风格：off-policy 策略梯度 + 熵正则，样本效率高；为简化省略 Q 网络与回放缓冲区。
+均实现为小型 MLP，CPU 上快速跑通，打印对比指标。
 """
 import numpy as np
 import torch
