@@ -14,6 +14,27 @@
 3. 先用 PID 做行为克隆预热，再 PPO 微调；
 4. 离线对比 PPO 与 PID 的轨迹跟踪 MAE。
 
+## 1.1 运行环境
+
+| 项目 | 版本 |
+|---|---|
+| 操作系统 | Ubuntu 20.04.6 LTS（VMware 虚拟机，无 GPU） |
+| ROS 2 | Humble（`/opt/ros/humble`） |
+| Python | 3.8.10 |
+| MuJoCo | 3.1.x（OSMesa 离屏渲染） |
+| PyTorch | 2.4.1+cpu |
+| NumPy | 1.24.4 |
+
+依赖安装：
+
+```bash
+pip3 install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt
+pip3 install torch==2.4.1+cpu torchvision==0.19.1+cpu \
+  -i https://mirrors.aliyun.com/pypi/simple/ \
+  --extra-index-url https://download.pytorch.org/whl/cpu
+sudo apt install libosmesa6
+```
+
 ## 2. 算法原理
 
 ### 2.1 PPO 目标函数
@@ -37,7 +58,7 @@ $$
 
 ## 3. 实测结果
 
-```
+```text
 [BC] ep   0  loss=8.6395
 [BC] ep  20  loss=6.1781
 [PPO] ep   0  final_err=1.933
@@ -66,7 +87,7 @@ ros2 launch mjc_rov_ppo_tracking main.launch.py
 
 ## 6. 文件清单
 
-```
+```text
 mjc_rov_ppo_tracking/
 ├── package.xml / setup.py / setup.cfg
 ├── main.py / main.sh
