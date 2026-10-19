@@ -47,12 +47,14 @@ sudo apt install libosmesa6
 
 ```text
 [对比] PPO  最后10轮平均奖励: -1440.94
-[对比] SAC  最后10轮平均奖励: -400.22
+[对比] SAC  最后10轮平均奖励: -399.33
 ```
 
-SAC 在相同训练步数下奖励明显优于 PPO（-400 vs -1440），验证了最大熵 RL 的样本效率优势。
+SAC 在相同训练步数下奖励明显优于 PPO（-399 vs -1440），验证了最大熵 RL 的样本效率优势。
 
-![PPO vs SAC 对比](images/pr5_compare.gif)
+![PPO vs SAC 奖励对比（实测）](images/pr5_compare.png)
+
+![PPO vs SAC 对比动图](images/pr5_compare.gif)
 
 ## 4. ROS 接口
 
