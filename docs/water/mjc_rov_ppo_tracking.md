@@ -39,17 +39,17 @@ sudo apt install libosmesa6
 
 ### 2.1 PPO 目标函数
 
-$$
-L^{CLIP}(\theta) = \hat{E}_t \left[ \min\left( r_t(\theta)\hat{A}_t,\; \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t \right) \right]
-$$
+```
+L_CLIP(θ) = E_t[ min( r_t(θ)·Â_t, clip(r_t(θ), 1-ε, 1+ε)·Â_t ) ]
+```
 
-其中 $r_t(\theta) = \pi_\theta(a_t|s_t) / \pi_{\theta_{old}}(a_t|s_t)$ 是新旧策略概率比，$\epsilon=0.2$。
+其中 `r_t(θ) = π_θ(a_t|s_t) / π_θ_old(a_t|s_t)` 是新旧策略概率比，`ε=0.2`。
 
 ### 2.2 状态与动作
 
-- **状态** $s = [x, y, v_x, v_y]$（4 维）
-- **动作** $a = [F_x, F_y]$（2 维，限幅 ±5N）
-- **奖励** $r = -\sqrt{(x-x^*)^2 + (y-y^*)^2}$（越接近目标奖励越大）
+- **状态**  s = [x, y, vx, vy]（4 维）
+- **动作** `a = [Fx, Fy]`（2 维，限幅 ±5N）
+- **奖励** `r = -sqrt((x-x*)² + (y-y*)²)`（越接近目标奖励越大）
 
 ### 2.3 训练流程
 
